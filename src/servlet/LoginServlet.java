@@ -44,6 +44,7 @@ public class LoginServlet extends HttpServlet {
 		bean.setUserId(userId);
 		bean.setPassword(password);
 
+		// 検索処理
 		try {
 			bean = model.authentication(bean);
 		} catch (Exception e) {
