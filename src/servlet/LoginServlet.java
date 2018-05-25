@@ -44,14 +44,14 @@ public class LoginServlet extends HttpServlet {
 		bean.setUserId(userId);
 		bean.setPassword(password);
 
-		// 検索処理
+		// 認証処理
 		try {
 			bean = model.authentication(bean);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		// 取得に成功した場合セッション情報をセット
-		if (bean.getErrorMessage().equals("")) {
+		if ("".equals(bean.getErrorMessage())) {
 			SessionBean sessionBean = new SessionBean();
 			sessionBean.setUserName(bean.getUserName());
 			sessionBean.setUserNo(bean.getUserNo());
