@@ -46,6 +46,7 @@ public class LoginModel {
 		} else {
 			bean.setUserNo(rs.getString("user_no"));
 			bean.setUserName(rs.getString("user_name"));
+			bean.setErrorMessage("");
 			conn.close();
 		}
 
