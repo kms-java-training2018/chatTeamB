@@ -9,8 +9,11 @@
 </head>
 <body>
 	<h1>チャット研修プログラム</h1>
-	<h2>メッセージ</h2>
+	<h2>メッセージ<a href="/chat/showProfile">あいて</a></h2>
+
+	<span style="border: 5px solid black; padding : 20px ;">
 	あなた：メッセージのサンプルだよー（｀・ω・´）
+	</span>
 	<br>
 	<a href="/chat/showProfile">あいて</a>：いえーい（｀・ω・´）
 	<br>
