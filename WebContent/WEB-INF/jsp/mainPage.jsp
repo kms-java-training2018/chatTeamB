@@ -12,7 +12,13 @@
 	<h2>メインメニュー</h2>
 	<br>■会員一覧
 	<br>
-	<a href="/chat/directMessage">他会員名（メッセージへ）</a>
+
+	<c:forEach var="x" items="${MainBean.otherName}">
+		<a href="/chat/directMessage">${x} （メッセージへ）<br>
+		</a>
+	</c:forEach>
+
+
 	<br>■グループ一覧
 	<br>
 	<a href="/chat/groupMessage">グループ名（グループメッセージへ）</a>
