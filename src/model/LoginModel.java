@@ -13,9 +13,10 @@ import bean.LoginBean;
  */
 public class LoginModel {
 
+	// ログイン認証用メソッドの宣言
 	public LoginBean authentication(LoginBean bean) {
 		// 初期化
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();		// SQL文の格納用
 		String userId = bean.getUserId();
 		String password = bean.getPassword();
 
@@ -46,12 +47,14 @@ public class LoginModel {
 			sb.append(" AND password = '" + password + "'");
 
 			// SQL実行
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sb.toString());
+			Statement stmt = conn.createStatement();			// SQL文をデータベースに送るためのStatementオブジェクトを生成
+			ResultSet rs = stmt.executeQuery(sb.toString());	// 実行し、その結果を格納
 
-			if (!rs.next()) {
+			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
+			if (!rs.next()) {	// 無かった場合
 				bean.setErrorMessage("パスワードが一致しませんでした。");
-			} else {
+			} else {			// あった場合
+				// beanに、DB会員マスタの各値を代入
 				bean.setUserNo(rs.getString("user_no"));
 				bean.setUserName(rs.getString("user_name"));
 				bean.setErrorMessage("");
