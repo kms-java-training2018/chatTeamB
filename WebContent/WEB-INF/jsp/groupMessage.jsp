@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>グループメッセージ</title>
 </head>
 <body>
 	<h1>チャット研修プログラム</h1>
@@ -15,7 +15,12 @@
 	<br>
 	<br>
 	<form action="/chat/groupMessage" method="POST">
-		<input type="submit" value="メッセージの送信">
+		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage">
+		<input type="submit" value="メッセージの送信" name="inputMessage">
+
+		<input type="submit" value="メッセージの削除" name="deleteMessage">
+		<input type="submit" value="グループ脱退" name="leaveGroup">
+
 	</form>
 	<form action="/chat/main" method="POST">
 		<input type="submit" value="メインメニューに戻る">
