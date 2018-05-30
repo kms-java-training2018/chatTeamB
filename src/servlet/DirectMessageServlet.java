@@ -1,26 +1,64 @@
 package servlet;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bean.SessionBean;
+import model.DirectMessageModel;
+
 public class DirectMessageServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
-		req.getRequestDispatcher("/WEB-INF/jsp/directMessage.jsp").forward(req, res);
+		// 初期化
+
+		/** SQL文実行結果を格納する */
+
+		SessionBean bean = new SessionBean();
+
+		ArrayList<String> list = new ArrayList<String>();
+
+		DirectMessageModel model = new DirectMessageModel();
+		list = model.lookMessage(bean);
+
+		for (int i =0; i < list.size(); i++) {
+			System.out.println(list.get(i));
+
+		}
+
+		//req.getRequestDispatcher("/WEB-INF/jsp/directMessage.jsp").forward(req, res);
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		// 初期化
+
+		/** SQL文実行結果を格納する */
+		ResultSet rs = null;
+
+		SessionBean bean = new SessionBean();
+		DirectMessageModel model = new DirectMessageModel();
+
+		rs = model.lookMessage(bean);
+
+		try {
+			while (rs.next()) {
+				System.out.println(rs.getString("MESSAGE"));
+			}
+		} catch (SQLException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
 		// セッションの存在チェック。
 		// 送信対象者（会話相手）の会員番号が存在するかチェック。
 
-
 		// パラメーターが不明の場合エラー。
-
 
 		// 会話情報マスタからSQLを使って、会話情報取得。
 		// セッション情報の自分の会員番号と送信者番号、
@@ -29,14 +67,13 @@ public class DirectMessageServlet extends HttpServlet {
 		// 自分のメッセージと相手のメッセージは別に取得する？if文で違いを判断する？
 		// 自分のメッセージは削除出来るようにし、右側に表示する？
 
-//------------------------------------------------------------------------------
-// 今日はここを作る
-//------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------
+		// 今日はここを作る
+		//------------------------------------------------------------------------------
 
 		// レコードが取得できない場合エラー。
 
 		// 取得できた場合directMessage.jspに出力。
-
 
 		//----------------------------------------------------------------
 
