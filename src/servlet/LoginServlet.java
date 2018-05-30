@@ -49,7 +49,6 @@ public class LoginServlet extends HttpServlet {
 			bean = model.authentication(bean);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("ログインサーブレット、認証処理キャッチ");
 		}
 		// 登録済み会員情報の取得に成功した場合(ログイン可の場合)セッション情報をセット
 		if ("".equals(bean.getErrorMessage())) {			// ログイン成功の場合、エラーメッセは空文字
@@ -66,8 +65,10 @@ public class LoginServlet extends HttpServlet {
 
 		// 登録済み会員情報の取得に失敗した場合(ログイン不可の場合)、ログイン画面に遷移しエラーメッセを表示
 		} else {
+			// beanのerrorMessageをパラメーターにセット
+			req.setAttribute("errorMessage", bean.getErrorMessage());
 
-			System.out.println("ログインサーブレットログイン不可のelseにいます");
+
 		}
 		req.getRequestDispatcher(direction).forward(req, res);
 	}
