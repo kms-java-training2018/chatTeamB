@@ -25,11 +25,12 @@ public class MainPageServlet extends HttpServlet {
 
 		// Beanの初期化
 		SessionBean bean = new SessionBean();
-		System.out.println(session.getAttribute("session"));
-
-
+		bean =(SessionBean) session.getAttribute("session");
 		String a = bean.getUserName();
 		System.out.println(a);
+
+
+
 
 		MainModel model = new MainModel();
 
