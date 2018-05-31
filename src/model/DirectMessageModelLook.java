@@ -15,7 +15,7 @@ public class DirectMessageModelLook {
 		// 初期化
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
 		/** ログインユーザーの会員番号 */
-		String userNo = "1"				/*bean.getUserNo()*/;
+		String userNo = "1"				/*{セッションスコープ内の会員番号を参照する}bean.getUserNo()*/;
 
 		/** 相手ユーザーの会員番号 */
 		String toSendUserNo = "3";
