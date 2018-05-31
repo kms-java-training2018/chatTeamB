@@ -20,7 +20,7 @@
 
 
 
-	 <p>${list1}${count}</p>
+	 <p>${message}</p>
 
 
 	<br>
