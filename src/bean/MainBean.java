@@ -2,14 +2,20 @@ package bean;
 
 public class MainBean {
 
-	/** 会員番号 */
-	private String otherNo;
+	/** ログインしたユーザの会員番号*/
+	private String userNo;
+
+	/** ログインしたユーザの会員名*/
+	private String userName;
+
+	/** 他のユーザの会員番号*/
+	private String otherNo[];
+
+	/** 他のユーザの会員名*/
+	private String otherName[];
 
 	/** 会話内容 */
-	private String massage;
-
-	/** 会員名 */
-	private String otherName;
+	private String message[];
 
 	/** エラーメッセージ */
 	private String errorMessage;
@@ -22,28 +28,46 @@ public class MainBean {
 		this.errorMessage = errorMessage;
 	}
 
-	public String getMassage() {
-		return massage;
+	public String getUserNo() {
+		return userNo;
 	}
 
-	public void setMassage(String massage) {
-		this.massage = massage;
+	public void setUserNo(String userNo) {
+		this.userNo = userNo;
 	}
 
-	public String getOtherName() {
-		return otherName;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setOtherName(String otherName) {
-		this.otherName = otherName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
-	public String getOtherNo() {
+	public String[] getOtherNo() {
 		return otherNo;
 	}
 
-	public void setOtherNo(String otherNo) {
+	public void setOtherNo(String otherNo[]) {
 		this.otherNo = otherNo;
 	}
+
+	public String[] getOtherName() {
+		return otherName;
+	}
+
+	public void setOtherName(String otherName[]) {
+		this.otherName = otherName;
+	}
+
+	public String[] getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message[]) {
+		this.message = message;
+	}
+
+
 
 }

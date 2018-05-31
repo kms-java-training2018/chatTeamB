@@ -5,22 +5,27 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import bean.LoginBean;
-import bean.MainBean;
+import bean.SessionBean;
 
 /**
  * ログイン画面ビジネスロジック
  */
 public class MainModel {
 
-	public MainBean authentication(MainBean bean) {
+	public ArrayList<String> newMessage(SessionBean bean) {
 		// 初期化
+
 		LoginBean log = new LoginBean();
 		LoginModel model = new LoginModel();
 		StringBuilder sb = new StringBuilder();
 		String userNo = log.getUserNo();
 		String userName = log.getUserName();
+		ArrayList<String> otherNo = new ArrayList<String>();
+		ArrayList<String> otherName = new ArrayList<String>();
+		ArrayList<String> message = new ArrayList<String>();
 
 		Connection conn = null;
 		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
@@ -35,8 +40,7 @@ public class MainModel {
 		}
 
 		// 認証処理
-		log.getUserId();
-		log.getPassword();
+
 		try {
 			log = model.authentication(log);
 		} catch (Exception e) {
@@ -46,6 +50,8 @@ public class MainModel {
 		// 会員番号と表示名取得
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
+
+			System.out.println("一つ目開始");
 
 			// SQL作成
 			sb.append("SELECT ");
@@ -62,10 +68,12 @@ public class MainModel {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sb.toString());
 
+
 			while (rs.next()) {
-				if (!(rs.getString("user_no").equals(userNo) && rs.getString("user_name").equals(userName))) {
-					bean.setOtherNo(rs.getString("user_no"));
-					bean.setOtherName(rs.getString("user_name"));
+				if (!((rs.getString("user_no").equals(userNo)) || (rs.getString("user_name").equals(userName)))) {
+					otherNo.add(rs.getString("user_no"));
+					otherName.add(rs.getString("user_name"));
+
 				}
 			}
 
@@ -84,22 +92,39 @@ public class MainModel {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			// SQL作成
-			sb.append("SELECT ");
-			sb.append("  ");
-			sb.append("FROM ");
-			sb.append(" ");
-			sb.append("ORDER ");
-			sb.append("BY ");
-			sb.append("  ");
-			sb.append("DESC");
+			int count = 0;
+			System.out.println("二つ目開始");
+			for (String nom : otherNo) {
+				if(count ==2) {
+					System.out.println("2回目");
+				}
+				// SQL作成
+				sb.append("SELECT ");
+				sb.append("message ");
+				sb.append("FROM ");
+				sb.append("t_message_info ");
+				sb.append("WHERE ");
+				sb.append("(message_no = (");
+				sb.append("SELECT ");
+				sb.append("MAX(message_no) ");
+				sb.append("FROM ");
+				sb.append("t_message_info ");
+				sb.append("WHERE ");
+				sb.append("((send_user_no = " + userNo );
+				sb.append("OR send_user_no = " + nom + ")");
+				sb.append("AND (to_send_user_no = " + userNo );
+				sb.append("OR to_send_user_no = " + nom + "))))");
 
-			// SQL実行
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sb.toString());
+				// SQL実行
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(sb.toString());
 
-			while (rs.next()) {
-				bean.setOtherName(rs.getString("user_name"));
+				if (rs.next()) {
+					message.add(rs.getString("message"));
+				} else {
+					message.add("会話を始めましょう");
+				}
+				count++;
 			}
 
 		} catch (SQLException e) {
@@ -112,7 +137,30 @@ public class MainModel {
 				e.printStackTrace();
 			}
 		}
+//		String []oNo = new String[otherNo.size()];
+//		String []oName = new String[otherName.size()];
+//		String []mess = new String[message.size()];
+//
+//
+//		int count=0;
+//		for(String x : otherNo) {
+//			oNo[count]=x;
+//			count++;
+//		}
+//		count=0;
+//		for(String x : otherName) {
+//			oName[count]=x;
+//			count++;
+//		}
+//		count=0;
+//		for(String x : message) {
+//			mess[count]=x;
+//			count++;
+//		}
+//		bean.setOtherNo(oNo);
+//		bean.setOtherName(oName);
+//		bean.setMessage(mess);
 
-		return bean;
+		return otherName;
 	}
 }

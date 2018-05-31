@@ -50,6 +50,7 @@ public class LoginServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		// 登録済み会員情報の取得に成功した場合(ログイン可の場合)セッション情報をセット
 		if ("".equals(bean.getErrorMessage())) {			// ログイン成功の場合、エラーメッセは空文字
 			// ますはSessionBeanに情報をセット

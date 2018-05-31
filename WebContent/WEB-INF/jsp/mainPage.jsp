@@ -13,10 +13,12 @@
 	<br>■会員一覧
 	<br>
 
-	<c:forEach var="x" items="${MainBean.otherName}">
-		<a href="/chat/directMessage">${x} （メッセージへ）<br>
+	<!--<c:forEach var="nom" items="${otherNo}" varStatus="status">
+		<a href="/chat/directMessage">${nom}  ${otherName.get(status)} さん（メッセージへ）<br>
 		</a>
-	</c:forEach>
+		<p>${messasge.get(status)}</p>
+	</c:forEach>-->
+	<p>${bean.getOtherNo}</p>
 
 
 	<br>■グループ一覧
