@@ -15,8 +15,8 @@ public class LoginModel {
 
 	/**
 	 * ログイン認証用メソッドの宣言
-	 * @param bean		(ユーザーが入力したIDとパスワードが格納されてる）
-	 * @return bean	(ログイン可能の場合、ID・パスワード・空のエラーメッセが返ってくる)
+	 * @param Loginbean型	(ユーザーが入力したIDとパスワードが格納されてる）
+	 * @return Loginbean型	(ログイン可能の場合、ID・パスワード・空のエラーメッセが返ってくる)
 	 * 					(ログイン不可の場合、文字列セット済みエラーメッセが返ってくる)
 	 */
 	public LoginBean authentication(LoginBean bean) {
