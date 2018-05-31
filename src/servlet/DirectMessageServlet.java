@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.DirectMessageBean;
 import bean.SessionBean;
@@ -17,53 +18,124 @@ import model.DirectMessageModelLook;
 public class DirectMessageServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		System.out.println("DirectMessageServletにきました");
 
-		// 初期化
-		// LoginModel参考
-		/** クラスSessionBean取得 */
-		SessionBean bean = new SessionBean();
-		/** メッセージ内容取得メソッドを使えるようにする */
-		DirectMessageModelLook model = new DirectMessageModelLook();
-
-		/** もしかして必要ない、いや、あるかも？なぜならsessionbeanのなかにはいっているし、sessionbean取得している
-		// セッションスコープ内のパラメータ取得
+		//セッション取得
 		HttpSession session = req.getSession();
-		String userNo = (String) req.getAttribute(bean.getUserNo());
-		String userName = (String) req.getAttribute(bean.getUserName());
-		*/
+		//セッションがない場合エラー画面に移動
+		if (session == null) {
+			System.out.println("セッションがないです");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+		// Beanの初期化
+		// LoginModel参考
+		/** クラスSessionBeanのインスタンス取得 */
+		SessionBean sessionBean = new SessionBean();
+		// セッションの"session"をクラスSessionBeanに代入
+		sessionBean = (SessionBean) session.getAttribute("session");
 
 		// オリジナル
-		/** メッセージ内容を格納するリスト（DirectMessage.jspに持っていくため） */
-		ArrayList<String> message = new ArrayList<String>();
-		
-		/** 送信対象者番号を格納するリスト（DirectMessage.jspに持っていくため） */
-		ArrayList<String> toSendUserNo = new ArrayList<String>();
-
-		/** クラスDirectMessageBean取得 */
+		/** クラスDirectMessageBeanのインスタンス取得 */
 		DirectMessageBean directMessageBean = new DirectMessageBean();
+		///////directMessageBean
+
+		// メソッド使うための下準備
+		/** クラスDirectMessageModelLookのインスタンス取得
+		 * メッセージ内容取得メソッドを使えるようにする */
+		DirectMessageModelLook model = new DirectMessageModelLook();
+
+		/** 参考までに
+		 * 	sessionBean = (SessionBean) session.getAttribute("session");
+		 *上記１行の処理で済む内容を次の長文で表現しようと考えていた
+		 * 反省！！！！
+
+			// セッションスコープ内のパラメータ取得
+			// セッションスコープ内のクラスsessionBean内の変数UserNoをgetUserNoメソッドで取得
+			String userNo = (String) session.getAttribute(sessionBean.getUserNo());
+			// セッションスコープ内のクラスsessionBean内の変数userNameをgetuserNameメソッドで取得
+			String userName = (String) session.getAttribute(sessionBean.getUserName());
+			// クラスsessionBean内のそれぞれの変数にset~メソッドで代入
+			sessionBean.setUserNo(userNo);
+			sessionBean.setUserNo(userName);
+		*/
+
+		//------------------------------------------------------------------------------
+		// ここから後回し
+		//------------------------------------------------------------------------------
+		// TODO 相手の会員番号をメインページからのリクエストスコープで取得
+		// (例)request.getParameter("相手の会員番号（送信対象者番号）");　？
+
+		// 相手の会員番号をクラスDirectMessageBeanにセットlookMessageメソッドで使う。（送信対象者番号と比較する）
+
+		// directMessageBean.setToSendUserNo(request.getParameter("相手の会員番号（送信対象者番号）"));　？
+
+		//------------------------------------------------------------------------------
+		// ここまで後回し
+		//------------------------------------------------------------------------------
+
+		/** メッセージ内容を格納するリストを初期化（DirectMessage.jspに持っていくため） */
+		ArrayList<String> message = new ArrayList<String>();
+
+		/** 送信対象者番号を格納するリスト初期化（DirectMessage.jspに持っていくため）
+		ArrayList<String> toSendUserNo = new ArrayList<String>();
+		*/
+
+		/** 自分のものか相手のかメッセージを分ける判断をするリストを初期化（DirectMessage.jspに持っていくため）
+		 * エラーが出た場合<String>型にする
+		 */
+		ArrayList<String> judge = new ArrayList<String>();
+
+
+		// クラスsessionBean内の変数｛userName,UserNo｝を
+		// クラスDirectMessageBean内にコピー
+		directMessageBean.setUserNo(sessionBean.getUserNo());
+		directMessageBean.setUserName(sessionBean.getUserName());
+
+		//------------------------------------------------------------------------------
+		// ここまで完成
+		//------------------------------------------------------------------------------
+
+		// TODO　認証処理とは何か？
+		try {
+		directMessageBean = model.lookMessage(directMessageBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("DirectMessageServlet、認証処理キャッチ");
+		}
+
 
 
 		// DBからメッセージ内容を取得し格納する
 		message = directMessageBean.getMessage();
 		// DBから送信対象者番号を取得し格納する
-		toSendUserNo = directMessageBean.getMessage();
+		judge = directMessageBean.getJudge();
 
-		// メッセジーの個数カウント用変数
+		// 必要ないかも？メッセジーの個数カウント用変数
 		int count = 0;
-		for (int i =0; i < list.size(); i++) {
-			System.out.println(list.get(i));
-			req.setAttribute("list", list.get(i));
+
+
+
+		// 確認用
+		for (int i = 0; i < message.size(); i++) {
+			System.out.println(message.get(i));
+			System.out.println(judge.get(i));
+
+			// いらないかも？
+			// req.setAttribute("myMessage", message.get(i));
+			// req.setAttribute("othersMessage", message.get(i));
 			count = i;
 		}
-		// メッセジーの個数をjspに送る
+
+		// 必要ないかも？メッセジーの個数をjspに送る
 		req.setAttribute("count", count);
 
-
+		// 以下は必要！！！！
+		req.setAttribute("message", message);
+		req.setAttribute("judge", judge);
 
 		req.getRequestDispatcher("/WEB-INF/jsp/directMessage.jsp").forward(req, res);
 	}
-
-
 
 	//------------------------------------------------------------------------------
 	// ここから先は後回し
@@ -76,8 +148,6 @@ public class DirectMessageServlet extends HttpServlet {
 
 		SessionBean bean = new SessionBean();
 		DirectMessageModelLook model = new DirectMessageModelLook();
-
-
 
 		try {
 			while (rs.next()) {
