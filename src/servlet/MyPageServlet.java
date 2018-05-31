@@ -96,7 +96,7 @@ public class MyPageServlet extends HttpServlet {
 			req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
 
 		} else {
-			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
 		}
 
 	}
