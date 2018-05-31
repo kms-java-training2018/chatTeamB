@@ -15,15 +15,25 @@ public class DirectMessageModelLook {
 		// 初期化
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
 		/** ログインユーザーの会員番号 */
-		String userNo = "1"				/*{セッションスコープ内の会員番号を参照する}bean.getUserNo()*/;
+		// DirectMessageBeanクラス内の会員番号を参照する
+		String userNo = bean.getUserNo();
 
+		// DirectMessageBeanクラス内の送信対象者番号を参照する
 		/** 相手ユーザーの会員番号 */
-		String toSendUserNo = "3";
+		String toSendUserNo = bean.getToSendUserNo();
+
+		/** 会話内容（メッセージ）を格納する */
+		ArrayList<String> message = new ArrayList<String>();
+
+		/** メッセージが自分の物か他人の物か判断する番号
+		 * （自分="0"、他人="1"が代入される）を格納する
+		 */
+		ArrayList<String> judge = new ArrayList<String>();
 
 		/** SQL文実行結果を格納する */
 		ResultSet rs = null;
-		ArrayList<String> list = new ArrayList<String>();
 
+		// データベースに接続する準備
 		Connection conn = null;
 		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
 		String user = "DEV_TEAM_B";
@@ -40,13 +50,14 @@ public class DirectMessageModelLook {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-//------------------------------------------------------------------------------
-// 今日はここまで
-//------------------------------------------------------------------------------
+			//------------------------------------------------------------------------------
+			// 今日はここまで
+			//------------------------------------------------------------------------------
 
 			// SQL作成
 			sb.append("SELECT ");
-			sb.append(" MESSAGE ");
+			sb.append(" MESSAGE, ");
+			sb.append(" SEND_USER_NO ");
 			sb.append("FROM ");
 			sb.append(" T_MESSAGE_INFO ");
 			sb.append("WHERE ");
@@ -59,31 +70,14 @@ public class DirectMessageModelLook {
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
 			rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
 
-
-			/**
-			// SQL文の結果を格納する二次元配列
-			String[][] list = new String[2][2];
-
-			for (int i = 0;i < 2; i++) {
-				list = new String[][] {rs.getString("MESSAGE"), rs.getString("MESSAGE")};
-				rs.next();
-			}
-			*/
-
-
-			try {
-				while (rs.next()) {
-//					String[] judge = {rs.getString("MESSAGE"), rs.getString("MESSAGE")};
-
-//					list.add (judge);
-					list.add (rs.getString("MESSAGE"));
-
+			while (rs.next()) {
+				message.add(rs.getString("MESSAGE"));
+				if (rs.getString("SEND_USER_NO") == userNo) {
+					judge.add(rs.getString("0"));
+				} else {
+					judge.add(rs.getString("0"));
 				}
-			} catch (SQLException e) {
-				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
 			}
-
 
 			/**
 			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
@@ -108,6 +102,6 @@ public class DirectMessageModelLook {
 			}
 		}
 
-		return list;
+		return bean;
 	}
 }

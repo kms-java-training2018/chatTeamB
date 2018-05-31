@@ -11,7 +11,9 @@ import bean.MainBean;
 import bean.SessionBean;
 
 /**
- * ログイン画面ビジネスロジック
+ * @author mitsuno-shinki
+ * メインメニュー画面(自分以外の会員の番号と名前を取得、
+ * 二者間の最新メッセージを取得)
  */
 public class MainModel {
 
@@ -41,8 +43,6 @@ public class MainModel {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			System.out.println("一つ目開始");
-
 			// SQL作成
 			sb.append("SELECT ");
 			sb.append("user_no ");
@@ -60,6 +60,7 @@ public class MainModel {
 
 
 			while (rs.next()) {
+				//ログインしているユーザの会員番号と名前を省く
 				if (!((rs.getString("user_no").equals(userNo)) || (rs.getString("user_name").equals(userName)))) {
 					otherNo.add(rs.getString("user_no"));
 					otherName.add(rs.getString("user_name"));
@@ -82,39 +83,37 @@ public class MainModel {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			int count = 0;
-			System.out.println("二つ目開始");
 			for (String nom : otherNo) {
-				if(count ==2) {
-					System.out.println("2回目");
-				}
+
+				StringBuilder sb2 = new StringBuilder();
 				// SQL作成
-				sb.append("SELECT ");
-				sb.append("message ");
-				sb.append("FROM ");
-				sb.append("t_message_info ");
-				sb.append("WHERE ");
-				sb.append("(message_no = (");
-				sb.append("SELECT ");
-				sb.append("MAX(message_no) ");
-				sb.append("FROM ");
-				sb.append("t_message_info ");
-				sb.append("WHERE ");
-				sb.append("((send_user_no = " + userNo );
-				sb.append("OR send_user_no = " + nom + ")");
-				sb.append("AND (to_send_user_no = " + userNo );
-				sb.append("OR to_send_user_no = " + nom + "))))");
+				sb2.append("SELECT ");
+				sb2.append("message ");
+				sb2.append("FROM ");
+				sb2.append("t_message_info ");
+				sb2.append("WHERE ");
+				sb2.append("(message_no = (");
+				sb2.append("SELECT ");
+				sb2.append("MAX(message_no) ");
+				sb2.append("FROM ");
+				sb2.append("t_message_info ");
+				sb2.append("WHERE ");
+				sb2.append("((send_user_no = " + userNo );
+				sb2.append("OR send_user_no = " + nom + ")");
+				sb2.append("AND (to_send_user_no = " + userNo );
+				sb2.append("OR to_send_user_no = " + nom + "))))");
 
 				// SQL実行
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sb.toString());
+				ResultSet rs = stmt.executeQuery(sb2.toString());
 
 				if (rs.next()) {
 					message.add(rs.getString("message"));
 				} else {
+					//falseなら"会話を始めましょう"をアレイリストに追加
 					message.add("会話を始めましょう");
 				}
-				count++;
+
 			}
 
 		} catch (SQLException e) {
@@ -128,10 +127,12 @@ public class MainModel {
 			}
 		}
 
+		//mainBeanにセット
 		mainBean.setOtherNo(otherNo);
 		mainBean.setOtherName(otherName);
 		mainBean.setMessage(message);
 
+		//まとめてmainBeanを返す
 		return mainBean;
 	}
 }
