@@ -7,15 +7,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import bean.SessionBean;
+import bean.DirectMessageBean;
 
 public class DirectMessageModelLook {
 	// メッセージ閲覧メソッドの宣言
-	public ArrayList<String> lookMessage(SessionBean bean) {
+	public DirectMessageBean lookMessage(DirectMessageBean bean) {
 		// 初期化
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
 		/** ログインユーザーの会員番号 */
-		String userNo = "1"				/*bean.getUserNo()*/;
+		String userNo = "1"				/*{セッションスコープ内の会員番号を参照する}bean.getUserNo()*/;
 
 		/** 相手ユーザーの会員番号 */
 		String toSendUserNo = "3";

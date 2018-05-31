@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bean.DirectMessageBean;
 import bean.SessionBean;
 import model.DirectMessageModelLook;
 
@@ -18,16 +19,34 @@ public class DirectMessageServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
 		// 初期化
-
-		/** SQL文実行結果を格納する */
-
+		// LoginModel参考
+		/** クラスSessionBean取得 */
 		SessionBean bean = new SessionBean();
-
-		ArrayList<String> list = new ArrayList<String>();
-
+		/** メッセージ内容取得メソッドを使えるようにする */
 		DirectMessageModelLook model = new DirectMessageModelLook();
-		list = model.lookMessage(bean);
 
+		/** もしかして必要ない、いや、あるかも？なぜならsessionbeanのなかにはいっているし、sessionbean取得している
+		// セッションスコープ内のパラメータ取得
+		HttpSession session = req.getSession();
+		String userNo = (String) req.getAttribute(bean.getUserNo());
+		String userName = (String) req.getAttribute(bean.getUserName());
+		*/
+
+		// オリジナル
+		/** メッセージ内容を格納するリスト（DirectMessage.jspに持っていくため） */
+		ArrayList<String> message = new ArrayList<String>();
+		
+		/** 送信対象者番号を格納するリスト（DirectMessage.jspに持っていくため） */
+		ArrayList<String> toSendUserNo = new ArrayList<String>();
+
+		/** クラスDirectMessageBean取得 */
+		DirectMessageBean directMessageBean = new DirectMessageBean();
+
+
+		// DBからメッセージ内容を取得し格納する
+		message = directMessageBean.getMessage();
+		// DBから送信対象者番号を取得し格納する
+		toSendUserNo = directMessageBean.getMessage();
 
 		// メッセジーの個数カウント用変数
 		int count = 0;
