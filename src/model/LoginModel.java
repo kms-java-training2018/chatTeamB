@@ -55,12 +55,10 @@ public class LoginModel {
 			// SQL実行
 			Statement stmt = conn.createStatement();			// SQL文をデータベースに送るためのStatementオブジェクトを生成
 			ResultSet rs = stmt.executeQuery(sb.toString());	// 実行し、その結果を格納
-			System.out.println("SQL実行完了");
 
 			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
 			if (!rs.next()) {	// 無かった場合
 				bean.setErrorMessage("パスワードが一致しませんでした。");
-				System.out.println("sql実行後、該当会員情報なしif文");
 			} else {			// あった場合
 				// beanに、DB会員マスタの会員番号・表示名と、空文字を代入
 				bean.setUserNo(rs.getString("user_no"));
@@ -78,7 +76,6 @@ public class LoginModel {
 			}
 		}
 
-		System.out.println("ログインモデルを抜けます");
 		return bean;
 	}
 }
