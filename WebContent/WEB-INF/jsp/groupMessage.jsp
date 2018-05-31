@@ -5,6 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- JSを指定 -->
+	<script src="../js/groupMessage.js"></script>
 <title>グループメッセージ</title>
 </head>
 <body>
@@ -16,10 +18,17 @@
 	<br>
 	<form action="/chat/groupMessage" method="POST">
 		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage">
-		<input type="submit" value="メッセージの送信" name="inputMessage">
+		<button type='submit' name='action' value='inputMessage'>送信</button>
 
-		<input type="submit" value="メッセージの削除" name="deleteMessage">
-		<input type="submit" value="グループ脱退" name="leaveGroup">
+
+		<button type="submit" name='action' value='deleteMessage' id='deleteMessage'
+<!-- 			onclick="alert('このメッセージを削除しますか？')" -->
+			>メッセージ削除</button>
+
+
+		<button type="submit" name='action' value='leaveGroup'id='leaveGroup'
+<!-- 			onclick="alert('このグループを脱退しますか？')" -->
+			>グループ脱退</button>
 
 	</form>
 	<form action="/chat/main" method="POST">
