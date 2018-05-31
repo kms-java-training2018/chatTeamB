@@ -9,17 +9,16 @@ import java.util.ArrayList;
 
 import bean.SessionBean;
 
-public class DirectMessageModel {
+public class DirectMessageModelLook {
 	// メッセージ閲覧メソッドの宣言
 	public ArrayList<String> lookMessage(SessionBean bean) {
 		// 初期化
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
 		/** ログインユーザーの会員番号 */
 		String userNo = "1"				/*bean.getUserNo()*/;
-		/** ログインユーザーの表示名 */
-		String userName = ""			/*bean.getUserName()*/;
+
 		/** 相手ユーザーの会員番号 */
-		String toSendUserNo = "2";
+		String toSendUserNo = "3";
 
 		/** SQL文実行結果を格納する */
 		ResultSet rs = null;
@@ -60,8 +59,23 @@ public class DirectMessageModel {
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
 			rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
 
+
+			/**
+			// SQL文の結果を格納する二次元配列
+			String[][] list = new String[2][2];
+
+			for (int i = 0;i < 2; i++) {
+				list = new String[][] {rs.getString("MESSAGE"), rs.getString("MESSAGE")};
+				rs.next();
+			}
+			*/
+
+
 			try {
 				while (rs.next()) {
+//					String[] judge = {rs.getString("MESSAGE"), rs.getString("MESSAGE")};
+
+//					list.add (judge);
 					list.add (rs.getString("MESSAGE"));
 
 				}
