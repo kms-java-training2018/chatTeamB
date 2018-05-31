@@ -11,13 +11,20 @@
 	<h1>チャット研修プログラム</h1>
 	<h2>メッセージ<a href="/chat/showProfile">あいて</a></h2>
 
-	<span style="border: 5px solid black; padding : 20px ;">
+	<!--  <span style="border: 5px solid black; padding : 20px ;"> -->
 	あなた：メッセージのサンプルだよー（｀・ω・´）
-	</span>
+	<!-- </span> -->
 	<br>
 	<a href="/chat/showProfile">あいて</a>：いえーい（｀・ω・´）
 	<br>
+
+
+
+	 <p>${list1}${count}</p>
+
+
 	<br>
+
 
 	<form action="/chat/directMessage" method="POST">
 		<input type="submit" value="メッセージの送信">

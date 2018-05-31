@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.SessionBean;
-import model.DirectMessageModel;
+import model.DirectMessageModelLook;
 
 public class DirectMessageServlet extends HttpServlet {
 
@@ -25,17 +25,30 @@ public class DirectMessageServlet extends HttpServlet {
 
 		ArrayList<String> list = new ArrayList<String>();
 
-		DirectMessageModel model = new DirectMessageModel();
+		DirectMessageModelLook model = new DirectMessageModelLook();
 		list = model.lookMessage(bean);
 
+
+		// メッセジーの個数カウント用変数
+		int count = 0;
 		for (int i =0; i < list.size(); i++) {
 			System.out.println(list.get(i));
-
+			req.setAttribute("list", list.get(i));
+			count = i;
 		}
+		// メッセジーの個数をjspに送る
+		req.setAttribute("count", count);
 
-		//req.getRequestDispatcher("/WEB-INF/jsp/directMessage.jsp").forward(req, res);
+
+
+		req.getRequestDispatcher("/WEB-INF/jsp/directMessage.jsp").forward(req, res);
 	}
 
+
+
+	//------------------------------------------------------------------------------
+	// ここから先は後回し
+	//------------------------------------------------------------------------------
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		// 初期化
 
@@ -43,9 +56,9 @@ public class DirectMessageServlet extends HttpServlet {
 		ResultSet rs = null;
 
 		SessionBean bean = new SessionBean();
-		DirectMessageModel model = new DirectMessageModel();
+		DirectMessageModelLook model = new DirectMessageModelLook();
 
-		rs = model.lookMessage(bean);
+
 
 		try {
 			while (rs.next()) {
