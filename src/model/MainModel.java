@@ -11,7 +11,9 @@ import bean.MainBean;
 import bean.SessionBean;
 
 /**
- * ログイン画面ビジネスロジック
+ * @author mitsuno-shinki
+ * メインメニュー画面(自分以外の会員の番号と名前を取得、
+ * 二者間の最新メッセージを取得)
  */
 public class MainModel {
 
@@ -41,8 +43,6 @@ public class MainModel {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			System.out.println("一つ目開始");
-
 			// SQL作成
 			sb.append("SELECT ");
 			sb.append("user_no ");
@@ -60,6 +60,7 @@ public class MainModel {
 
 
 			while (rs.next()) {
+				//ログインしているユーザの会員番号と名前を省く
 				if (!((rs.getString("user_no").equals(userNo)) || (rs.getString("user_name").equals(userName)))) {
 					otherNo.add(rs.getString("user_no"));
 					otherName.add(rs.getString("user_name"));
@@ -81,8 +82,6 @@ public class MainModel {
 		// 会話情報テーブルから二者間の最新メッセージを取得
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
-
-			System.out.println("二つ目開始");
 
 			for (String nom : otherNo) {
 
@@ -111,6 +110,7 @@ public class MainModel {
 				if (rs.next()) {
 					message.add(rs.getString("message"));
 				} else {
+					//falseなら"会話を始めましょう"をアレイリストに追加
 					message.add("会話を始めましょう");
 				}
 
@@ -127,10 +127,12 @@ public class MainModel {
 			}
 		}
 
+		//mainBeanにセット
 		mainBean.setOtherNo(otherNo);
 		mainBean.setOtherName(otherName);
 		mainBean.setMessage(message);
 
+		//まとめてmainBeanを返す
 		return mainBean;
 	}
 }
