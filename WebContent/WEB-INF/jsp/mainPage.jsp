@@ -14,9 +14,9 @@
 	<br>
 
 	<c:forEach var="nom" items="${otherNo}" varStatus="status">
-		<a href="/chat/directMessage">${nom}  ${otherName.get(status)} さん（メッセージへ）<br>
+		<a href="/chat/directMessage">${nom}  ${otherName[status.index]} さん（メッセージへ）<br>
 		</a>
-		<p>${messasge.get(status)}</p>
+		<c:out value="${message[status.index]}"/><br><br>
 	</c:forEach>
 
 

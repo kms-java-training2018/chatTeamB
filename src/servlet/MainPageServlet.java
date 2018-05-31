@@ -27,15 +27,9 @@ public class MainPageServlet extends HttpServlet {
 		// Beanの初期化
 		MainBean mainBean = new MainBean();
 		SessionBean sessionBean = new SessionBean();
-		sessionBean =(SessionBean) session.getAttribute("session");
-		sessionBean.getUserNo();
-		sessionBean.getUserName();
-		ArrayList<String> otherNo = new ArrayList<String>();
-		ArrayList<String> otherName = new ArrayList<String>();
-		ArrayList<String> message = new ArrayList<String>();
+		sessionBean = (SessionBean) session.getAttribute("session");
 
 		MainModel model = new MainModel();
-
 
 		// 認証処理
 		try {
@@ -45,9 +39,19 @@ public class MainPageServlet extends HttpServlet {
 			e.printStackTrace();
 			System.out.println("メインサーブレット、認証処理キャッチ");
 		}
-		otherNo= mainBean.getOtherNo();
+		ArrayList<String> otherNo = new ArrayList<String>();
+		ArrayList<String> otherName = new ArrayList<String>();
+		ArrayList<String> message = new ArrayList<String>();
+
+		otherNo = mainBean.getOtherNo();
 		otherName = mainBean.getOtherName();
 		message = mainBean.getMessage();
+
+		req.setAttribute("otherNo", otherNo);
+		req.setAttribute("otherName", otherName);
+		req.setAttribute("message", message);
+
+//		req.setAttribute("mainBean", mainBean);
 
 		req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
 	}
@@ -57,7 +61,5 @@ public class MainPageServlet extends HttpServlet {
 		req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
 
 	}
-
-
 
 }

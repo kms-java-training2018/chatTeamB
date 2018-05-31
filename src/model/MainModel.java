@@ -82,39 +82,38 @@ public class MainModel {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			int count = 0;
 			System.out.println("二つ目開始");
+
 			for (String nom : otherNo) {
-				if(count ==2) {
-					System.out.println("2回目");
-				}
+
+				StringBuilder sb2 = new StringBuilder();
 				// SQL作成
-				sb.append("SELECT ");
-				sb.append("message ");
-				sb.append("FROM ");
-				sb.append("t_message_info ");
-				sb.append("WHERE ");
-				sb.append("(message_no = (");
-				sb.append("SELECT ");
-				sb.append("MAX(message_no) ");
-				sb.append("FROM ");
-				sb.append("t_message_info ");
-				sb.append("WHERE ");
-				sb.append("((send_user_no = " + userNo );
-				sb.append("OR send_user_no = " + nom + ")");
-				sb.append("AND (to_send_user_no = " + userNo );
-				sb.append("OR to_send_user_no = " + nom + "))))");
+				sb2.append("SELECT ");
+				sb2.append("message ");
+				sb2.append("FROM ");
+				sb2.append("t_message_info ");
+				sb2.append("WHERE ");
+				sb2.append("(message_no = (");
+				sb2.append("SELECT ");
+				sb2.append("MAX(message_no) ");
+				sb2.append("FROM ");
+				sb2.append("t_message_info ");
+				sb2.append("WHERE ");
+				sb2.append("((send_user_no = " + userNo );
+				sb2.append("OR send_user_no = " + nom + ")");
+				sb2.append("AND (to_send_user_no = " + userNo );
+				sb2.append("OR to_send_user_no = " + nom + "))))");
 
 				// SQL実行
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sb.toString());
+				ResultSet rs = stmt.executeQuery(sb2.toString());
 
 				if (rs.next()) {
 					message.add(rs.getString("message"));
 				} else {
 					message.add("会話を始めましょう");
 				}
-				count++;
+
 			}
 
 		} catch (SQLException e) {
