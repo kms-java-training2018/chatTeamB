@@ -28,6 +28,14 @@ public class GroupMessageServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
+		// 初期化
+		GroupMessageModel model = new GroupMessageModel();
+
+		// セッションの値を取得
+		HttpSession session = req.getSession();
+		String userName = (String)session.getAttribute("userName");
+		String userNo = (String)session.getAttribute("userNo");
+
 		// パラメーターの値を取得
 		String action = req.getParameter("action");
 		switch (action) {
@@ -42,8 +50,6 @@ public class GroupMessageServlet extends HttpServlet {
 
 			// (1)-1 セッションの存在チェックを行う。
 			// (1)-2 チェックでエラーが発生した場合、不正な遷移と判断して、エラー画面に遷移する。
-			HttpSession session = req.getSession();
-			Object userName = session.getAttribute("userName");
 			if (userName == null) {
 	//			System.out.println("セッションがありませんでした");
 				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
@@ -58,7 +64,6 @@ public class GroupMessageServlet extends HttpServlet {
 
 			// (1)-5 セッションに保持している会員番号、パラメータとして受け取ったグループ番号を条件に
 			//       グループ情報テーブルから自身のデータを取得する
-			GroupMessageModel model = new GroupMessageModel();
 			try {
 	//			bean = model.authentication(bean);
 			} catch (Exception e) {
@@ -103,9 +108,14 @@ public class GroupMessageServlet extends HttpServlet {
 
 		case "leaveGroup":
 
+			// (2)-1 セッション情報の会員番号とをグループ番号を条件に、会話情報テーブルから論理削除する
+			try {
+				bean = model.authentication(bean);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 
-			// (2)-1 セッション情報のグループ番号と会員番号を条件に、会話情報テーブルから論理削除する
 			// (2)-2 レコードを論理削除できなかった場合、エラー画面に遷移する。
 
 

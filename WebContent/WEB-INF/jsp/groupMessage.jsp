@@ -18,17 +18,17 @@
 	<br>
 	<form action="/chat/groupMessage" method="POST">
 		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage">
-		<button type='submit' name='action' value='inputMessage'>送信</button>
+		<button type='submit' name='action' value='sendMessage'>送信</button>
 
 
-		<button type="submit" name='action' value='deleteMessage' id='deleteMessage'
-<!-- 			onclick="alert('このメッセージを削除しますか？')" -->
-			>メッセージ削除</button>
+		<form>
+			<input type="hidden" name='action' value='deleteMessage' id='deleteMessage'>
+			<p>メッセージ削除
+			<a href>
+		</form>
 
-
-		<button type="submit" name='action' value='leaveGroup'id='leaveGroup'
-<!-- 			onclick="alert('このグループを脱退しますか？')" -->
-			>グループ脱退</button>
+		<button type="submit" name='action' value='leaveGroup'id='leaveGroup'>
+			グループ脱退</button>
 
 	</form>
 	<form action="/chat/main" method="POST">
