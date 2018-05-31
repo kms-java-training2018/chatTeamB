@@ -22,7 +22,13 @@
 
 	<br>■グループ一覧
 	<br>
-	<a href="/chat/groupMessage">グループ名（グループメッセージへ）</a>
+
+	<c:forEach var="group" items="${groupNo}" varStatus="status">
+		<a href="/chat/groupMessage">${group} ${groupName[status.index]}（グループメッセージへ）<br>
+		</a>
+		<c:out value="${groupMessage[status.index]}"/><br><br>
+	</c:forEach>
+
 	<br>
 	<br>
 	<form action="/chat/makeGroup" method="POST">
