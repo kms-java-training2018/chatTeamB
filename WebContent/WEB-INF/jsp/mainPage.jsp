@@ -14,15 +14,21 @@
 	<br>
 
 	<c:forEach var="nom" items="${otherNo}" varStatus="status">
-		<a href="/chat/directMessage">${nom}  ${otherName.get(status)} さん（メッセージへ）<br>
+		<a href="/chat/directMessage">${nom}  ${otherName[status.index]} さん（メッセージへ）<br>
 		</a>
-		<p>${messasge.get(status)}</p>
+		<c:out value="${message[status.index]}"/><br><br>
 	</c:forEach>
 
 
 	<br>■グループ一覧
 	<br>
-	<a href="/chat/groupMessage">グループ名（グループメッセージへ）</a>
+
+	<c:forEach var="group" items="${groupNo}" varStatus="status">
+		<a href="/chat/groupMessage">${group} ${groupName[status.index]}（グループメッセージへ）<br>
+		</a>
+		<c:out value="${groupMessage[status.index]}"/><br><br>
+	</c:forEach>
+
 	<br>
 	<br>
 	<form action="/chat/makeGroup" method="POST">
