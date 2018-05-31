@@ -52,9 +52,6 @@ public class MainPageServlet extends HttpServlet {
 
 	}
 
-	// Beanを使うための初期化
-			LoginBean bean = new LoginBean();
-			String userNo = bean.getUserNo();
-			String userName = bean.getUserName();
+
 
 }
