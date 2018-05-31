@@ -1,5 +1,7 @@
 package bean;
 
+import java.util.ArrayList;
+
 public class MainBean {
 
 	/** ログインしたユーザの会員番号*/
@@ -9,13 +11,13 @@ public class MainBean {
 	private String userName;
 
 	/** 他のユーザの会員番号*/
-	private String otherNo[];
+	private ArrayList<String> otherNo = new ArrayList<String>();
 
 	/** 他のユーザの会員名*/
-	private String otherName[];
+	private ArrayList<String> otherName = new ArrayList<String>();
 
 	/** 会話内容 */
-	private String message[];
+	private ArrayList<String> message = new ArrayList<String>();
 
 	/** エラーメッセージ */
 	private String errorMessage;
@@ -44,27 +46,27 @@ public class MainBean {
 		this.userName = userName;
 	}
 
-	public String[] getOtherNo() {
+	public ArrayList<String> getOtherNo() {
 		return otherNo;
 	}
 
-	public void setOtherNo(String otherNo[]) {
+	public void setOtherNo(ArrayList<String> otherNo) {
 		this.otherNo = otherNo;
 	}
 
-	public String[] getOtherName() {
+	public ArrayList<String> getOtherName() {
 		return otherName;
 	}
 
-	public void setOtherName(String otherName[]) {
+	public void setOtherName(ArrayList<String> otherName) {
 		this.otherName = otherName;
 	}
 
-	public String[] getMessage() {
+	public ArrayList<String> getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message[]) {
+	public void setMessage(ArrayList<String> message) {
 		this.message = message;
 	}
 

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import bean.LoginBean;
+import bean.MainBean;
 import bean.SessionBean;
 
 /**
@@ -15,14 +15,12 @@ import bean.SessionBean;
  */
 public class MainModel {
 
-	public ArrayList<String> newMessage(SessionBean bean) {
+	public MainBean newMessage(SessionBean bean) {
 		// 初期化
-
-		LoginBean log = new LoginBean();
-		LoginModel model = new LoginModel();
+		MainBean mainBean = new MainBean();
 		StringBuilder sb = new StringBuilder();
-		String userNo = log.getUserNo();
-		String userName = log.getUserName();
+		String userNo = bean.getUserNo();
+		String userName = bean.getUserName();
 		ArrayList<String> otherNo = new ArrayList<String>();
 		ArrayList<String> otherName = new ArrayList<String>();
 		ArrayList<String> message = new ArrayList<String>();
@@ -36,14 +34,6 @@ public class MainModel {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		// 認証処理
-
-		try {
-			log = model.authentication(log);
-		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -137,30 +127,11 @@ public class MainModel {
 				e.printStackTrace();
 			}
 		}
-//		String []oNo = new String[otherNo.size()];
-//		String []oName = new String[otherName.size()];
-//		String []mess = new String[message.size()];
-//
-//
-//		int count=0;
-//		for(String x : otherNo) {
-//			oNo[count]=x;
-//			count++;
-//		}
-//		count=0;
-//		for(String x : otherName) {
-//			oName[count]=x;
-//			count++;
-//		}
-//		count=0;
-//		for(String x : message) {
-//			mess[count]=x;
-//			count++;
-//		}
-//		bean.setOtherNo(oNo);
-//		bean.setOtherName(oName);
-//		bean.setMessage(mess);
 
-		return otherName;
+		mainBean.setOtherNo(otherNo);
+		mainBean.setOtherName(otherName);
+		mainBean.setMessage(message);
+
+		return mainBean;
 	}
 }

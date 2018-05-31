@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import bean.MainBean;
 import bean.SessionBean;
 import model.MainModel;
 
@@ -24,25 +25,29 @@ public class MainPageServlet extends HttpServlet {
 		}
 
 		// Beanの初期化
-		SessionBean bean = new SessionBean();
-		bean =(SessionBean) session.getAttribute("session");
-		String a = bean.getUserName();
-		System.out.println(a);
-
-
-
+		MainBean mainBean = new MainBean();
+		SessionBean sessionBean = new SessionBean();
+		sessionBean =(SessionBean) session.getAttribute("session");
+		sessionBean.getUserNo();
+		sessionBean.getUserName();
+		ArrayList<String> otherNo = new ArrayList<String>();
+		ArrayList<String> otherName = new ArrayList<String>();
+		ArrayList<String> message = new ArrayList<String>();
 
 		MainModel model = new MainModel();
 
 
 		// 認証処理
 		try {
-			ArrayList<String> list = new ArrayList<String>();
-			list = model.newMessage(bean);
+
+			mainBean = model.newMessage(sessionBean);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("メインサーブレット、認証処理キャッチ");
 		}
+		otherNo= mainBean.getOtherNo();
+		otherName = mainBean.getOtherName();
+		message = mainBean.getMessage();
 
 		req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
 	}
