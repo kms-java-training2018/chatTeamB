@@ -1,8 +1,6 @@
 package servlet;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,35 +11,64 @@ import javax.servlet.http.HttpSession;
 public class MyPageServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-
-		//セッション保持の確認
-		HttpSession session = request.getSession();
-		if(session == null) {
-			req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
+		String prof = request.getParameter("");
+		// メインメニューからの遷移
+		// セッションが保持されているかの確認(メイン→プロフ遷移時)
+		// セッションがない場合、エラー画面に遷移
+		HttpSession session = req.getSession();
+		if (session == null) {
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
+//		// Beanを使うための初期化
+//		LoginBean bean = new LoginBean();
+//		MyPageModel model = new MyPageModel();
+//		String userNo = bean.getUserNo();
+//		String userName = bean.getUserName();
+//
+//		// パラメータの取得
+//		String userId = (String) req.getParameter("userId");
+//		String password = (String) req.getParameter("password");
+//
+//		bean.setUserId(userId);
+//		bean.setPassword(password);
 
-	}
+		// セッションがある場合、プロフィール情報の取得（認証処理）
+//		try {
+//			bean = model.authentication(bean);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.out.println("プロフィールサーブレット、認証処理キャッチ");
+//		}
 
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-
-		StringBuilder sb = new StringBuilder();		// SQL文の格納用
-
-		//SQL作成
-		sb.append("SELECT");
-		sb.append("user_name");
-		sb.append("my_page_text");
-		sb.append("FROM");
-		sb.append("m_user");
-		sb.append("WHERE");
-		sb.append("user_no like");
-
-		//SQL実行
-		Statement stmt = conn.createStatement();			// SQL文をデータベースに送るためのStatementオブジェクトを生成
-		ResultSet rs = stmt.executeQuery(sb.toString());	// 実行し、その結果を格納
-
-
+		// 自分のプロフィール画面に遷移
 		req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
 
+//		// プロフィール更新時
+//		// 入力文字数のチェック
+//		//		if (//!ユーザー名が1以上30以下 && 自己紹介文が1以上100以下) {
+//		//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jspp").forward(req, res);
+//		//		}
+//
+//		// セッションが保持されているかの確認(更新時)
+//		HttpSession session = req.getSession();
+//		if (session == null) {
+//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jspp").forward(req, res);
+//		}
+//
+//		// セッションがある場合、自分のプロフィール画面に遷移
+//		// Beanの初期化
+//		LoginBean bean = new LoginBean();
+//		String userNo = bean.getUserNo();
+//		String userName = bean.getUserName();
+//
+//		req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
+//
+//	}
+//
+//	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+//
+//		req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
+//
 	}
 }
