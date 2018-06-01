@@ -9,7 +9,9 @@
 </head>
 <body>
 	<h1>チャット研修プログラム</h1>
-	<h2>メッセージ<a href="/chat/showProfile">あいて</a></h2>
+	<h2>
+		メッセージ<a href="/chat/showProfile">あいて</a>
+	</h2>
 
 	<!--  <span style="border: 5px solid black; padding : 20px ;"> -->
 	あなた：メッセージのサンプルだよー（｀・ω・´）
@@ -18,9 +20,34 @@
 	<a href="/chat/showProfile">あいて</a>：いえーい（｀・ω・´）
 	<br>
 
+	<br>
 
 
-	 <p>${message}</p>
+	<c:forEach var="list" items="${list}" varStatus="status">
+		<c:if test="${list.listJudge == '0'}" var="judge" />
+		<c:if test="${judge}">
+			<br>
+				｛自分：<c:out value="${list.listMessage}" />
+				：<c:out value="${list.listJudge}" />
+				：<c:out value="${list.listMessageNo}" />
+				｝
+			<br>
+			<a href="/chat/directMessage?messageNo=${list.listMessageNo}"
+				id='deleteMessage'>メッセージ削除</a>
+			<br>
+		</c:if>
+		<c:if test="${!judge}">
+			<br>
+				｛<c:out value="${list.otherName}" />　さん：<c:out value="${list.listMessage}" />
+				：<c:out value="${list.listJudge}" />
+				：<c:out value="${list.listMessageNo}" />
+				｝
+			<br>
+		</c:if>
+	</c:forEach>
+
+
+
 
 
 	<br>

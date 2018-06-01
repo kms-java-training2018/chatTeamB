@@ -11,24 +11,37 @@ import bean.DirectMessageBean;
 
 public class DirectMessageModelLook {
 	// メッセージ閲覧メソッドの宣言
-	public DirectMessageBean lookMessage(DirectMessageBean bean) {
+	public ArrayList<DirectMessageBean> lookMessage(DirectMessageBean bean) {
+		System.out.println("DirectMessageModelLookにきました");
+
+		// jspに持っていくリスト（会話内容、judge）初期化
+		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
+
 		// 初期化
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
-		/** ログインユーザーの会員番号 */
 		// DirectMessageBeanクラス内の会員番号を参照する
+		/** ログインユーザーの会員番号 */
 		String userNo = bean.getUserNo();
+		System.out.println("UserNoは" + bean.getUserNo());
 
 		// DirectMessageBeanクラス内の送信対象者番号を参照する
 		/** 相手ユーザーの会員番号 */
 		String toSendUserNo = bean.getToSendUserNo();
+		System.out.println("toSendUserNoは" + bean.getUserNo());
 
-		/** 会話内容（メッセージ）を格納する */
-		ArrayList<String> message = new ArrayList<String>();
+		// DirectMessageBeanクラス内の相手ユーザーの表示名を参照する
+		/** 相手ユーザーの表示名 */
+		String otherName = bean.getOtherName();
 
-		/** メッセージが自分の物か他人の物か判断する番号
-		 * （自分="0"、他人="1"が代入される）を格納する
-		 */
-		ArrayList<String> judge = new ArrayList<String>();
+		// 必要ないかも？
+		/////////////////////////////////////////////////////////////////////////////
+		//		/** 会話内容（メッセージ）を格納する */
+		//		ArrayList<String> message = new ArrayList<String>();
+		//
+		//		/** 会話内容（メッセージ）が自分の物か他人の物か判断する番号
+		//		 * （自分="0"、他人="1"が代入される）を格納する*/
+		//		ArrayList<String> judge = new ArrayList<String>();
+		/////////////////////////////////////////////////////////////////////////////
 
 		/** SQL文実行結果を格納する */
 		ResultSet rs = null;
@@ -57,7 +70,8 @@ public class DirectMessageModelLook {
 			// SQL作成
 			sb.append("SELECT ");
 			sb.append(" MESSAGE, ");
-			sb.append(" SEND_USER_NO ");
+			sb.append(" SEND_USER_NO, ");
+			sb.append(" MESSAGE_NO ");
 			sb.append("FROM ");
 			sb.append(" T_MESSAGE_INFO ");
 			sb.append("WHERE ");
@@ -70,15 +84,41 @@ public class DirectMessageModelLook {
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
 			rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
 
+			//			if (!rs.next()) {	// 無かった場合
+			//				bean.setErrorMessage("パスワードが一致しませんでした。");
+			//			}
+
+			// 削除予定
+			//int i = 0;
+
 			while (rs.next()) {
-				message.add(rs.getString("MESSAGE"));
-				if (rs.getString("SEND_USER_NO") == userNo) {
-					judge.add(rs.getString("0"));
+				// クラスDirectMessageBean初期化
+				DirectMessageBean directMessageBean = new DirectMessageBean();
+				// メッセージをクラスDirectMessageBeanのlistMessageに入れる
+				directMessageBean.setListMessage(rs.getString("MESSAGE"));
+				// 会話番号をクラスDirectMessageBeanのlistMessageに入れる
+				directMessageBean.setListMessageNo(rs.getString("MESSAGE_NO"));
+				// 送信者番号がログインユーザーの会員番号と一致した場合、listjudgeに0を代入
+				if (userNo.equals(rs.getString("SEND_USER_NO"))) {
+					directMessageBean.setListJudge("0");
+					// 送信者番号がログインユーザーの会員番号と一致しなかった場合、listjudgeに0を代入
 				} else {
-					judge.add(rs.getString("0"));
+					directMessageBean.setListJudge("1");
+					directMessageBean.setOtherName(otherName);
 				}
+				System.out.println("会話内容：" + directMessageBean.getListMessage()
+						+ "判別内容：" + directMessageBean.getListJudge()
+						+ "会話番号:" + directMessageBean.getListMessageNo());
+				// 削除予定
+				//i++;
+				list.add(directMessageBean);
 			}
 
+			/**
+			必要ないかも？
+			bean.setMessage(message);
+			bean.setJudge(judge);
+			 */
 			/**
 			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
 			if (!rs.next()) { // 無かった場合
@@ -102,6 +142,6 @@ public class DirectMessageModelLook {
 			}
 		}
 
-		return bean;
+		return list;
 	}
 }

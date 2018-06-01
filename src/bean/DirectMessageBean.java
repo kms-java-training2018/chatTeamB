@@ -9,17 +9,28 @@ public class DirectMessageBean {
 	/** 会話内容（メッセージ） */
 	private ArrayList<String>  message = new ArrayList<String>();
 
+	/** リスト格納用会話内容（メッセージ） */
+	private String  listMessage;
+
+	/** リスト格納用判断する番号 */
+	private String listJudge;
+
+	/** リスト格納用会話番号 */
+	private String listMessageNo;
 
 	/** 送信対象者番号 */
 	private String  toSendUserNo = new String();
-
 
 	/** 会員番号 */
 	private String userNo;
 
 	// 必要ないかも？
-	/** 表示名 */
+	/** ログインユーザ表示名 */
 	private String userName;
+
+	/** 相手ユーザ表示名 */
+	private String otherName;
+
 
 	/** メッセージが自分の物か他人の物か判断する番号
 	 * （自分="0"、他人="1"が代入される）
@@ -78,5 +89,37 @@ public class DirectMessageBean {
 
 	public void setJudge(ArrayList<String> judge) {
 		this.judge = judge;
+	}
+
+	public String getListMessage() {
+		return listMessage;
+	}
+
+	public void setListMessage(String listMessage) {
+		this.listMessage = listMessage;
+	}
+
+	public String getListJudge() {
+		return listJudge;
+	}
+
+	public void setListJudge(String listJudge) {
+		this.listJudge = listJudge;
+	}
+
+	public String getListMessageNo() {
+		return listMessageNo;
+	}
+
+	public void setListMessageNo(String listMessageNo) {
+		this.listMessageNo = listMessageNo;
+	}
+
+	public String getOtherName() {
+		return otherName;
+	}
+
+	public void setOtherName(String otherName) {
+		this.otherName = otherName;
 	}
 }
