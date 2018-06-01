@@ -78,6 +78,17 @@ public class MainPageServlet extends HttpServlet {
 		req.setAttribute("groupName", groupName);
 		req.setAttribute("groupMessage", groupMessage);
 
+		// メッセージ画面用仮
+		// まずはSessionBeanに情報をセット
+		sessionBean.setOtherNo(mainBean.getOtherNo());
+
+		// グループ画面用仮
+		// まずはSessionBeanに情報をセット
+		sessionBean.setGroupNo(mainBean.getGroupNo());
+
+		// セッションに、SessionBeanをセット
+		session.setAttribute("session", sessionBean);
+
 		req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
 	}
 
