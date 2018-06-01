@@ -1,24 +1,25 @@
 package bean;
 
 public class ShowProfileBean {
-	private String otherUserName;
+	/** 選択したユーザ名 */
+	private String userName;
 
-	private String otherPageText;
+	/** そのユーザの自己紹介文 */
+	private String myPageText;
 
-	public String getOtherUserName() {
-		return otherUserName;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setOtherUserName(String otherUserName) {
-		this.otherUserName = otherUserName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
-	public String getOtherPageText() {
-		return otherPageText;
+	public String getMyPageText() {
+		return myPageText;
 	}
 
-	public void setOtherPageText(String otherPageText) {
-		this.otherPageText = otherPageText;
+	public void setMyPageText(String myPageText) {
+		this.myPageText = myPageText;
 	}
-
 }

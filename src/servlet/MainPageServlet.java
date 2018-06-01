@@ -28,6 +28,9 @@ public class MainPageServlet extends HttpServlet {
 		if (session == null) {
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
+		//TODO ログアウトボタンが押されたかどうかの判定
+
+		req.getRequestDispatcher("/sessionOut").forward(req, res);
 
 		// 初期化
 		MainBean mainBean = new MainBean();
@@ -78,6 +81,10 @@ public class MainPageServlet extends HttpServlet {
 		req.setAttribute("groupName", groupName);
 		req.setAttribute("groupMessage", groupMessage);
 
+		//ヘッダー用にユーザ名をセッションにセット
+		session.setAttribute("userName", sessionBean.getUserName());
+		req.setAttribute("userName", session.getAttribute("userName"));
+
 		// メッセージ画面用仮
 		// まずはSessionBeanに情報をセット
 		sessionBean.setOtherNo(mainBean.getOtherNo());
@@ -90,12 +97,6 @@ public class MainPageServlet extends HttpServlet {
 		session.setAttribute("session", sessionBean);
 
 		req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
-	}
-
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		System.out.println("doGet");
-		req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
-
 	}
 
 }

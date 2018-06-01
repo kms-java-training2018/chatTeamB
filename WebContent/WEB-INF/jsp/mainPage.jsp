@@ -5,18 +5,25 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>メインメニュー</title>
 </head>
 <body>
+	<header> ようこそ<br>
+	${userName}さん<br>
+	<form action="/chat/main" method="POST">
+	 <input type="submit" value="ログアウト">  </form></header>
 	<h1>チャット研修プログラム</h1>
 	<h2>メインメニュー</h2>
 	<br>■会員一覧
 	<br>
 
 	<c:forEach var="nom" items="${otherNo}" varStatus="status">
-		<a href="/chat/directMessage">${nom}  ${otherName[status.index]} さん（メッセージへ）<br>
+		<a href="/chat/directMessage">${nom} ${otherName[status.index]}
+			さん（メッセージへ）<br>
 		</a>
-		<c:out value="${message[status.index]}"/><br><br>
+		<c:out value="${message[status.index]}" />
+		<br>
+		<br>
 	</c:forEach>
 
 
@@ -24,9 +31,12 @@
 	<br>
 
 	<c:forEach var="group" items="${groupNo}" varStatus="status">
-		<a href="/chat/groupMessage">${group} ${groupName[status.index]}（グループメッセージへ）<br>
+		<a href="/chat/groupMessage">${group}
+			${groupName[status.index]}（グループメッセージへ）<br>
 		</a>
-		<c:out value="${groupMessage[status.index]}"/><br><br>
+		<c:out value="${groupMessage[status.index]}" />
+		<br>
+		<br>
 	</c:forEach>
 
 	<br>
@@ -34,7 +44,7 @@
 	<form action="/chat/makeGroup" method="POST">
 		<input type="submit" value="グループの作成">
 	</form>
-	<form action="/chat/myPage" method="POST">
+	<form action="/chat/myPage" method="POST" target="newtab">
 		<input type="submit" value="プロフィール画面へ">
 	</form>
 

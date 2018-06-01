@@ -6,16 +6,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import bean.MyPageUpdateBean;
+import bean.MyPageBean;
 import bean.SessionBean;
 
 public class MyPageUpdateModel {
-	public MyPageUpdateBean ProfileUpdateGet(SessionBean beanUpdate) {
+	public MyPageBean profileUpdateGet(SessionBean sessionBean) {
 		// 初期化
-		StringBuilder sb = new StringBuilder(); // SQL文の格納用
-		String userNo = beanUpdate.getUserNo();
-		MyPageUpdateBean myPageUpdateBean = new MyPageUpdateBean();
+		MyPageBean myPageBean = new MyPageBean();
+		String updateUserName = myPageBean.getUpdateUserName();
+		String updateMyPageText = myPageBean.getUpdateMyPageText();
+		String userNo = sessionBean.getUserNo();
 
+		StringBuilder sb = new StringBuilder(); // SQL文の格納用
 		Connection conn = null;
 		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
 		String user = "DEV_TEAM_B";
@@ -31,30 +33,19 @@ public class MyPageUpdateModel {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			// 表示名と自己紹介文を取得
+			// 表示名と自己紹介文を更新
 			// SQL作成
-			sb.append("SELECT ");
-			sb.append("user_name ");
-			sb.append(" ,my_page_text ");
-			sb.append("FROM ");
-			sb.append(" m_user ");
-			sb.append(" WHERE ");
-			sb.append(" user_no = '" + userNo + "' ");
+			sb.append("UPDATE ");
+			sb.append("m_user ");
+			sb.append("SET ");
+			sb.append("user_name = '" + updateUserName + "'");
+			sb.append(", my_page_text = '" + updateMyPageText + "' ");
+			sb.append("where user_no = '" + userNo + "' ");
 
 			// SQL実行
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sb.toString());
-			System.out.println("SQL実行完了");
 
-			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
-			if (!rs.next()) { // 無かった場合
-				myPageUpdateBean.setUserName("");
-				myPageUpdateBean.setMyPageText("");
-			} else { // あった場合
-				// beanに、DB会員マスタの表示名と自己紹介文、空文字を代入
-				myPageUpdateBean.setUserName(rs.getString("user_name"));
-				myPageUpdateBean.setMyPageText(rs.getString("my_page_text"));
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			//SQLの接続は絶対に切断
@@ -65,8 +56,6 @@ public class MyPageUpdateModel {
 				e.printStackTrace();
 			}
 		}
-
-		System.out.println("マイページモデルを抜けます");
-		return myPageUpdateBean;
+		return myPageBean;
 	}
 }

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.GroupMessageModel;
+import model.MessageInfoModel;
 
 public class GroupMessageServlet extends HttpServlet {
 
@@ -21,7 +21,7 @@ public class GroupMessageServlet extends HttpServlet {
 //		HttpSession session = req.getSession();
 //		if (session.getAttribute("userName") == null) {
 //			System.out.println("セッションがありませんでした");
-//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+//			req.getRequestDispatcher("/WEB-INF/jsp/ersrorPage.jsp").forward(req, res);
 //		}
 	}
 
@@ -29,7 +29,9 @@ public class GroupMessageServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
 		// 初期化
-		GroupMessageModel model = new GroupMessageModel();
+		MessageInfoModel model = new MessageInfoModel();
+		boolean result;
+
 
 		// セッションの値を取得
 		HttpSession session = req.getSession();
@@ -88,15 +90,50 @@ public class GroupMessageServlet extends HttpServlet {
 
 		case "sendMessage":
 
+			// メッセージ登録用のメソッドを呼び出し(登録処理を実行し)、
+			// 【登録処理が失敗した場合(メソッドの戻り値がfalseの場合)】
+			if (model.entryMessage("1", "arigatou", "1", 1) == false) {
+				// TODO セッションの情報を削除する
+
+				// エラーページに遷移
+				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			}
+
+
+			// 【登録処理が成功した場合】
+			// TODO 最新の会話情報を表示するメソッドを呼び出す
+
+
+			// TODO リクエストにパラメーターをセット
+
+
 			req.getRequestDispatcher("/WEB-INF/jsp/groupMessage.jsp").forward(req, res);
 		break;
 
 // 【メッセージ削除時】-------------------------------------------------------------------------------------------------
 //		グループ画面で削除ボタンを押したときに実行される処理。
-//		ダイアログで論理削除確認後、会話情報を論理削除する。
+//		ダイアログで論理削除確認後(JSP)、会話情報を論理削除する。
 //		あわせて、最新の会話情報テーブルの情報を表示
 
 		case "deleteMessage":
+
+			// メッセージ削除用のメソッドを呼び出し(削除処理を実行し)、
+			// 【削除処理が失敗した場合(メソッドの戻り値がfalseの場合)】
+			if (model.deleteMessage("1") == false) {
+				// TODO セッションの情報を削除する
+
+
+				// エラーページに遷移
+				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			}
+
+
+			// 【削除処理が成功した場合】
+			// TODO 最新の会話情報を表示するメソッドを呼び出す
+
+
+			// TODO リクエストにパラメーターをセット
+
 
 			req.getRequestDispatcher("/WEB-INF/jsp/groupMessage.jsp").forward(req, res);
 		break;

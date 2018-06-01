@@ -10,10 +10,10 @@ import bean.MyPageBean;
 import bean.SessionBean;
 
 public class MyPageModel {
-	public MyPageBean ProfileGet(SessionBean bean) {
+	public MyPageBean profileGet(SessionBean sessionBean) {
 		// 初期化
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
-		String userNo = bean.getUserNo();
+		String userNo = sessionBean.getUserNo();
 		MyPageBean myPageBean = new MyPageBean();
 
 
@@ -45,16 +45,16 @@ public class MyPageModel {
 			// SQL実行
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sb.toString());
-			System.out.println("SQL実行完了");
 
 			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
-			if (!rs.next()) { // 無かった場合
-				myPageBean.setUserName("");
-				myPageBean.setMyPageText("");
-			} else { // あった場合
-				// beanに、DB会員マスタの表示名と自己紹介文、空文字を代入
+			if (rs.next()) { // あった場合
 				myPageBean.setUserName(rs.getString("user_name"));
 				myPageBean.setMyPageText(rs.getString("my_page_text"));
+			} else { // なかった場合
+				// beanに、DB会員マスタの表示名と自己紹介文、空文字を代入
+				myPageBean.setUserName("");
+				myPageBean.setMyPageText("");
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -67,7 +67,6 @@ public class MyPageModel {
 			}
 		}
 
-		System.out.println("マイページモデルを抜けます");
 		return myPageBean;
 	}
 }
