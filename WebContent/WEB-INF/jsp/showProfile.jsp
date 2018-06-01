@@ -5,12 +5,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>プロフィール</title>
 </head>
 <body>
 	<h1>チャット研修プログラム</h1>
 	<h2>プロフィール確認</h2>
-	<form action="" method="POST">
+	<p>${userName}さん</p>
+	<p>自己紹介  ${myPageText}
+	<form action="" method="POST" onclick="window.close();">
 		<input type="submit" value="閉じる">
 	</form>
 </body>

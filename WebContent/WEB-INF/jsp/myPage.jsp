@@ -10,6 +10,12 @@
 <body>
 	<h1>チャット研修プログラム</h1>
 	<h2>マイページ</h2>
+	<p>${errorMessage}</p>
+
+	<p>表示名</p>
+	<p><input type="text" name="editName" value="${userName}"></p>
+	<p>自己紹介</p>
+	<p><input type="text" name="editText" value="${myPageText}"></p>
 
 	<form action="/chat/myPage" method="POST">
 		<input type="submit" value="プロフィールを更新">
