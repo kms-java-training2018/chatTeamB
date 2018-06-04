@@ -9,7 +9,7 @@
 	<script src="../js/main.js"></script>
 <title>グループメッセージ</title>
 </head>
-
+<body>
 <!-- 以下メモ===========================================================================================================
 
 【リンク】
@@ -23,10 +23,20 @@
 
  以上メモ============================================================================================================-->
 
+<!-- ここからヘッダー ===============================================================================================-->
+<header> ようこそ<br>
+    ${userName}さん<br>
+    <form action="/chat/main" method="POST">
+        <button type='submit' name='action' value='logout'>ログアウト</button>
+    </form>
 
+    <form action="/chat/main" method="POST">
+		<button type="submit" name="action" value="toMainPage" class="button">メインメニューへ戻る</button>
+	</form>
 
-
-<body>
+<!-- ここまでヘッダー ===============================================================================================-->
+</header>
+<!-- ここからボディ ===============================================================================================-->
 	<h1>チャット研修プログラム</h1>
 	<h2>グループメッセージ</h2>
 	<a href="/chat/showProfile">あいて</a>：グループメッセージのサンプルだよー（´・ω・｀）
@@ -35,36 +45,33 @@
 	<br>
 
 
-<!-- 【グループ作成画面、グループメンバー選択箇所】 -->
-<form action="/chat/makeGroup" method="post">
-      <label><input type="checkbox" name="selectMember[]" value="ログインユーザー(作成者)" checked="checked" required>自分</label>
-      <label><input type="checkbox" name="selectMember[]" value="※他ユーザー会員番号番号">他ユーザー名</label>
-      <label><input type="checkbox" name="selectMember[]" value="※他ユーザー会員番号番号">他ユーザー名</label>
-      <input type="submit" value="送信">
-</form>
+
 
 <!-- 	【メッセージ送信】 -->
 	<form action="/chat/groupMessage" method="POST">
-		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage">
-		<button type='submit' name='action' value='sendMessage'>送信</button>
+		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage" class="messageInputBox">
+		<input type="hidden" name="groupNo" value="${requestScope.groupNo}">
+		<button type='submit' name='action' value='sendMessage' class="button">送信</button>
 	</form>
 
 
 <!-- 	【メッセージ削除】 -->
 	<form action="/chat/groupMessage" method="POST">
-		<input type="hidden" name='action' value='deleteMessage' id='deleteMessage'>
-		<p>メッセージ削除
-		<a href="/chat/groupMessage?messageNo=messageNo" id='deleteMessage'>メッセージ削除</a>
+		<button type="submit" name="action" value="deleteMessage" class="button">削除</button>
+		<input type="hidden" name="messageNo" value="【EL式で、該当の会話番号】">
 	</form>
 
 <!-- 	【グループ脱退】 -->
-	<form>
-	<button type="submit" name='action' value='leaveGroup'id='leaveGroup'>
+	<form action="/chat/groupMessage" method="POST">
+	<button type="submit" name='action' value='leaveGroup'class='button'>
 		グループ脱退</button>
-
 	</form>
-	<form action="/chat/main" method="POST">
+
+<!-- ここまでボディ ===============================================================================================-->
+<!-- ここからフッター ===============================================================================================-->
+<form action="/chat/main" method="POST">
 		<input type="submit" value="メインメニューに戻る">
 	</form>
+<!-- ここまでフッター ===============================================================================================-->
 </body>
 </html>
