@@ -26,6 +26,9 @@ public class MainPageServlet extends HttpServlet {
 		//セッションが存在していたら処理を開始
 		HttpSession session = req.getSession();
 		if (session == null) {
+			//エラー画面に遷移
+			session = req.getSession(false);
+			session = null;
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 		//TODO ログアウトボタンが押されたかどうかの判定
@@ -83,7 +86,7 @@ public class MainPageServlet extends HttpServlet {
 		session.setAttribute("userName", sessionBean.getUserName());
 		req.setAttribute("userName", session.getAttribute("userName"));
 
-		// メッセージ画面用仮
+		/*// メッセージ画面用仮
 		// まずはSessionBeanに情報をセット
 		sessionBean.setOtherNo(mainBean.getOtherNo());
 
@@ -91,8 +94,7 @@ public class MainPageServlet extends HttpServlet {
 		// まずはSessionBeanに情報をセット
 		sessionBean.setGroupNo(mainBean.getGroupNo());
 
-		// セッションに、SessionBeanをセット
-		session.setAttribute("session", sessionBean);
+		session.setAttribute("session", sessionBean);*/
 
 		req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
 	}

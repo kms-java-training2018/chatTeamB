@@ -48,7 +48,7 @@
 	<form action="/chat/makeGroup" method="POST">
 		<input type="submit" value="グループの作成">
 	</form>
-	<form action="/chat/myPage" method="POST" target="newtab">
+	<form action="/chat/myPage" method="POST">
 		<input type="submit" value="プロフィール画面へ">
 	</form>
 

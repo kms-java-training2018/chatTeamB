@@ -11,9 +11,8 @@
 	<h1>チャット研修プログラム</h1>
 	<h2>プロフィール確認</h2>
 	<p>${userName}さん</p>
-	<p>自己紹介  ${myPageText}
-	<form action="" method="POST" onclick="window.close();">
-		<input type="submit" value="閉じる">
-	</form>
+	<p>自己紹介 ${myPageText}</p>
+	<input type="button" value="閉じる" class="closeTab">
+
 </body>
 </html>

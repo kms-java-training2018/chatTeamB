@@ -28,6 +28,8 @@ public class MyPageServlet extends HttpServlet {
 		HttpSession session = req.getSession();
 		if (session == null) {
 			// エラー画面に遷移
+			session = req.getSession(false);
+			session = null;
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
@@ -45,8 +47,8 @@ public class MyPageServlet extends HttpServlet {
 			// プロフィール更新時
 			// 文字型に変換
 			// プロフィール編集後、「プロフィール更新」ボタン押下時
-			String editName = (String) req.getParameter("editName");
-			String editText = (String) req.getParameter("editText");
+			String editName = (String) req.getParameter("inputUserName");
+			String editText = (String) req.getParameter("inputUserSelfIntro");
 			//入力文字数のチェック
 			myPageBean.setErrorMessage("");
 			if (editName.length() > 30 || editText.length() > 100) {
