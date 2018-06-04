@@ -27,9 +27,16 @@ public class ShowProfileServlet extends HttpServlet {
 		HttpSession session = req.getSession();
 		if (session == null) {
 			// エラー画面に遷移
+			session = req.getSession(false);
+			session = null;
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		} else {
-			//TODO 対象ユーザーの会員番号をパラメータに保持しているかチェック
+		}
+		String userNo = req.getParameter("userNo");
+		if (userNo == null) {
+			// エラー画面に遷移
+			session = req.getSession(false);
+			session = null;
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
 		// 初期化
@@ -37,9 +44,7 @@ public class ShowProfileServlet extends HttpServlet {
 		SessionBean sessionBean = new SessionBean();
 		MyPageBean showProfileBean = new MyPageBean();
 		sessionBean = (SessionBean) session.getAttribute("session");
-
-		//TODO　セッションになんていう名前でセットしているかによる
-		sessionBean.setUserNo(sessionBean.getUserNo());
+		sessionBean.setUserNo(userNo);
 
 		// プロフィール情報の取得（認証処理）
 		try {
