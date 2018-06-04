@@ -68,9 +68,6 @@ public class DirectMessageBean {
 		this.userNo = userNo;
 	}
 
-	//------------------------------------------------------------------------------
-	// ここから必要ないかも？
-	//------------------------------------------------------------------------------
 	public String getUserName() {
 		return userName;
 	}
@@ -78,10 +75,6 @@ public class DirectMessageBean {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	//------------------------------------------------------------------------------
-	// ここまで必要ないかも？
-	//------------------------------------------------------------------------------
-
 
 	public ArrayList<String> getJudge() {
 		return judge;

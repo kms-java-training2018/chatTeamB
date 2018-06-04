@@ -22,25 +22,25 @@ public class DirectMessageModelLook {
 		// DirectMessageBeanクラス内の会員番号を参照する
 		/** ログインユーザーの会員番号 */
 		String userNo = bean.getUserNo();
-		System.out.println("UserNoは" + bean.getUserNo());
+		System.out.println("UserNo：" + userNo);
+
+		// DirectMessageBeanクラス内の相手ユーザーの表示名を参照する
+		/** ログインユーザーの表示名 */
+		String userName = bean.getUserName();
+		System.out.println("UserName：" + userName);
 
 		// DirectMessageBeanクラス内の送信対象者番号を参照する
 		/** 相手ユーザーの会員番号 */
 		String toSendUserNo = bean.getToSendUserNo();
-		System.out.println("toSendUserNoは" + bean.getUserNo());
+		System.out.println("ToSendUserNo：" + toSendUserNo);
 
 		// DirectMessageBeanクラス内の相手ユーザーの表示名を参照する
 		/** 相手ユーザーの表示名 */
 		String otherName = bean.getOtherName();
+		System.out.println("OtherName：" + otherName);
 
-		// 必要ないかも？
 		/////////////////////////////////////////////////////////////////////////////
-		//		/** 会話内容（メッセージ）を格納する */
-		//		ArrayList<String> message = new ArrayList<String>();
-		//
-		//		/** 会話内容（メッセージ）が自分の物か他人の物か判断する番号
-		//		 * （自分="0"、他人="1"が代入される）を格納する*/
-		//		ArrayList<String> judge = new ArrayList<String>();
+		//		SQL文実行
 		/////////////////////////////////////////////////////////////////////////////
 
 		/** SQL文実行結果を格納する */
@@ -101,14 +101,15 @@ public class DirectMessageModelLook {
 				// 送信者番号がログインユーザーの会員番号と一致した場合、listjudgeに0を代入
 				if (userNo.equals(rs.getString("SEND_USER_NO"))) {
 					directMessageBean.setListJudge("0");
+					directMessageBean.setUserName(userName);
 					// 送信者番号がログインユーザーの会員番号と一致しなかった場合、listjudgeに0を代入
 				} else {
 					directMessageBean.setListJudge("1");
 					directMessageBean.setOtherName(otherName);
 				}
 				System.out.println("会話内容：" + directMessageBean.getListMessage()
-						+ "判別内容：" + directMessageBean.getListJudge()
-						+ "会話番号:" + directMessageBean.getListMessageNo());
+						+ "：判別内容：" + directMessageBean.getListJudge()
+						+ "：会話番号：" + directMessageBean.getListMessageNo());
 				// 削除予定
 				//i++;
 				list.add(directMessageBean);
