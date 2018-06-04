@@ -14,9 +14,9 @@ public class MessageInfoModel {
 	/**
 	 * 個人チャット、グループチャット共に、メッセージを送信したときに会話情報テーブルに情報を登録する。
 	 * 戻り値の型はbooleanで、処理が成功した場合はtrue、失敗の場合はfalseが返ってくる。
-	 * @param sendUserNo (String)
-	 * @param message (String)
-	 * @param toSendAddress (String)
+	 * @param sendUserNo (String) 送信者のuserNo
+	 * @param message (String) ユーザーが入力したmessage
+	 * @param toSendAddress (String) 個チャの場合は相手のuserNo、グルチャの場合はgroupNo
 	 * @param judgeAddress (int) 個人チャットは0、グループチャットは1を指定してください。
 	 * @return boolean
 	 */
@@ -53,7 +53,6 @@ public class MessageInfoModel {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
 			// SQL作成
-			// TODO 自動采番、文整える
 			sb.append("INSERT INTO ");
 			sb.append(" T_MESSAGE_INFO ");
 			sb.append("(MESSAGE_NO,"); //1
@@ -131,11 +130,12 @@ public class MessageInfoModel {
 			// SQL作成
 			// 会話番号を条件に会話情報を論理削除する
 			sb.append("UPDATE ");
-			sb.append(" T_MESSAGE_INFO ");
+				sb.append(" T_MESSAGE_INFO ");
 			sb.append("SET ");
-			sb.append(" DELETE_FLAG  = 1");
+				sb.append(" DELETE_FLAG  = 1");
+				sb.append(" UPDATE_DATE  =  to_date(sysdate)");
 			sb.append("WHERE ");
-			sb.append(" MESSAGE_NO = '" + messageNo + "' ");
+				sb.append(" MESSAGE_NO = '" + messageNo + "' ");
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
