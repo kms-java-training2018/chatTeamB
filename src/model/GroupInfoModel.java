@@ -229,4 +229,78 @@ public class GroupInfoModel {
 
 	}
 
+//【グループメンバーかどうか判定用】------------------------------------------------------------------------------------
+/**
+ * ログインユーザーが、遷移しようとしているグループのメンバーかどうかを判定するメソッド。
+ * 戻り値はbooleanで、メンバーの一員だった場合true、違った場合はfalseが返ってくる。
+ * @param userNo (String) ログインユーザーのuserNo
+ * @param groupNo (String) メッセージ画面を開こうとしているgroupNo
+ * @return boolean
+ */
+	public boolean judgeGroupMember(String userNo, String groupNo) {
+		// 初期化
+		StringBuilder sb = new StringBuilder();		// SQL文の格納用
+		boolean result = true;					// 処理実行結果格納用(戻り値用)
+
+		Connection conn = null;
+		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
+		String user = "DEV_TEAM_B";
+		String dbPassword = "B_DEV_TEAM";
+
+		// JDBCドライバーのロード
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		// 接続作成
+		try {
+			conn = DriverManager.getConnection(url, user, dbPassword);
+
+			// SQL作成
+			sb.append("SELECT ");
+				sb.append("USER_NO");
+			sb.append("FROM ");
+				sb.append("t_group_info ");
+			sb.append("WHERE ");
+				sb.append("group_no = '" + groupNo + "'");
+
+
+			// SQL実行
+			Statement stmt = conn.createStatement();			// SQL文をデータベースに送るためのStatementオブジェクトを生成
+			ResultSet rs = stmt.executeQuery(sb.toString());	// 実行し、その結果を格納
+
+			// 処理
+			// 取得した参加メンバー一覧に、ログインユーザーの会員番号があった場合
+			while (rs.next()) {
+				if (rs.getString("user_no").equals(userNo)) {
+					// 実行結果はtrueのまま、while文を抜ける
+					result = true;
+					break;
+				} else {
+					// レコードを確認し、該当なしのたびに、実行結果をfalseに設定
+					result = false;
+
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		//SQLの接続は絶対に切断
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// メソッドの戻り値(実行結果)を返す
+		return result;
+
+	}
+
+
 }
