@@ -24,7 +24,7 @@ public class DirectMessageBean {
 	/** 会員番号 */
 	private String userNo;
 
-	// 必要ないかも？
+	
 	/** ログインユーザ表示名 */
 	private String userName;
 

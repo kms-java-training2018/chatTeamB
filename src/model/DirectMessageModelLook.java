@@ -78,7 +78,7 @@ public class DirectMessageModelLook {
 			sb.append(" SEND_USER_NO IN (" + userNo + "," + toSendUserNo + ") ");
 			sb.append(" AND TO_SEND_USER_NO IN (" + userNo + "," + toSendUserNo + ") ");
 			sb.append(" AND DELETE_FLAG = 0 ");
-			sb.append("ORDER BY REGIST_DATE ");
+			sb.append("ORDER BY MESSAGE_NO ");
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
@@ -96,7 +96,7 @@ public class DirectMessageModelLook {
 				DirectMessageBean directMessageBean = new DirectMessageBean();
 				// メッセージをクラスDirectMessageBeanのlistMessageに入れる
 				directMessageBean.setListMessage(rs.getString("MESSAGE"));
-				// 会話番号をクラスDirectMessageBeanのlistMessageに入れる
+				// 会話番号をクラスDirectMessageBeanのlistMessageNoに入れる
 				directMessageBean.setListMessageNo(rs.getString("MESSAGE_NO"));
 				// 送信者番号がログインユーザーの会員番号と一致した場合、listjudgeに0を代入
 				if (userNo.equals(rs.getString("SEND_USER_NO"))) {
@@ -109,9 +109,8 @@ public class DirectMessageModelLook {
 				}
 				System.out.println("会話内容：" + directMessageBean.getListMessage()
 						+ "：判別内容：" + directMessageBean.getListJudge()
+						+ "：会員番号：" + directMessageBean.getListMessageNo()
 						+ "：会話番号：" + directMessageBean.getListMessageNo());
-				// 削除予定
-				//i++;
 				list.add(directMessageBean);
 			}
 

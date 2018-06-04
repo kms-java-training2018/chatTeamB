@@ -28,31 +28,41 @@
 		<c:if test="${list.listJudge == '0'}" var="judge" />
 		<!-- 自分のメッセージの場合 -->
 		<c:if test="${judge}">
-			<div align="center">
+			<br>
+			<div align="center" >
+			<div style="display:inline-block; border: 1px solid #cccccc">
 				<br> ｛
 				<c:out value="${list.userName}" />
 				<br>：
 				<c:out value="${list.listMessage}" />
-				<br>：
+				<br>：Judge番号
 				<c:out value="${list.listJudge}" />
-				：
+				<br>：会話番号
 				<c:out value="${list.listMessageNo}" />
-				｝ <br> <a
-					href="/chat/directMessage?messageNo=${list.listMessageNo}"
-					id='deleteMessage'>メッセージ削除 </a> <br>
+				｝ <br>
+				<form action="/chat/directMessage" method="POST">
+					<button type="submit" name="action" value="deleteMessage"
+						class="deleteMessage">削除</button>
+					<input type="hidden" name="messageNo" value="${list.listMessageNo}">
+				</form>
+			</div>
 			</div>
 		</c:if>
 
 		<!-- 他人のメッセージの場合 -->
 		<c:if test="${!judge}">
 			<br>
-			<a href="/chat/showProfile"> ｛<c:out value="${list.otherName}" />さん
-			</a>
-			<br>：<c:out value="${list.listMessage}" />
-			<br>：<c:out value="${list.listJudge}" />
-				：<c:out value="${list.listMessageNo}" />
-				｝
-			<br>
+			<div style="display:inline-block; border: 1px solid #cccccc">
+				<br> <a href="/chat/showProfile?userNo=${list.toSendUserNo}"
+					class="link" target=”_blank”> ｛<c:out value="${list.otherName}" />さん
+				</a> <br>：
+				<c:out value="${list.listMessage}" />
+				<br>：Judge番号
+				<c:out value="${list.listJudge}" />
+				<br>：会話番号
+				<c:out value="${list.listMessageNo}" />
+				｝ <br>
+			</div>
 		</c:if>
 	</c:forEach>
 
@@ -63,16 +73,20 @@
 	<br>
 	<form action="/chat/directMessage" method="POST">
 		<textarea placeholder="ここにメッセージを入力" name="inputMessage" rows="5" cols="50"></textarea>
-		<br>
+		<input type="hidden" name="userNo" value="${directMessageBean.userNo}">
+		<input type="hidden" name="toSendUserNo" value="${directMessageBean.toSendUserNo}"> <br>
 		<button type='submit' name='action' value='sendMessage' class="button">メッセージ送信</button>
 	</form>
-
+	<!--
 	<br>
 	<form action="/chat/directMessage" method="POST">
 		<textarea name="message" rows="5" cols="50"></textarea>
 		<br>
 		<input type="submit" value="メッセージの送信">
 	</form>
+ -->
+
+
 
 	<br>
 	<form action="/chat/main" method="POST">

@@ -55,7 +55,7 @@ public class DirectMessageServlet extends HttpServlet {
 
 		// SessionBeanからログインユーザの会員番号取得
 		directMessageBean.setUserNo("1"/*メインページが出来次第こちらを使う　sessionBean.getUserNo()*/);
-		System.out.println("UserNoは" + directMessageBean.getUserNo());
+		System.out.println("UserNo：" + directMessageBean.getUserNo());
 
 		// SessionBeanからログインユーザの表示名取得
 		directMessageBean.setUserName("私の表示名"/*メインページが出来次第こちらを使う　sessionBean.getUserName()*/);
@@ -101,14 +101,17 @@ public class DirectMessageServlet extends HttpServlet {
 		DirectMessageBean dMBean = new DirectMessageBean();
 		for (int i = 0; i < list.size(); i++) {
 			dMBean = list.get(i);
-			System.out.println(dMBean.getListMessage());
-			System.out.println(dMBean.getListJudge());
+			System.out.println("会話内容：" + dMBean.getListMessage()
+			+ "：判別内容：" + dMBean.getListJudge()
+			+ "：会員番号：" + dMBean.getListMessageNo()
+			+ "：会話番号：" + dMBean.getListMessageNo());
 		}
 
 		// リクエストスコープにいれてjspに送る
 		req.setAttribute("list", list);
 		req.setAttribute("otherName", otherName);
 		req.setAttribute("userName", userName);
+		req.setAttribute("directMessageBean", directMessageBean);
 		req.getRequestDispatcher(direction).forward(req, res);
 	}
 
@@ -120,7 +123,11 @@ public class DirectMessageServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		System.out.println("DirectMessageServletにきました");
 
+		//セッション取得
+		HttpSession session = req.getSession();
+
 		String action = req.getParameter("action");
+
 		switch (action) {
 
 		////////////////////////////////////////////////////////////////////////
@@ -128,9 +135,21 @@ public class DirectMessageServlet extends HttpServlet {
 		////////////////////////////////////////////////////////////////////////
 
 		case "sendMessage":
-			/** クラスDirectMessageModelLookのインスタンス取得　*/
+			/** クラスMessageInfoModelのインスタンス取得　*/
 			MessageInfoModel entryMessage = new MessageInfoModel();
-			boolean result = entryMessage.lookMessage(directMessageBean);
+			// DirectMessageBean directMessageBean = new DirectMessageBean();
+			String sendUserNo = req.getParameter("userNo");
+			String message = req.getParameter("inputMessage");
+			String toSendAddress = req.getParameter("toSendUserNo");
+			int judgeAddress = 0;
+			boolean result1 = entryMessage.entryMessage(sendUserNo, message, toSendAddress, judgeAddress);
+
+			if (result1 == false) {
+				System.out.println("会話情報を登録できません");
+				session = req.getSession(false);
+				session = null;
+				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			}
 
 
 			break;
@@ -142,6 +161,19 @@ public class DirectMessageServlet extends HttpServlet {
 		//		ここからdeleteMessage処理
 		////////////////////////////////////////////////////////////////////////
 		case "deleteMessage":
+			/** クラスMessageInfoModelのインスタンス取得　*/
+			MessageInfoModel deleteMessage = new MessageInfoModel();
+			// DirectMessageBean directMessageBean = new DirectMessageBean();
+			String messageNo = req.getParameter("messageNo");
+			boolean result2 = deleteMessage.deleteMessage(messageNo);
+
+			if (result2 == false) {
+				System.out.println("会話情報を論理削除できません");
+				session = req.getSession(false);
+				session = null;
+				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			}
+
 
 			break;
 		////////////////////////////////////////////////////////////////////////
@@ -169,8 +201,6 @@ public class DirectMessageServlet extends HttpServlet {
 		// case "lookMessage":
 			// System.out.println("lookMessage処理にきました");
 
-			//セッション取得
-			HttpSession session = req.getSession();
 			/**　セッションがない場合エラー画面に移動
 			if (session == null) {
 				System.out.println("セッションがないです");
@@ -194,6 +224,8 @@ public class DirectMessageServlet extends HttpServlet {
 			DirectMessageModelLook model = new DirectMessageModelLook();
 			/** jspに持っていくArrayList（会話内容、judge、会話番号）初期化　*/
 			ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
+
+
 
 			////////////////////////////////////////////////////////////////////////
 			//		ここからdirectMessageBeanに必要な値を入れる
