@@ -10,15 +10,19 @@
 <body>
 	<header> ようこそ<br>
 	${userName}さん<br>
-	<form action="/chat/main" method="POST">
-	 <input type="submit" value="ログアウト">  </form></header>
+	<form action="/chat/logout" method="POST">
+		<button type='submit' name='action' value='logout'>ログアウト</button>
+	</form>
+	</header>
 	<h1>チャット研修プログラム</h1>
 	<h2>メインメニュー</h2>
 	<br>■会員一覧
 	<br>
 
 	<c:forEach var="nom" items="${otherNo}" varStatus="status">
-		<a href="/chat/directMessage">${nom} ${otherName[status.index]}
+		<a
+			href="/chat/directMessage?otherNo=${otherNo[status.index]}&otherName=${otherName[status.index]}"
+			class='partnerNameLink'>${nom} ${otherName[status.index]}
 			さん（メッセージへ）<br>
 		</a>
 		<c:out value="${message[status.index]}" />
@@ -31,8 +35,8 @@
 	<br>
 
 	<c:forEach var="group" items="${groupNo}" varStatus="status">
-		<a href="/chat/groupMessage">${group}
-			${groupName[status.index]}（グループメッセージへ）<br>
+		<a href="/chat/groupMessage?groupNo=${groupNo[status.index]}"
+			class='nameLink'>${group} ${groupName[status.index]}（グループメッセージへ）<br>
 		</a>
 		<c:out value="${groupMessage[status.index]}" />
 		<br>

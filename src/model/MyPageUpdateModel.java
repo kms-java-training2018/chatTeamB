@@ -2,7 +2,6 @@ package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -12,6 +11,7 @@ import bean.SessionBean;
 public class MyPageUpdateModel {
 	public MyPageBean profileUpdateGet(SessionBean sessionBean) {
 		// 初期化
+		boolean result = true;
 		MyPageBean myPageBean = new MyPageBean();
 		String updateUserName = myPageBean.getUpdateUserName();
 		String updateMyPageText = myPageBean.getUpdateMyPageText();
@@ -44,7 +44,14 @@ public class MyPageUpdateModel {
 
 			// SQL実行
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sb.toString());
+			int rs = stmt.executeUpdate(sb.toString()); // 実行し、その結果(更新された行数)を格納
+
+			// 処理
+			// SQL実行後に、更新されたレコードが無かった場合(削除処理が失敗)
+			if (rs == 0) {
+				// 実行結果をfalse(失敗)に設定
+				result = false;
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();

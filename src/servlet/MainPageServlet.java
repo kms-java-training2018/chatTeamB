@@ -29,8 +29,6 @@ public class MainPageServlet extends HttpServlet {
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 		//TODO ログアウトボタンが押されたかどうかの判定
-//		session=req.getSession(false);
-//		session = null;
 
 		// 初期化
 		MainBean mainBean = new MainBean();

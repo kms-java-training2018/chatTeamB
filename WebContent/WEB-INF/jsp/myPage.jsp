@@ -8,17 +8,30 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<header> ようこそ<br>
+	${userName}さん<br>
+	<form action="/chat/logout" method="POST">
+		<button type='submit' name='action' value='logout'>ログアウト</button>
+	</form>
+	</header>
 	<h1>チャット研修プログラム</h1>
 	<h2>マイページ</h2>
 	<p>${errorMessage}</p>
 
-	<p>表示名</p>
-	<p><input type="text" name="editName" value="${userName}"></p>
-	<p>自己紹介</p>
-	<p><input type="text" name="editText" value="${myPageText}"></p>
-
 	<form action="/chat/myPage" method="POST">
-		<input type="submit" value="プロフィールを更新">
+		<p>表示名</p>
+		<p>
+			<input type="text" name="inputUserName" value="${userName}"
+				class="inputUserProf">
+		</p>
+		<p>自己紹介</p>
+		<p>
+			<input type="text" name="inputUserSelfIntro" value="${myPageText}"
+				class="inputUserProf">
+		</p>
+
+
+		<button type='submit' name='action' value='profileUpdate'>プロフィールを更新</button>
 
 	</form>
 	<form action="/chat/main" method="POST">
