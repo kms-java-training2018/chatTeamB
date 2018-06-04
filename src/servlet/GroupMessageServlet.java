@@ -81,7 +81,7 @@ public class GroupMessageServlet extends HttpServlet {
 
 		// 初期化
 		MessageInfoModel model = new MessageInfoModel();
-		boolean result;
+//		boolean result;
 
 
 		// セッションの値を取得
@@ -177,6 +177,8 @@ public class GroupMessageServlet extends HttpServlet {
 		// メッセージ送信時、メッセージ削除時にこの処理に入る。
 
 
+		// パラメーターを設定
+		
 
 
 

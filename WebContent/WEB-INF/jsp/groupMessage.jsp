@@ -57,13 +57,13 @@
 
 <!-- 	【メッセージ削除】 -->
 	<form action="/chat/groupMessage" method="POST">
-		<button type="submit" name="action" value="deleteMessage" class="button">削除</button>
+		<button type="submit" name="action" value="deleteMessage" id="deleteMessage">削除</button>
 		<input type="hidden" name="messageNo" value="【EL式で、該当の会話番号】">
 	</form>
 
 <!-- 	【グループ脱退】 -->
 	<form action="/chat/groupMessage" method="POST">
-	<button type="submit" name='action' value='leaveGroup'class='button'>
+	<button type="submit" name="action" value="leaveGroup" class="leaveGroup">
 		グループ脱退</button>
 	</form>
 

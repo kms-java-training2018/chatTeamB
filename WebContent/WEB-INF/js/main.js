@@ -14,24 +14,24 @@
 window.onload=function(){
 
 	// メッセージ削除ボタン押下時、確認ダイアログを表示
-	document.getElementByClassName("deleteMessage").onclick=
-    function(){
-	alert('このメッセージを削除してよろしいですか？')
+	document.getElementById("deleteMessage").onclick=
+	    function(){
+		alert('このメッセージを削除してよろしいですか？');
+		}
 
 
 	//グループ脱退ボタン押下時、確認ダイアログを表示
-	document.getElementByClassName("leaveGroup").onclick=
+	document.getElementsByClassName('leaveGroup').onclick=
 	    function(){
 		alert('このグループから脱退してよろしいですか？')
-
 		}
-	}
+
 
 	// 他ユーザープロフ確認画面で「閉じる」ボタン押下時、タブを閉じる
-	document.getElementByClassName("closeTab").onclick=
+	document.getElementsByClassName('closeTab').onclick=
 	    function(){
 		window.close();
 		}
-	}
 
-}
+};
+
