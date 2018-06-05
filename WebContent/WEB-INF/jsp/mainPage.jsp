@@ -46,7 +46,7 @@
 	<br>
 	<br>
 	<form action="/chat/makeGroup" method="POST">
-		<input type="submit" value="グループの作成">
+		<button type='submit' name='action' value='groupTransition'>グループ作成</button>
 	</form>
 	<form action="/chat/myPage" method="POST">
 		<input type="submit" value="プロフィール画面へ">
