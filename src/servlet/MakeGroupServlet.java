@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bean.MakeGroupBean;
+import bean.SessionBean;
+import model.GroupInfoModel;
 import model.MakeGroupModel;
 
 public class MakeGroupServlet extends HttpServlet {
@@ -33,30 +35,7 @@ public class MakeGroupServlet extends HttpServlet {
 		}
 		String action = req.getParameter("action");
 		switch (action) {
-
-		case groupCreate:
-			// グループ作成時
-			// 文字型に変換
-			MakeGroupBean mgBean = new MakeGroupBean();
-			String groupName = (String) req.getParameter("inputGroupName");
-			String[] groupMember = req.getParameter("inputGroupMember");
-			ArrayList<String> memberList = new ArrayList<String>();
-			for (String mem:groupMember) {
-				memberList.add(mem);
-			}
-			//入力文字数のチェック
-			//TODO<p>${errorMessage}</p>これをjspに
-			mgBean.setErrorMessage("");
-			req.setAttribute("errorMessage", mgBean.getErrorMessage());
-			if (groupName.length() > 30 || memberList.contains(session.getAttribute("userName"))) {
-				mgBean.setErrorMessage("入力文字数が不正です。\n正しい文字数で入力してください");
-				req.setAttribute("errorMessage", mgBean.getErrorMessage());
-				req.getRequestDispatcher("/WEB-INF/jsp/makeGroup.jsp").forward(req, res);
-			}
-
-
-
-		default:
+		case "groupTransition":
 
 			// メインメニューからの遷移
 			MakeGroupModel model = new MakeGroupModel();
@@ -69,10 +48,41 @@ public class MakeGroupServlet extends HttpServlet {
 				System.out.println("メイクグループサーブレット、認証処理キャッチ");
 			}
 
-			session.setAttribute("allUserNo", makeGroupBean.getAllUserNo());
-			session.setAttribute("allUserName", makeGroupBean.getAllUserName());
+			req.setAttribute("allUserNo", makeGroupBean.getAllUserNo());
+			req.setAttribute("allUserName", makeGroupBean.getAllUserName());
 
 			req.getRequestDispatcher("/WEB-INF/jsp/makeGroup.jsp").forward(req, res);
+			break;
+
+		case "groupCreate":
+			// グループ作成時
+			// 文字型に変換
+			MakeGroupBean mgBean = new MakeGroupBean();
+			String groupName = (String) req.getParameter("inputGroupName");
+			String[] groupMember = req.getParameterValues("selectMember");
+			System.out.println(groupMember);
+			ArrayList<String> memberList = new ArrayList<String>();
+			for (String mem : groupMember) {
+				memberList.add(mem);
+			}
+			//入力文字数のチェック
+			mgBean.setErrorMessage("");
+			if (groupName.length() > 30 || (!(memberList.contains(session.getAttribute("userNo"))))) {
+				mgBean.setErrorMessage("エラーが発生しました。\nグループ名は30文字以内で入力し、\n自分をチェックしてグループを作成してください");
+				req.getRequestDispatcher("/WEB-INF/jsp/makeGroup.jsp").forward(req, res);
+			}
+			req.setAttribute("errorMessage", mgBean.getErrorMessage());
+
+			SessionBean sessionBean = new SessionBean();
+			sessionBean = (SessionBean) session.getAttribute("session");
+			GroupInfoModel gimodel = new GroupInfoModel();
+			gimodel.groupCreate(sessionBean.getUserNo(), groupName, memberList);
+			break;
+
+		default:
+			System.out.println("スイッチ文エラー");
+			break;
+
 		}
 	}
 }

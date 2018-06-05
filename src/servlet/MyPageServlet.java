@@ -40,6 +40,25 @@ public class MyPageServlet extends HttpServlet {
 		sessionBean = (SessionBean) session.getAttribute("session");
 		MyPageBean myPageBean = new MyPageBean();
 
+		// メインメニューからの遷移
+		// プロフィール情報の取得（認証処理）
+		try {
+			myPageBean = model.profileGet(sessionBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("プロフィールサーブレット、認証処理キャッチ");
+		}
+
+		String userName = myPageBean.getUserName();
+		String myPageText = myPageBean.getMyPageText();
+
+		//セット
+		req.setAttribute("userName", userName);
+		req.setAttribute("myPageText", myPageText);
+
+		// 自分のプロフィール画面に遷移
+		req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
+
 		String action = req.getParameter("action");
 		switch (action) {
 		case "profileUpdate":
@@ -75,27 +94,6 @@ public class MyPageServlet extends HttpServlet {
 			}
 			// メインメニューに遷移
 			req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
-
-		default:
-
-			// メインメニューからの遷移
-			// プロフィール情報の取得（認証処理）
-			try {
-				myPageBean = model.profileGet(sessionBean);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("プロフィールサーブレット、認証処理キャッチ");
-			}
-
-			String userName = myPageBean.getUserName();
-			String myPageText = myPageBean.getMyPageText();
-
-			//セット
-			req.setAttribute("userName", userName);
-			req.setAttribute("myPageText", myPageText);
-
-			// 自分のプロフィール画面に遷移
-			req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
 
 		}
 	}

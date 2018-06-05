@@ -85,6 +85,8 @@ public class MainPageServlet extends HttpServlet {
 		//ヘッダー用にユーザ名をセッションにセット
 		session.setAttribute("userName", sessionBean.getUserName());
 
+		//各プログラム用にユーザ番号をセッションにセット
+		session.setAttribute("userNo", sessionBean.getUserNo());
 
 		/*// メッセージ画面用仮
 		// まずはSessionBeanに情報をセット
