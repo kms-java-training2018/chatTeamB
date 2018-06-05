@@ -72,7 +72,7 @@ public class GroupMessageServlet extends HttpServlet {
 		//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
 		//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		//	}
-		directMessageBean.setToSendUserNo("1"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
+		directMessageBean.setToSendUserNo(groupNo/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
 		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
 
 		// リクエストスコープから送信対象者の表示名取得
@@ -144,7 +144,6 @@ public class GroupMessageServlet extends HttpServlet {
 
 		// リクエストからパラメーターの値を取得
 		String groupNo = req.getParameter("groupNo");		// 現在のgroupNo
-		groupNo = "1";		// デバッグ用
 		String action = req.getParameter("action");			// 処理分岐用
 		switch (action) {
 
@@ -221,7 +220,7 @@ public class GroupMessageServlet extends HttpServlet {
 
 			// 【グループ脱退処理が成功した場合】
 			// メインメニューに遷移
-			req.getRequestDispatcher("/WEB-INF/main").forward(req, res);
+			req.getRequestDispatcher("/main").forward(req, res);
 
 		break;
 

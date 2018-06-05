@@ -56,6 +56,7 @@ public class MainModelGroup {
 			sb.append("m_group.group_no = t_group_info.group_no ");
 			sb.append("WHERE ");
 			sb.append("user_no = " + userNo);
+			sb.append( " AND out_flag = 0 ");
 			sb.append("ORDER ");
 			sb.append("BY ");
 			sb.append("m_group.group_no ");
