@@ -30,7 +30,7 @@
 				class="inputUserProf">
 		</p>
 
-		<input type='hidden' name='charset' value='utf8' />
+
 		<button type='submit' name='action' value='profileUpdate'>プロフィールを更新</button>
 
 	</form>

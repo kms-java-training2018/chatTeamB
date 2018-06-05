@@ -23,6 +23,7 @@ public class MyPageServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
+		req.setCharacterEncoding("utf-8");
 		// セッションが保持されているかの確認
 		// セッションがない場合
 		HttpSession session = req.getSession();
@@ -43,7 +44,6 @@ public class MyPageServlet extends HttpServlet {
 			MyPageModel model = new MyPageModel();
 			SessionBean sessionBean = new SessionBean();
 			sessionBean = (SessionBean) session.getAttribute("session");
-
 
 			// メインメニューからの遷移
 			// プロフィール情報の取得（認証処理）
@@ -100,6 +100,10 @@ public class MyPageServlet extends HttpServlet {
 			}
 			// メインメニューに遷移
 			req.getRequestDispatcher("/main").forward(req, res);
+			break;
+
+		default:
+			System.out.println("スイッチ文エラー");
 			break;
 
 		}

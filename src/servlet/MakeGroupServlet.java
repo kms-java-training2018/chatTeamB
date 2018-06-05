@@ -23,6 +23,7 @@ public class MakeGroupServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
+		req.setCharacterEncoding("utf-8");
 		// セッションが保持されているかの確認
 		// セッションがない場合
 		HttpSession session = req.getSession();
@@ -71,13 +72,11 @@ public class MakeGroupServlet extends HttpServlet {
 			}
 			//入力文字数のチェック
 			mgBean.setErrorMessage("");
-			boolean userCheck = false;
-			if (memberList.contains(session.getAttribute("userNo"))) {
-				userCheck = true;
-			}
-			if (groupName.length() > 30 || userCheck == false) {
+
+			if (groupName.length() > 30 || !(memberList.contains(sessionBean.getUserNo()))) {
 				mgBean.setErrorMessage("エラーが発生しました。\nグループ名は30文字以内で入力し、\n自分をチェックしてグループを作成してください");
-				req.getRequestDispatcher("/WEB-INF/jsp/makeGroup.jsp").forward(req, res);
+				action = "groupTransition";
+				req.getRequestDispatcher("/makeGroup").forward(req, res);
 			}
 			req.setAttribute("errorMessage", mgBean.getErrorMessage());
 
