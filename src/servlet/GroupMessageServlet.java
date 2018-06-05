@@ -20,19 +20,22 @@ public class GroupMessageServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		System.out.println("GroupMessageServletにきました");
 
-		//セッション取得
+		//セッションを取得
 		HttpSession session = req.getSession();
-//		//**　セッションがない場合エラー画面に移動
-//		if (session == null) {
-//			System.out.println("セッションがないです");
-//			session = req.getSession(false);
-//			session = null;
-//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-//		}
-		 //*/
+
+		// セッションがない場合エラー画面に移動
+		if (session == null) {
+			session = req.getSession(false);
+			session = null;
+			// エラーページに遷移
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
 
 		// パラメーターから遷移先groupNoを取得
 		String groupNo = req.getParameter("groupNo");
+
+		// 初期化
+		GroupInfoModel modelGroup = new GroupInfoModel();
 
 
 		////////////////////////////////////////////////////////////////////////
@@ -41,8 +44,6 @@ public class GroupMessageServlet extends HttpServlet {
 
 		// ページの行き先変更変数
 		String direction = "/WEB-INF/jsp/groupMessage.jsp";
-		/** クラスSessionBeanの初期化 */
-		SessionBean sessionBean = new SessionBean();
 		/** クラスDirectMessageBeanの初期化 */
 		DirectMessageBean directMessageBean = new DirectMessageBean();
 		/** クラスDirectMessageModelLookのインスタンス取得　*/
@@ -55,23 +56,32 @@ public class GroupMessageServlet extends HttpServlet {
 		////////////////////////////////////////////////////////////////////////
 
 		// セッションスコープの"session"をクラスSessionBeanに代入
+		SessionBean sessionBean = new SessionBean();
 		sessionBean = (SessionBean) session.getAttribute("session");
 
-
 		// SessionBeanからログインユーザの会員番号取得
-		directMessageBean.setUserNo("1"/*メインページが出来次第こちらを使う　sessionBean.getUserNo()*/);
-		System.out.println("UserNo：" + directMessageBean.getUserNo());
+		directMessageBean.setUserNo(sessionBean.getUserNo());
+		String userNo = directMessageBean.getUserNo();
 
 		// SessionBeanからログインユーザの表示名取得
-		directMessageBean.setUserName("私の表示名"/*メインページが出来次第こちらを使う　sessionBean.getUserName()*/);
+		directMessageBean.setUserName(sessionBean.getUserName());
 		String userName = directMessageBean.getUserName();
-		System.out.println("UserName：" + userName);
-
 
 		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
 		//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
 		//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		//	}
+
+		// ログインユーザーがグループの一員かどうかを判定
+		// 【一員でなかった場合】
+		if (modelGroup.judgeGroupMember(userNo, groupNo) == false) {
+			// sessionを削除
+			session = req.getSession(false);
+			session = null;
+			// エラーページに遷移
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
 		directMessageBean.setToSendUserNo(groupNo/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
 		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
 
@@ -259,18 +269,18 @@ public class GroupMessageServlet extends HttpServlet {
 		sessionBean = (SessionBean) session.getAttribute("session");
 
 		// SessionBeanからログインユーザの会員番号取得
-		directMessageBean.setUserNo("1"/*メインページが出来次第こちらを使う　sessionBean.getUserNo()*/);
+		directMessageBean.setUserNo(sessionBean.getUserNo());
 
 		// SessionBeanからログインユーザの表示名取得
-		directMessageBean.setUserName("私の表示名"/*メインページが出来次第こちらを使う　sessionBean.getUserName()*/);
+		directMessageBean.setUserName(sessionBean.getUserName());
 //		String userName = directMessageBean.getUserName();
 
 //		 セッションスコープから送信対象者の会員番号取得
-		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
-		//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
-		//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		//	}
-		directMessageBean.setToSendUserNo("1"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
+//		 パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
+			if (groupNo.equals(null)) {
+				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			}
+		directMessageBean.setToSendUserNo((String) req.getParameter("相手の会員番号（送信対象者番号）"));
 
 		// リクエストスコープから送信対象者の表示名取得
 		directMessageBean.setOtherName("お~い"/*(String) req.getParameter("相手の表示名")*/);
