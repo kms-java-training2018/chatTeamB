@@ -54,11 +54,11 @@ public class DirectMessageServlet extends HttpServlet {
 
 
 		// SessionBeanからログインユーザの会員番号取得
-		directMessageBean.setUserNo("1"/*メインページが出来次第こちらを使う　sessionBean.getUserNo()*/);
+		directMessageBean.setUserNo(sessionBean.getUserNo()); /*"1"メインページが出来次第こちらを使う　*/
 		System.out.println("UserNo：" + directMessageBean.getUserNo());
 
 		// SessionBeanからログインユーザの表示名取得
-		directMessageBean.setUserName("私の表示名"/*メインページが出来次第こちらを使う　sessionBean.getUserName()*/);
+		directMessageBean.setUserName(sessionBean.getUserName()); /*"私の表示名"メインページが出来次第こちらを使う　*/
 		String userName = directMessageBean.getUserName();
 		System.out.println("UserName：" + userName);
 
@@ -67,11 +67,11 @@ public class DirectMessageServlet extends HttpServlet {
 		//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
 		//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		//	}
-		directMessageBean.setToSendUserNo("3"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
+		directMessageBean.setToSendUserNo(/*"2"*/req.getParameter("otherNo"));
 		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
 
 		// リクエストスコープから送信対象者の表示名取得
-		directMessageBean.setOtherName("お~い"/*(String) req.getParameter("相手の表示名")*/);
+		directMessageBean.setOtherName(/*"test"*/(String) req.getParameter("otherName"));
 		String otherName = directMessageBean.getOtherName();
 		System.out.println("OtherName：" + otherName);
 
@@ -111,6 +111,7 @@ public class DirectMessageServlet extends HttpServlet {
 		req.setAttribute("list", list);
 		req.setAttribute("otherName", otherName);
 		req.setAttribute("userName", userName);
+		System.out.println("チェックしてください" + userName);
 		req.setAttribute("directMessageBean", directMessageBean);
 		req.getRequestDispatcher(direction).forward(req, res);
 	}
@@ -143,7 +144,7 @@ public class DirectMessageServlet extends HttpServlet {
 			String toSendAddress = req.getParameter("toSendUserNo");
 			int judgeAddress = 0;
 			boolean result1 = entryMessage.entryMessage(sendUserNo, message, toSendAddress, judgeAddress);
-
+			System.out.println("会話情報を登録しました");
 			if (result1 == false) {
 				System.out.println("会話情報を登録できません");
 				session = req.getSession(false);
@@ -241,11 +242,11 @@ public class DirectMessageServlet extends HttpServlet {
 			sessionBean = (SessionBean) session.getAttribute("session");
 
 			// SessionBeanからログインユーザの会員番号取得
-			directMessageBean.setUserNo("1"/*メインページが出来次第こちらを使う　sessionBean.getUserNo()*/);
+			directMessageBean.setUserNo(sessionBean.getUserNo()); /*req.getParameter("userNo")メインページが出来次第こちらを使う　sessionBean.getUserNo()*/
 			System.out.println("UserNoは" + directMessageBean.getUserNo());
 
 			// SessionBeanからログインユーザの表示名取得
-			directMessageBean.setUserName("私の表示名"/*メインページが出来次第こちらを使う　sessionBean.getUserName()*/);
+			directMessageBean.setUserName(sessionBean.getUserName()); /*req.getParameter("userName")メインページが出来次第こちらを使う　sessionBean.getUserName()*/
 			String userName = directMessageBean.getUserName();
 			System.out.println("UserName：" + userName);
 
@@ -254,11 +255,11 @@ public class DirectMessageServlet extends HttpServlet {
 			//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
 			//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			//	}
-			directMessageBean.setToSendUserNo("3"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
+			directMessageBean.setToSendUserNo(req.getParameter("toSendUserNo"));
 			System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
 
 			// リクエストスコープから送信対象者の表示名取得
-			directMessageBean.setOtherName("お~い"/*(String) req.getParameter("相手の表示名")*/);
+			directMessageBean.setOtherName(req.getParameter("otherName"));
 			String otherName = directMessageBean.getOtherName();
 			System.out.println("OtherName：" + otherName);
 
@@ -298,6 +299,7 @@ public class DirectMessageServlet extends HttpServlet {
 			req.setAttribute("otherName", otherName);
 			req.setAttribute("userName", userName);
 			req.setAttribute("directMessageBean", directMessageBean);
+			System.out.println("更新終わり");
 			req.getRequestDispatcher(direction).forward(req, res);
 
 			// 必要ないかも？

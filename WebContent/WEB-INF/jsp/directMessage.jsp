@@ -78,21 +78,14 @@
 	<form action="/chat/directMessage" method="POST">
 		<textarea placeholder="ここにメッセージを入力" name="inputMessage" rows="5" cols="50"></textarea>
 		<input type="hidden" name="userNo" value="${directMessageBean.userNo}">
-		<input type="hidden" name="toSendUserNo" value="${directMessageBean.toSendUserNo}"> <br>
+		<input type="hidden" name="userName" value="${directMessageBean.userName}">
+		<input type="hidden" name="toSendUserNo" value="${directMessageBean.toSendUserNo}">
+		<input type="hidden" name="otherName" value="${directMessageBean.otherName}"> <br>
 		<button type='submit' name='action' value='sendMessage' class="button">メッセージ送信</button>
 	</form>
-	<!--
-	<br>
-	<form action="/chat/directMessage" method="POST">
-		<textarea name="message" rows="5" cols="50"></textarea>
-		<br>
-		<input type="submit" value="メッセージの送信">
-	</form>
- -->
 
 
-
-	<br>
+	<!-- 正式版 -->
 	<form action="/chat/main" method="POST">
 		<button type="submit" name="action" value="toMainPage" class="button">メインメニューへ戻る</button>
 	</form>

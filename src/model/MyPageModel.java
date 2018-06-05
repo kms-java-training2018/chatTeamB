@@ -11,6 +11,7 @@ import bean.SessionBean;
 
 public class MyPageModel {
 	public MyPageBean profileGet(SessionBean sessionBean) {
+		System.out.println("profileGetにきました");
 		// 初期化
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
 		String userNo = sessionBean.getUserNo();

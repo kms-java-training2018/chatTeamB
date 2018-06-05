@@ -84,9 +84,15 @@
 			<br>
 			<div style="position: relative; left: 100px">
 				<div style="display: inline-block; border: 1px solid #cccccc">
-					<br> <a href="/chat/showProfile?userNo=${list.toSendUserNo}"
+
+					<!-- ここから編集中 -->
+
+					<br> <a href="/chat/showProfile?userNo=<c:out value="${list.userNo}" />"
 						class="link" target=”_blank”> ｛<c:out
 							value="${list.otherName}" />さん
+
+					<!-- ここまで編集中 -->
+
 					</a> <br>：
 					<c:out value="${list.listMessage}" />
 					<br>：Judge番号
