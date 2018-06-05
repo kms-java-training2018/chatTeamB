@@ -62,12 +62,26 @@ public class MessageInfoModel {
 			sb.append(" TO_SEND_GROUP_NO,"); //5
 			sb.append(" REGIST_DATE)"); //6
 			sb.append(" VALUES");
-			sb.append("( message_sequence.nextval"); //1
-			sb.append(" ' " + sendUserNo + "'"); //2
-			sb.append(" ' " + message + "'"); //3
-			sb.append(" ' " + toSendUserNo + "'"); //4
-			sb.append(" ' " + toSendGroupNo + "'"); //5
-			sb.append(" to_date(sysdate))"); //6
+			sb.append("( message_sequence.nextval,"); //1
+//			if (judgeAddress == 0) { // 送信先がユーザーの場合
+//				toSendUserNo = toSendAddress;
+//				sb.append( toSendUserNo + ","); //4
+//				sb.append( toSendGroupNo + ","); //5
+//
+//			} else if (judgeAddress == 1) { // 送信先がグループの場合
+//				toSendGroupNo = toSendAddress;
+//			}
+//			sb.append("'" + sendUserNo + ","); //2
+//			sb.append(" ' " + message + "' ,"); //3
+//			sb.append("'" + toSendUserNo + "' ,"); //4
+//			sb.append("'" + toSendGroupNo + "' ,"); //5
+//			sb.append(" to_date(sysdate))"); //6
+
+			sb.append(sendUserNo + ","); //2
+			sb.append(" ' " + message + "' ,"); //3
+			sb.append(toSendUserNo + ","); //4
+			sb.append(toSendGroupNo + ","); //5
+			sb.append("systimestamp)"); //6
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
@@ -133,7 +147,7 @@ public class MessageInfoModel {
 				sb.append(" T_MESSAGE_INFO ");
 			sb.append("SET ");
 				sb.append(" DELETE_FLAG  = 1");
-				sb.append(" UPDATE_DATE  =  to_date(sysdate)");
+				sb.append(" UPDATE_DATE  =  systimestamp");
 			sb.append("WHERE ");
 				sb.append(" MESSAGE_NO = '" + messageNo + "' ");
 
