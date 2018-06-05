@@ -19,7 +19,8 @@
 
 	<h1>チャット研修プログラム</h1>
 	<h2>
-		<a href="/chat/showProfile">${otherName} さん</a>
+		<a href="/chat/showProfile?userNo=${toSendUserNo}"
+		class="link" target=”_blank”>${otherName} さん</a>
 	</h2>
 
 	<!-- for文でメッセージを全て表示させる -->
@@ -28,12 +29,11 @@
 		<c:if test="${list.listJudge == '0'}" var="judge" />
 		<!-- 自分のメッセージの場合 -->
 		<c:if test="${judge}">
-			<br>
 			<div align="center" >
 			<div style="display:inline-block; border: 1px solid #cccccc">
 				<br> ｛
 				<c:out value="${list.userName}" />
-				<br>：
+				<br>：メッセージ
 				<c:out value="${list.listMessage}" />
 				<br>：Judge番号
 				<c:out value="${list.listJudge}" />
@@ -53,11 +53,12 @@
 
 		<!-- 他人のメッセージの場合 -->
 		<c:if test="${!judge}">
-			<br>
 			<div style="display:inline-block; border: 1px solid #cccccc">
-				<br> <a href="/chat/showProfile?userNo=${list.toSendUserNo}"
+				<br>
+				<a href="/chat/showProfile?userNo=<c:out value="${list.userNo}" />"
 					class="link" target=”_blank”> ｛<c:out value="${list.otherName}" />さん
-				</a> <br>：
+				</a>
+				<br>：メッセージ
 				<c:out value="${list.listMessage}" />
 				<br>：Judge番号
 				<c:out value="${list.listJudge}" />

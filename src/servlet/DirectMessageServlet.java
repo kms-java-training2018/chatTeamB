@@ -21,14 +21,14 @@ public class DirectMessageServlet extends HttpServlet {
 
 		//セッション取得
 		HttpSession session = req.getSession();
-		/**　セッションがない場合エラー画面に移動
+		//　セッションがない場合エラー画面に移動
 		if (session == null) {
 			System.out.println("セッションがないです");
 			session = req.getSession(false);
 			session = null;
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
-		 */
+
 
 		////////////////////////////////////////////////////////////////////////
 		//		初期化
@@ -63,18 +63,21 @@ public class DirectMessageServlet extends HttpServlet {
 		System.out.println("UserName：" + userName);
 
 		// セッションスコープから送信対象者の会員番号取得
-		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
-		//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
-		//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		//	}
 		directMessageBean.setToSendUserNo(/*"2"*/req.getParameter("otherNo"));
+		String toSendUserNo = directMessageBean.getToSendUserNo();
 		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
+		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
+			if (toSendUserNo.equals(null)) {
+				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			}
 
 		// リクエストスコープから送信対象者の表示名取得
 		directMessageBean.setOtherName(/*"test"*/(String) req.getParameter("otherName"));
 		String otherName = directMessageBean.getOtherName();
 		System.out.println("OtherName：" + otherName);
 
+
+		session.setAttribute("dMBean", directMessageBean);
 		////////////////////////////////////////////////////////////////////////
 		//		ここまでdirectMessageBeanに必要な値を入れる
 		////////////////////////////////////////////////////////////////////////
@@ -111,7 +114,8 @@ public class DirectMessageServlet extends HttpServlet {
 		req.setAttribute("list", list);
 		req.setAttribute("otherName", otherName);
 		req.setAttribute("userName", userName);
-		System.out.println("チェックしてください" + userName);
+		req.setAttribute("toSendUserNo", toSendUserNo);
+		System.out.println("チェックしてください:" + userName);
 		req.setAttribute("directMessageBean", directMessageBean);
 		req.getRequestDispatcher(direction).forward(req, res);
 	}
@@ -208,14 +212,14 @@ public class DirectMessageServlet extends HttpServlet {
 //		 case "lookMessage":
 			// System.out.println("lookMessage処理にきました");
 
-			/**　セッションがない場合エラー画面に移動
+			//　セッションがない場合エラー画面に移動
 			if (session == null) {
 				System.out.println("セッションがないです");
 				session = req.getSession(false);
 				session = null;
 				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
-			 */
+
 
 			////////////////////////////////////////////////////////////////////////
 			//		初期化
@@ -227,6 +231,18 @@ public class DirectMessageServlet extends HttpServlet {
 			SessionBean sessionBean = new SessionBean();
 			/** クラスDirectMessageBeanの初期化 */
 			DirectMessageBean directMessageBean = new DirectMessageBean();
+
+			DirectMessageBean dMessageBean = new DirectMessageBean();
+			dMessageBean = (DirectMessageBean) session.getAttribute("dMBean");
+
+
+
+
+
+
+
+
+
 			/** クラスDirectMessageModelLookのインスタンス取得　*/
 			DirectMessageModelLook model = new DirectMessageModelLook();
 			/** jspに持っていくArrayList（会話内容、judge、会話番号）初期化　*/
@@ -251,15 +267,16 @@ public class DirectMessageServlet extends HttpServlet {
 			System.out.println("UserName：" + userName);
 
 			// リクエストスコープから送信対象者の会員番号取得
-			// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
-			//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
-			//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-			//	}
-			directMessageBean.setToSendUserNo(req.getParameter("toSendUserNo"));
+			directMessageBean.setToSendUserNo(dMessageBean.getToSendUserNo()/*req.getParameter("toSendUserNo")*/);
+			String toSendUserNo = directMessageBean.getToSendUserNo();
 			System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
+			// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
+				if (toSendUserNo.equals(null)) {
+					req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+				}
 
 			// リクエストスコープから送信対象者の表示名取得
-			directMessageBean.setOtherName(req.getParameter("otherName"));
+			directMessageBean.setOtherName(dMessageBean.getOtherName()/*req.getParameter("otherName")*/);
 			String otherName = directMessageBean.getOtherName();
 			System.out.println("OtherName：" + otherName);
 
@@ -298,6 +315,7 @@ public class DirectMessageServlet extends HttpServlet {
 			req.setAttribute("list", list);
 			req.setAttribute("otherName", otherName);
 			req.setAttribute("userName", userName);
+			req.setAttribute("toSendUserNo", toSendUserNo);
 			req.setAttribute("directMessageBean", directMessageBean);
 			System.out.println("更新終わり");
 			req.getRequestDispatcher(direction).forward(req, res);
