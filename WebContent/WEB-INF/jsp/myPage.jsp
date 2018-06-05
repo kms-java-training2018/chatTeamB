@@ -9,7 +9,7 @@
 </head>
 <body>
 	<header> ようこそ<br>
-	${userName}さん<br>
+	${sessionScope.userName}さん<br>
 	<form action="/chat/logout" method="POST">
 		<button type='submit' name='action' value='logout'>ログアウト</button>
 	</form>

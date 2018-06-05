@@ -42,7 +42,7 @@ public class GroupInfoModel {
 
 			// SQL作成
 			// 作成者番号をログインユーザの会話番号とし、
-			// グループ名とともにグループマスタに登録(自分のユーザ番号のみ）
+			// グループ名とともにグループマスタに登録
 			sb.append("INSERT INTO ");
 			sb.append("M_GROUP ");
 			sb.append("(GROUP_NO, ");
@@ -118,30 +118,31 @@ public class GroupInfoModel {
 			// グループマスタの情報を基に
 			// グループ情報テーブルに登録(自分以外のユーザ番号)
 
+			sb.append("INSERT INTO ");
+			sb.append("T_GROUP_INFO ");
+			sb.append("(GROUP_NO, ");
+			sb.append("USER_NO, ");
+			sb.append("REGIST_DATE )");
+			sb.append("VALUES ");
+			sb.append("( '" + gcBean.getGroupNo() + "', '");
 			for (String nom : allUserNo) {
-				sb.append("INSERT INTO ");
-				sb.append("T_GROUP_INFO ");
-				sb.append("(GROUP_NO, ");
-				sb.append("USER_NO, ");
-				sb.append("REGIST_DATE )");
-				sb.append("VALUES ");
-				sb.append("( '" + gcBean.getGroupNo() + "', ");
-				sb.append("'" + nom + "', ");
-				sb.append("to_date(sysdate)");
-
-				// SQL実行
-				Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
-				int rs = stmt.executeUpdate(sb.toString()); // 実行し、その結果(更新された行数)を格納
-
-				// 処理
-				// SQL実行後に、更新されたレコードが無かった場合(削除処理が失敗)
-				if (rs == 0) {
-					// 実行結果をfalse(失敗)に設定
-					result = false;
-				}
+				sb.append(nom + ",");
 			}
+			sb.append("'to_date(sysdate)");
 
-		} catch (
+			// SQL実行
+			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
+			int rs = stmt.executeUpdate(sb.toString()); // 実行し、その結果(更新された行数)を格納
+
+			// 処理
+			// SQL実行後に、更新されたレコードが無かった場合(削除処理が失敗)
+			if (rs == 0) {
+				// 実行結果をfalse(失敗)に設定
+				result = false;
+			}
+		}
+
+		catch (
 
 		SQLException e) {
 			e.printStackTrace();
@@ -229,18 +230,18 @@ public class GroupInfoModel {
 
 	}
 
-//【グループメンバーかどうか判定用】------------------------------------------------------------------------------------
-/**
- * ログインユーザーが、遷移しようとしているグループのメンバーかどうかを判定するメソッド。
- * 戻り値はbooleanで、メンバーの一員だった場合true、違った場合はfalseが返ってくる。
- * @param userNo (String) ログインユーザーのuserNo
- * @param groupNo (String) メッセージ画面を開こうとしているgroupNo
- * @return boolean
- */
+	//【グループメンバーかどうか判定用】------------------------------------------------------------------------------------
+	/**
+	 * ログインユーザーが、遷移しようとしているグループのメンバーかどうかを判定するメソッド。
+	 * 戻り値はbooleanで、メンバーの一員だった場合true、違った場合はfalseが返ってくる。
+	 * @param userNo (String) ログインユーザーのuserNo
+	 * @param groupNo (String) メッセージ画面を開こうとしているgroupNo
+	 * @return boolean
+	 */
 	public boolean judgeGroupMember(String userNo, String groupNo) {
 		// 初期化
-		StringBuilder sb = new StringBuilder();		// SQL文の格納用
-		boolean result = true;					// 処理実行結果格納用(戻り値用)
+		StringBuilder sb = new StringBuilder(); // SQL文の格納用
+		boolean result = true; // 処理実行結果格納用(戻り値用)
 
 		Connection conn = null;
 		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
@@ -260,16 +261,15 @@ public class GroupInfoModel {
 
 			// SQL作成
 			sb.append("SELECT ");
-				sb.append("USER_NO");
+			sb.append("USER_NO");
 			sb.append("FROM ");
-				sb.append("t_group_info ");
+			sb.append("t_group_info ");
 			sb.append("WHERE ");
-				sb.append("group_no = '" + groupNo + "'");
-
+			sb.append("group_no = '" + groupNo + "'");
 
 			// SQL実行
-			Statement stmt = conn.createStatement();			// SQL文をデータベースに送るためのStatementオブジェクトを生成
-			ResultSet rs = stmt.executeQuery(sb.toString());	// 実行し、その結果を格納
+			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
+			ResultSet rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
 
 			// 処理
 			// 取得した参加メンバー一覧に、ログインユーザーの会員番号があった場合
@@ -288,7 +288,7 @@ public class GroupInfoModel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-		//SQLの接続は絶対に切断
+			//SQLの接続は絶対に切断
 		} finally {
 			try {
 				conn.close();
@@ -301,6 +301,5 @@ public class GroupInfoModel {
 		return result;
 
 	}
-
 
 }

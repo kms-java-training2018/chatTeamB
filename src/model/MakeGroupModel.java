@@ -7,17 +7,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import bean.MakeGroupBean;
+
 public class MakeGroupModel {
 
-	public MakeGroupBean alluser() {
+	public MakeGroupBean allUserGet() {
 		// 初期化
 		MakeGroupBean makeGroupBean = new MakeGroupBean();
 		StringBuilder sb = new StringBuilder();
-		String userNo = bean.getUserNo();
-		String userName = bean.getUserName();
-		ArrayList<String> otherNo = new ArrayList<String>();
-		ArrayList<String> otherName = new ArrayList<String>();
-		ArrayList<String> message = new ArrayList<String>();
+
+		ArrayList<String> allUserNo = new ArrayList<String>();
+		ArrayList<String> allUserName = new ArrayList<String>();
 
 		Connection conn = null;
 		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
@@ -41,22 +41,16 @@ public class MakeGroupModel {
 			sb.append(" ,user_name ");
 			sb.append("FROM ");
 			sb.append(" m_user ");
-			sb.append("ORDER ");
-			sb.append("BY ");
-			sb.append(" user_no ");
-			sb.append("DESC");
 
 			// SQL実行
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sb.toString());
 
 			while (rs.next()) {
-				//ログインしているユーザの会員番号と名前を省く
-				if (!((rs.getString("user_no").equals(userNo)) || (rs.getString("user_name").equals(userName)))) {
-					otherNo.add(rs.getString("user_no"));
-					otherName.add(rs.getString("user_name"));
 
-				}
+				allUserNo.add(rs.getString("user_no"));
+				allUserName.add(rs.getString("user_name"));
+
 			}
 
 		} catch (SQLException e) {
@@ -69,7 +63,10 @@ public class MakeGroupModel {
 				e.printStackTrace();
 			}
 		}
-		return mainBean;
+		makeGroupBean.setAllUserNo(allUserNo);
+		makeGroupBean.setAllUserName(allUserName);
+
+		return makeGroupBean;
 	}
 
 }
