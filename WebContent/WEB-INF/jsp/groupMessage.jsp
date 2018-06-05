@@ -39,15 +39,16 @@
 	<!-- ここからボディ ===============================================================================================-->
 	<h1>チャット研修プログラム</h1>
 	<h2>グループメッセージ</h2>
-	<a href="/chat/showProfile">あいて</a>：グループメッセージのサンプルだよー（´・ω・｀）
-	<br> あなた：がっくし（´・ω・｀）
-	<br>
-	<br>
-
-
-	<h2>
-		<a href="/chat/showProfile">${otherName} さん</a>
+		<h2>
+		<a href="/chat/showProfile">グループ：${groupNo}</a>
 	</h2>
+
+	<!-- 	【グループ脱退】 -->
+	<form action="/chat/groupMessage" method="POST">
+		<button type="submit" name="action" value="leaveGroup"
+			class="leaveGroup">グループ脱退</button>
+		<input type="hidden" name="groupNo" value="${requestScope.groupNo}">
+	</form>
 
 	<!-- for文でメッセージを全て表示させる -->
 	<c:forEach var="list" items="${list}" varStatus="status">
@@ -69,7 +70,7 @@
 					<br>：会員番号
 					<c:out value="${list.userNo}" />
 					｝ <br>
-					<form action="/chat/directMessage" method="POST">
+					<form action="/chat/groupMessage" method="POST">
 						<button type="submit" name="action" value="deleteMessage"
 							class="deleteMessage">削除</button>
 						<input type="hidden" name="messageNo"
@@ -127,19 +128,6 @@
 		<button type='submit' name='action' value='sendMessage' class="button">送信</button>
 	</form>
 
-
-	<!-- 	【メッセージ削除】 -->
-	<form action="/chat/groupMessage" method="POST">
-		<button type="submit" name="action" value="deleteMessage"
-			id="deleteMessage">削除</button>
-		<input type="hidden" name="messageNo" value="【EL式で、該当の会話番号】">
-	</form>
-
-	<!-- 	【グループ脱退】 -->
-	<form action="/chat/groupMessage" method="POST">
-		<button type="submit" name="action" value="leaveGroup"
-			class="leaveGroup">グループ脱退</button>
-	</form>
 
 	<!-- ここまでボディ ===============================================================================================-->
 	<!-- ここからフッター ===============================================================================================-->
