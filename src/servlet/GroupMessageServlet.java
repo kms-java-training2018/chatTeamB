@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import bean.DirectMessageBean;
 import bean.SessionBean;
+import model.GroupInfoModel;
 import model.GroupMessageModelLook;
 import model.MessageInfoModel;
 
@@ -21,14 +22,18 @@ public class GroupMessageServlet extends HttpServlet {
 
 		//セッション取得
 		HttpSession session = req.getSession();
-		//**　セッションがない場合エラー画面に移動
-		if (session == null) {
-			System.out.println("セッションがないです");
-			session = req.getSession(false);
-			session = null;
-			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		}
+//		//**　セッションがない場合エラー画面に移動
+//		if (session == null) {
+//			System.out.println("セッションがないです");
+//			session = req.getSession(false);
+//			session = null;
+//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+//		}
 		 //*/
+
+		// パラメーターから遷移先groupNoを取得
+		String groupNo = req.getParameter("groupNo");
+
 
 		////////////////////////////////////////////////////////////////////////
 		//		初期化
@@ -62,7 +67,7 @@ public class GroupMessageServlet extends HttpServlet {
 		String userName = directMessageBean.getUserName();
 		System.out.println("UserName：" + userName);
 
-		// セッションスコープから送信対象者の会員番号取得
+
 		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
 		//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
 		//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
@@ -113,24 +118,34 @@ public class GroupMessageServlet extends HttpServlet {
 		req.setAttribute("otherName", otherName);
 //		req.setAttribute("userName", userName);
 		req.setAttribute("directMessageBean", directMessageBean);
+		req.setAttribute("groupNo", groupNo);
 		req.getRequestDispatcher(direction).forward(req, res);
 	}
 
 
+
+// 	【以下POSTメソッド】================================================================================================
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
-		// 初期化
-		MessageInfoModel model = new MessageInfoModel();
-//		boolean result;
-
+		// モデルのインスタンスを作成
+		MessageInfoModel model = new MessageInfoModel();		// メッセージ送信・削除処理に使用
+		GroupInfoModel modelGroup = new GroupInfoModel();		// グループ脱退処理に使用
 
 		// セッションの値を取得
 		HttpSession session = req.getSession();
-		String userName = (String)session.getAttribute("userName");
-		String userNo = (String)session.getAttribute("userNo");
+		SessionBean sessionBean = (SessionBean)session.getAttribute("session");
+//		String userName = sessionBean.getUserName();
+//		String userNo = sessionBean.getUserNo();
 
-		// パラメーターの値を取得
-		String action = req.getParameter("action");
+		// デバッグ用
+		String userName = "iyo";
+		String userNo = "1";
+
+
+		// リクエストからパラメーターの値を取得
+		String groupNo = req.getParameter("groupNo");		// 現在のgroupNo
+		groupNo = "1";		// デバッグ用
+		String action = req.getParameter("action");			// 処理分岐用
 		switch (action) {
 
 
@@ -141,10 +156,8 @@ public class GroupMessageServlet extends HttpServlet {
 
 		case "sendMessage":
 
-			// パラメーターの値を受け取る
+			// リクエストから入力されたメッセージを取得
 			String inputMessage = req.getParameter("inputMessage");
-			String groupNo = req.getParameter("groupNo");
-
 
 			// メッセージ登録用のメソッドを呼び出し(登録処理を実行し)、
 			// 【登録処理が失敗した場合(メソッドの戻り値がfalseの場合)】
@@ -170,7 +183,7 @@ public class GroupMessageServlet extends HttpServlet {
 
 		case "deleteMessage":
 
-			// パラメーターの値を受け取る
+			// リクエストから論理削除するmessageNoを取得
 			String messageNo = req.getParameter("messageNo");
 
 			// メッセージ削除用のメソッドを呼び出し(削除処理を実行し)、
@@ -195,13 +208,21 @@ public class GroupMessageServlet extends HttpServlet {
 
 		case "leaveGroup":
 
-			// (2)-1 セッション情報の会員番号とをグループ番号を条件に、会話情報テーブルから論理削除する
+			// グループ脱退用のメソッドを呼び出し
+			// 【グループ脱退処理が失敗した場合】
+			if(modelGroup.groupLeave(userNo, groupNo) == false) {
+				// セッションの情報を削除する
+				session = req.getSession(false);
+				session = null;
 
+				// エラーページに遷移
+				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			}
 
-			// (2)-2 レコードを論理削除できなかった場合、エラー画面に遷移する。
+			// 【グループ脱退処理が成功した場合】
+			// メインメニューに遷移
+			req.getRequestDispatcher("/WEB-INF/main").forward(req, res);
 
-
-			req.getRequestDispatcher("/WEB-INF/jsp/groupMessage.jsp").forward(req, res);
 		break;
 
 // 【どのcaseにも当てはまらない時】-------------------------------------------------------------------------------------
@@ -213,13 +234,85 @@ public class GroupMessageServlet extends HttpServlet {
 		break;
 		}
 
-//		【ページ遷移処理】==============================================================================================
-		// メッセージ送信時、メッセージ削除時にこの処理に入る。
+//	【ページ遷移処理】==============================================================================================
+	// メッセージ送信時、メッセージ削除時にこの処理に入る。
 
+		////////////////////////////////////////////////////////////////////////
+		//		初期化
+		////////////////////////////////////////////////////////////////////////
 
-		// パラメーターを設定
+		// ページの行き先変更変数
+		String direction = "/WEB-INF/jsp/groupMessage.jsp";
+		/** クラスSessionBeanの初期化 */
+//		SessionBean sessionBean = new SessionBean();
+		/** クラスDirectMessageBeanの初期化 */
+		DirectMessageBean directMessageBean = new DirectMessageBean();
+		/** クラスDirectMessageModelLookのインスタンス取得　*/
+		GroupMessageModelLook groupMessageModelLook = new GroupMessageModelLook();
+		/** jspに持っていくArrayList（会話内容、judge、会話番号）初期化　*/
+		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
 
+		////////////////////////////////////////////////////////////////////////
+		//		ここからdirectMessageBeanに必要な値を入れる
+		////////////////////////////////////////////////////////////////////////
 
+		// セッションスコープの"session"をクラスSessionBeanに代入
+		sessionBean = (SessionBean) session.getAttribute("session");
+
+		// SessionBeanからログインユーザの会員番号取得
+		directMessageBean.setUserNo("1"/*メインページが出来次第こちらを使う　sessionBean.getUserNo()*/);
+
+		// SessionBeanからログインユーザの表示名取得
+		directMessageBean.setUserName("私の表示名"/*メインページが出来次第こちらを使う　sessionBean.getUserName()*/);
+//		String userName = directMessageBean.getUserName();
+
+//		 セッションスコープから送信対象者の会員番号取得
+		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
+		//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
+		//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		//	}
+		directMessageBean.setToSendUserNo("1"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
+
+		// リクエストスコープから送信対象者の表示名取得
+		directMessageBean.setOtherName("お~い"/*(String) req.getParameter("相手の表示名")*/);
+		String otherName = directMessageBean.getOtherName();
+
+		////////////////////////////////////////////////////////////////////////
+		//		ここまでdirectMessageBeanに必要な値を入れる
+		////////////////////////////////////////////////////////////////////////
+
+		// DirectMessageModelLookへ移動会話情報取得処理
+		try {
+			list = groupMessageModelLook.lookMessage(directMessageBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// レコードが取得出来なかった場合エラー画面に遷移する
+		if (list == null) {
+			session = req.getSession(false);
+			session = null;
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+		// デバック用
+		DirectMessageBean dMBean = new DirectMessageBean();
+		for (int i = 0; i < list.size(); i++) {
+			dMBean = list.get(i);
+			System.out.println("会話内容：" + dMBean.getListMessage()
+			+ "：判別内容：" + dMBean.getListJudge()
+			+ "：会員番号：" + dMBean.getUserNo()
+			+ "：表示名：" + dMBean.getUserName()
+			+ "：会話番号：" + dMBean.getListMessageNo());
+		}
+
+		// リクエストスコープにいれてjspに送る
+		req.setAttribute("list", list);
+		req.setAttribute("otherName", otherName);
+//				req.setAttribute("userName", userName);
+		req.setAttribute("directMessageBean", directMessageBean);
+		req.setAttribute("groupNo", groupNo);
+		req.getRequestDispatcher(direction).forward(req, res);
 
 
 	}

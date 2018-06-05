@@ -53,7 +53,7 @@ public class GroupInfoModel {
 			sb.append("(GROUP_CREATE_SEQUENCE.NEXTVAL, ");
 			sb.append("'" + groupName + "', ");
 			sb.append("'" + userNo + "', ");
-			sb.append("to_date(sysdate))");
+			sb.append("systimestamp)");
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
@@ -82,20 +82,21 @@ public class GroupInfoModel {
 		// 接続作成
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
+			StringBuilder sb2 = new StringBuilder(); // SQL文の格納用
 
 			// SQL作成
 			// 今作ったグループ番号取得
-			sb.append("SELECT ");
-			sb.append("MAX(GROUP_NO) ");
-			sb.append("FROM ");
-			sb.append("M_GROUP");
+			sb2.append("SELECT ");
+			sb2.append("MAX(GROUP_NO) ");
+			sb2.append("FROM ");
+			sb2.append("M_GROUP");
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
-			ResultSet rs = stmt.executeQuery(sb.toString()); // 実行し、その結果(更新された行数)を格納
+			ResultSet rs = stmt.executeQuery(sb2.toString()); // 実行し、その結果(更新された行数)を格納
 			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
 			if (rs.next()) { // あった場合
-				gcBean.setGroupNo(rs.getString("GROUP_NO"));
+				gcBean.setGroupNo(rs.getString("MAX(GROUP_NO)"));
 			}
 
 		} catch (SQLException e) {
@@ -114,31 +115,33 @@ public class GroupInfoModel {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
+
 			// SQL作成
 			// グループマスタの情報を基に
 			// グループ情報テーブルに登録(自分以外のユーザ番号)
 
-			sb.append("INSERT INTO ");
-			sb.append("T_GROUP_INFO ");
-			sb.append("(GROUP_NO, ");
-			sb.append("USER_NO, ");
-			sb.append("REGIST_DATE )");
-			sb.append("VALUES ");
-			sb.append("( '" + gcBean.getGroupNo() + "', '");
 			for (String nom : allUserNo) {
-				sb.append(nom + ",");
-			}
-			sb.append("'to_date(sysdate)");
+				StringBuilder sb3 = new StringBuilder(); // SQL文の格納用
+				sb3.append("INSERT INTO ");
+				sb3.append("T_GROUP_INFO ");
+				sb3.append("(GROUP_NO, ");
+				sb3.append("USER_NO, ");
+				sb3.append("REGIST_DATE )");
+				sb3.append("VALUES ");
+				sb3.append("( '" + gcBean.getGroupNo() + "', '");
+				sb3.append(nom + "', ");
+				sb3.append("systimestamp)");
 
-			// SQL実行
-			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
-			int rs = stmt.executeUpdate(sb.toString()); // 実行し、その結果(更新された行数)を格納
+				// SQL実行
+				Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
+				int rs = stmt.executeUpdate(sb3.toString()); // 実行し、その結果(更新された行数)を格納
 
-			// 処理
-			// SQL実行後に、更新されたレコードが無かった場合(削除処理が失敗)
-			if (rs == 0) {
-				// 実行結果をfalse(失敗)に設定
-				result = false;
+				// 処理
+				// SQL実行後に、更新されたレコードが無かった場合(削除処理が失敗)
+				if (rs == 0) {
+					// 実行結果をfalse(失敗)に設定
+					result = false;
+				}
 			}
 		}
 

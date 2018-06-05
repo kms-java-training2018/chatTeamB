@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>エラー</title>
 </head>
 <body>
-<p>エラーページです</p>
+<p>エラーです</p>
+<a href="/chat/login"> ログイン画面へ </a>
 </body>
 </html>
