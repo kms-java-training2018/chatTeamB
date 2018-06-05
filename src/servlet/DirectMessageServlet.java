@@ -161,18 +161,24 @@ public class DirectMessageServlet extends HttpServlet {
 		//		ここからdeleteMessage処理
 		////////////////////////////////////////////////////////////////////////
 		case "deleteMessage":
-			/** クラスMessageInfoModelのインスタンス取得　*/
-			MessageInfoModel deleteMessage = new MessageInfoModel();
-			// DirectMessageBean directMessageBean = new DirectMessageBean();
-			String messageNo = req.getParameter("messageNo");
-			boolean result2 = deleteMessage.deleteMessage(messageNo);
 
-			if (result2 == false) {
+			// パラメーターを受け取る
+			String messageNo = req.getParameter("messageNo");
+
+			// メッセージの論理削除処理を実行
+			// 【メッセージの論理削除処理が失敗した場合】
+			MessageInfoModel deleteMessage = new MessageInfoModel();
+			if (deleteMessage.deleteMessage(messageNo) == false) {
 				System.out.println("会話情報を論理削除できません");
+				// セッションを削除
 				session = req.getSession(false);
 				session = null;
+				// エラーページへ遷移
 				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
+
+			// 【メッセージの論理削除処理が成功した場合】
+			// switch文を抜けて、ページ表示処理をする。
 
 
 			break;
@@ -291,6 +297,7 @@ public class DirectMessageServlet extends HttpServlet {
 			req.setAttribute("list", list);
 			req.setAttribute("otherName", otherName);
 			req.setAttribute("userName", userName);
+			req.setAttribute("directMessageBean", directMessageBean);
 			req.getRequestDispatcher(direction).forward(req, res);
 
 			// 必要ないかも？
