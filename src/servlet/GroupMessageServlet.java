@@ -21,14 +21,14 @@ public class GroupMessageServlet extends HttpServlet {
 
 		//セッション取得
 		HttpSession session = req.getSession();
-		/**　セッションがない場合エラー画面に移動
+		//**　セッションがない場合エラー画面に移動
 		if (session == null) {
 			System.out.println("セッションがないです");
 			session = req.getSession(false);
 			session = null;
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
-		 */
+		 //*/
 
 		////////////////////////////////////////////////////////////////////////
 		//		初期化
@@ -111,7 +111,7 @@ public class GroupMessageServlet extends HttpServlet {
 		// リクエストスコープにいれてjspに送る
 		req.setAttribute("list", list);
 		req.setAttribute("otherName", otherName);
-		req.setAttribute("userName", userName);
+//		req.setAttribute("userName", userName);
 		req.setAttribute("directMessageBean", directMessageBean);
 		req.getRequestDispatcher(direction).forward(req, res);
 	}

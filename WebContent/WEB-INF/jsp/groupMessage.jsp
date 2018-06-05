@@ -6,11 +6,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!-- JSを指定 -->
-	<script src="../js/main.js"></script>
+<script src="../js/main.js"></script>
 <title>グループメッセージ</title>
 </head>
 <body>
-<!-- 以下メモ===========================================================================================================
+	<!-- 以下メモ===========================================================================================================
 
 【リンク】
 ・GET通信。
@@ -23,20 +23,20 @@
 
  以上メモ============================================================================================================-->
 
-<!-- ここからヘッダー ===============================================================================================-->
-<header> ようこそ<br>
-    ${userName}さん<br>
-    <form action="/chat/main" method="POST">
-        <button type='submit' name='action' value='logout'>ログアウト</button>
-    </form>
+	<!-- ここからヘッダー ===============================================================================================-->
+	<header> ようこそ<br>
+	${userName}さん<br>
+	<form action="/chat/main" method="POST">
+		<button type='submit' name='action' value='logout'>ログアウト</button>
+	</form>
 
-    <form action="/chat/main" method="POST">
+	<form action="/chat/main" method="POST">
 		<button type="submit" name="action" value="toMainPage" class="button">メインメニューへ戻る</button>
 	</form>
 
-<!-- ここまでヘッダー ===============================================================================================-->
-</header>
-<!-- ここからボディ ===============================================================================================-->
+	<!-- ここまでヘッダー ===============================================================================================-->
+	</header>
+	<!-- ここからボディ ===============================================================================================-->
 	<h1>チャット研修プログラム</h1>
 	<h2>グループメッセージ</h2>
 	<a href="/chat/showProfile">あいて</a>：グループメッセージのサンプルだよー（´・ω・｀）
@@ -56,43 +56,47 @@
 		<!-- 自分のメッセージの場合 -->
 		<c:if test="${judge}">
 			<br>
-			<div align="center" >
-			<div style="display:inline-block; border: 1px solid #cccccc">
-				<br> ｛
-				<c:out value="${list.userName}" />
-				<br>：
-				<c:out value="${list.listMessage}" />
-				<br>：Judge番号
-				<c:out value="${list.listJudge}" />
-				<br>：会話番号
-				<c:out value="${list.listMessageNo}" />
-				<br>：会員番号
-				<c:out value="${list.userNo}" />
-				｝ <br>
-				<form action="/chat/directMessage" method="POST">
-					<button type="submit" name="action" value="deleteMessage"
-						class="deleteMessage">削除</button>
-					<input type="hidden" name="messageNo" value="${list.listMessageNo}">
-				</form>
-			</div>
+			<div style="position: relative; left: 500px">
+				<div style="display: inline-block; border: 1px solid #cccccc">
+					<br> ｛
+					<c:out value="${list.userName}" />
+					<br>：
+					<c:out value="${list.listMessage}" />
+					<br>：Judge番号
+					<c:out value="${list.listJudge}" />
+					<br>：会話番号
+					<c:out value="${list.listMessageNo}" />
+					<br>：会員番号
+					<c:out value="${list.userNo}" />
+					｝ <br>
+					<form action="/chat/directMessage" method="POST">
+						<button type="submit" name="action" value="deleteMessage"
+							class="deleteMessage">削除</button>
+						<input type="hidden" name="messageNo"
+							value="${list.listMessageNo}">
+					</form>
+				</div>
 			</div>
 		</c:if>
 
 		<!-- 他人のメッセージの場合 -->
 		<c:if test="${!judge}">
 			<br>
-			<div style="display:inline-block; border: 1px solid #cccccc">
-				<br> <a href="/chat/showProfile?userNo=${list.toSendUserNo}"
-					class="link" target=”_blank”> ｛<c:out value="${list.otherName}" />さん
-				</a> <br>：
-				<c:out value="${list.listMessage}" />
-				<br>：Judge番号
-				<c:out value="${list.listJudge}" />
-				<br>：会話番号
-				<c:out value="${list.listMessageNo}" />
-				<br>：会員番号
-				<c:out value="${list.userNo}" />
-				｝ <br>
+			<div style="position: relative; left: 100px">
+				<div style="display: inline-block; border: 1px solid #cccccc">
+					<br> <a href="/chat/showProfile?userNo=${list.toSendUserNo}"
+						class="link" target=”_blank”> ｛<c:out
+							value="${list.otherName}" />さん
+					</a> <br>：
+					<c:out value="${list.listMessage}" />
+					<br>：Judge番号
+					<c:out value="${list.listJudge}" />
+					<br>：会話番号
+					<c:out value="${list.listMessageNo}" />
+					<br>：会員番号
+					<c:out value="${list.userNo}" />
+					｝ <br>
+				</div>
 			</div>
 		</c:if>
 	</c:forEach>
@@ -114,31 +118,34 @@
 
 
 
-<!-- 	【メッセージ送信】 -->
+
+	<!-- 	【メッセージ送信】 -->
 	<form action="/chat/groupMessage" method="POST">
-		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage" class="messageInputBox">
-		<input type="hidden" name="groupNo" value="${requestScope.groupNo}">
+		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage"
+			class="messageInputBox"> <input type="hidden" name="groupNo"
+			value="${requestScope.groupNo}">
 		<button type='submit' name='action' value='sendMessage' class="button">送信</button>
 	</form>
 
 
-<!-- 	【メッセージ削除】 -->
+	<!-- 	【メッセージ削除】 -->
 	<form action="/chat/groupMessage" method="POST">
-		<button type="submit" name="action" value="deleteMessage" id="deleteMessage">削除</button>
+		<button type="submit" name="action" value="deleteMessage"
+			id="deleteMessage">削除</button>
 		<input type="hidden" name="messageNo" value="【EL式で、該当の会話番号】">
 	</form>
 
-<!-- 	【グループ脱退】 -->
+	<!-- 	【グループ脱退】 -->
 	<form action="/chat/groupMessage" method="POST">
-	<button type="submit" name="action" value="leaveGroup" class="leaveGroup">
-		グループ脱退</button>
+		<button type="submit" name="action" value="leaveGroup"
+			class="leaveGroup">グループ脱退</button>
 	</form>
 
-<!-- ここまでボディ ===============================================================================================-->
-<!-- ここからフッター ===============================================================================================-->
-<form action="/chat/main" method="POST">
+	<!-- ここまでボディ ===============================================================================================-->
+	<!-- ここからフッター ===============================================================================================-->
+	<form action="/chat/main" method="POST">
 		<input type="submit" value="メインメニューに戻る">
 	</form>
-<!-- ここまでフッター ===============================================================================================-->
+	<!-- ここまでフッター ===============================================================================================-->
 </body>
 </html>
