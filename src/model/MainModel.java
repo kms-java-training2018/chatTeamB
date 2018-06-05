@@ -20,13 +20,13 @@ public class MainModel {
 	public MainBean newMessage(SessionBean bean) {
 		// 初期化
 		MainBean mainBean = new MainBean();
-		StringBuilder sb = new StringBuilder();
 		String userNo = bean.getUserNo();
 		String userName = bean.getUserName();
 		ArrayList<String> otherNo = new ArrayList<String>();
 		ArrayList<String> otherName = new ArrayList<String>();
 		ArrayList<String> message = new ArrayList<String>();
 
+		StringBuilder sb = new StringBuilder();
 		Connection conn = null;
 		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
 		String user = "DEV_TEAM_B";

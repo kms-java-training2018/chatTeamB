@@ -19,18 +19,19 @@
 	<h2>グループ作成</h2>
 	<p>${errorMessage}</p>
 	<p>グループ名</p>
+	<form action="/chat/makeGroup" method="post">
 	<input type="text" name="inputGroupName" class="inputGroupCreate">
 	<p>メンバーを選ぶ</p>
 
 	<!-- 【グループ作成画面、グループメンバー選択箇所】 -->
-	<form action="/chat/makeGroup" method="post">
+
 		<!-- 自分 -->
 		<label><input type="checkbox" name="selectMember"
-			value="${sessionScope.userNo}" checked="checked" required>${sessionScope.userName}さん</label>
+			value="${userNo}" checked="checked" required>${userName}さん<br></label>
 
 		<!-- 他ユーザ -->
 		<c:forEach var="nom" items="${allUserNo}" varStatus="status">
-			<c:if test="${nom != sessionScope.userNo}">
+			<c:if test="${nom != userNo}">
 
 				<label><input type="checkbox" name="selectMember"
 					value="${nom}">${allUserName[status.index]} さん</label><br>

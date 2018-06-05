@@ -33,6 +33,9 @@ public class MakeGroupServlet extends HttpServlet {
 			session = null;
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
+		SessionBean sessionBean = new SessionBean();
+		sessionBean = (SessionBean) session.getAttribute("session");
+
 		String action = req.getParameter("action");
 		switch (action) {
 		case "groupTransition":
@@ -50,6 +53,8 @@ public class MakeGroupServlet extends HttpServlet {
 
 			req.setAttribute("allUserNo", makeGroupBean.getAllUserNo());
 			req.setAttribute("allUserName", makeGroupBean.getAllUserName());
+			req.setAttribute("userNo", sessionBean.getUserNo());
+			req.setAttribute("userName", sessionBean.getUserName());
 
 			req.getRequestDispatcher("/WEB-INF/jsp/makeGroup.jsp").forward(req, res);
 			break;
@@ -60,23 +65,25 @@ public class MakeGroupServlet extends HttpServlet {
 			MakeGroupBean mgBean = new MakeGroupBean();
 			String groupName = (String) req.getParameter("inputGroupName");
 			String[] groupMember = req.getParameterValues("selectMember");
-			System.out.println(groupMember);
 			ArrayList<String> memberList = new ArrayList<String>();
 			for (String mem : groupMember) {
 				memberList.add(mem);
 			}
 			//入力文字数のチェック
 			mgBean.setErrorMessage("");
-			if (groupName.length() > 30 || (!(memberList.contains(session.getAttribute("userNo"))))) {
+			boolean userCheck = false;
+			if (memberList.contains(session.getAttribute("userNo"))) {
+				userCheck = true;
+			}
+			if (groupName.length() > 30 || userCheck == false) {
 				mgBean.setErrorMessage("エラーが発生しました。\nグループ名は30文字以内で入力し、\n自分をチェックしてグループを作成してください");
 				req.getRequestDispatcher("/WEB-INF/jsp/makeGroup.jsp").forward(req, res);
 			}
 			req.setAttribute("errorMessage", mgBean.getErrorMessage());
 
-			SessionBean sessionBean = new SessionBean();
-			sessionBean = (SessionBean) session.getAttribute("session");
 			GroupInfoModel gimodel = new GroupInfoModel();
 			gimodel.groupCreate(sessionBean.getUserNo(), groupName, memberList);
+			req.getRequestDispatcher("/main").forward(req, res);
 			break;
 
 		default:

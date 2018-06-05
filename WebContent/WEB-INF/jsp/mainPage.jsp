@@ -49,7 +49,7 @@
 		<button type='submit' name='action' value='groupTransition'>グループ作成</button>
 	</form>
 	<form action="/chat/myPage" method="POST">
-		<input type="submit" value="プロフィール画面へ">
+		<button type='submit' name='action' value='myPageTransition'>プロフィール編集</button>
 	</form>
 
 

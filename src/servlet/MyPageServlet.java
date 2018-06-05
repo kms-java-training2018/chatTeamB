@@ -33,34 +33,38 @@ public class MyPageServlet extends HttpServlet {
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
-		// セッションがある場合
-		// Beanを使うための初期化
-		MyPageModel model = new MyPageModel();
-		SessionBean sessionBean = new SessionBean();
-		sessionBean = (SessionBean) session.getAttribute("session");
 		MyPageBean myPageBean = new MyPageBean();
-
-		// メインメニューからの遷移
-		// プロフィール情報の取得（認証処理）
-		try {
-			myPageBean = model.profileGet(sessionBean);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("プロフィールサーブレット、認証処理キャッチ");
-		}
-
-		String userName = myPageBean.getUserName();
-		String myPageText = myPageBean.getMyPageText();
-
-		//セット
-		req.setAttribute("userName", userName);
-		req.setAttribute("myPageText", myPageText);
-
-		// 自分のプロフィール画面に遷移
-		req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
 
 		String action = req.getParameter("action");
 		switch (action) {
+		case "myPageTransition":
+			// セッションがある場合
+			// Beanを使うための初期化
+			MyPageModel model = new MyPageModel();
+			SessionBean sessionBean = new SessionBean();
+			sessionBean = (SessionBean) session.getAttribute("session");
+
+
+			// メインメニューからの遷移
+			// プロフィール情報の取得（認証処理）
+			try {
+				myPageBean = model.profileGet(sessionBean);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("プロフィールサーブレット、認証処理キャッチ");
+			}
+
+			String userName = myPageBean.getUserName();
+			String myPageText = myPageBean.getMyPageText();
+
+			//セット
+			req.setAttribute("userName", userName);
+			req.setAttribute("myPageText", myPageText);
+
+			// 自分のプロフィール画面に遷移
+			req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
+			break;
+
 		case "profileUpdate":
 
 			// プロフィール更新時
@@ -80,20 +84,23 @@ public class MyPageServlet extends HttpServlet {
 			// Beanの初期化
 			MyPageUpdateModel update = new MyPageUpdateModel();
 			sessionBean = (SessionBean) session.getAttribute("session");
-
+			myPageBean.setUserNo(sessionBean.getUserNo());
 			myPageBean.setUpdateUserName(editName);
 			myPageBean.setUpdateMyPageText(editText);
 
 			// 情報取得
 			try {
-				myPageBean = update.profileUpdateGet(sessionBean);
+				myPageBean = update.profileUpdateGet(myPageBean);
+				sessionBean.setUserName(myPageBean.getUpdateUserName());
+				session.setAttribute("userName", sessionBean.getUserName());
 			} catch (Exception e) {
 				e.printStackTrace();
 				req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
 				System.out.println("プロフィール編集サーブレット、認証処理キャッチ");
 			}
 			// メインメニューに遷移
-			req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
+			req.getRequestDispatcher("/main").forward(req, res);
+			break;
 
 		}
 	}

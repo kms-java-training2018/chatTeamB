@@ -6,16 +6,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import bean.MyPageBean;
-import bean.SessionBean;
 
 public class MyPageUpdateModel {
-	public MyPageBean profileUpdateGet(SessionBean sessionBean) {
+	public MyPageBean profileUpdateGet(MyPageBean myPageBean) {
 		// 初期化
 		boolean result = true;
-		MyPageBean myPageBean = new MyPageBean();
 		String updateUserName = myPageBean.getUpdateUserName();
 		String updateMyPageText = myPageBean.getUpdateMyPageText();
-		String userNo = sessionBean.getUserNo();
+		String userNo = myPageBean.getUserNo();
 
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
 		Connection conn = null;

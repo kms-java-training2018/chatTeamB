@@ -1,6 +1,10 @@
 package bean;
 
 public class MyPageBean {
+
+	/** ログインしているユーザ番号 */
+	private String userNo;
+
 	/** ログインしているユーザ名 */
 	private String userName;
 
@@ -54,6 +58,14 @@ public class MyPageBean {
 
 	public void setUpdateMyPageText(String updateMyPageText) {
 		this.updateMyPageText = updateMyPageText;
+	}
+
+	public String getUserNo() {
+		return userNo;
+	}
+
+	public void setUserNo(String userNo) {
+		this.userNo = userNo;
 	}
 
 }

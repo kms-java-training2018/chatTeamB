@@ -29,13 +29,13 @@ public class MainPageServlet extends HttpServlet {
 			//エラー画面に遷移
 			session = req.getSession(false);
 			session = null;
-			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			req.getRequestDispatcher("/logout").forward(req, res);
 		}
-		//TODO ログアウトボタンが押されたかどうかの判定
+
 
 		// 初期化
 		MainBean mainBean = new MainBean();
-		MainBean mainBeanGroup = new MainBean();
+		MainBean mainGroupBean = new MainBean();
 		SessionBean sessionBean = new SessionBean();
 		sessionBean = (SessionBean) session.getAttribute("session");
 		MainModel model = new MainModel();
@@ -46,7 +46,7 @@ public class MainPageServlet extends HttpServlet {
 			//会員一覧と最新メッセージを取得
 			mainBean = model.newMessage(sessionBean);
 			//グループ一覧と最新メッセージを取得
-			mainBeanGroup = modelGroup.getGroup(sessionBean);
+			mainGroupBean = modelGroup.getGroup(sessionBean);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("メインページサーブレット、認証処理キャッチ");
@@ -73,9 +73,9 @@ public class MainPageServlet extends HttpServlet {
 		ArrayList<String> groupMessage = new ArrayList<String>();
 
 		//それぞれに値を格納
-		groupNo = mainBeanGroup.getGroupNo();
-		groupName = mainBeanGroup.getGroupName();
-		groupMessage = mainBeanGroup.getGroupMessage();
+		groupNo = mainGroupBean.getGroupNo();
+		groupName = mainGroupBean.getGroupName();
+		groupMessage = mainGroupBean.getGroupMessage();
 
 		//セット
 		req.setAttribute("groupNo", groupNo);
@@ -85,8 +85,7 @@ public class MainPageServlet extends HttpServlet {
 		//ヘッダー用にユーザ名をセッションにセット
 		session.setAttribute("userName", sessionBean.getUserName());
 
-		//各プログラム用にユーザ番号をセッションにセット
-		session.setAttribute("userNo", sessionBean.getUserNo());
+
 
 		/*// メッセージ画面用仮
 		// まずはSessionBeanに情報をセット

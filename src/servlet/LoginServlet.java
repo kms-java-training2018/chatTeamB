@@ -69,7 +69,6 @@ public class LoginServlet extends HttpServlet {
 			// beanのerrorMessageをパラメーターにセット
 			req.setAttribute("errorMessage", bean.getErrorMessage());
 
-
 		}
 		req.getRequestDispatcher(direction).forward(req, res);
 	}
