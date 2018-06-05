@@ -198,7 +198,7 @@ public class DirectMessageServlet extends HttpServlet {
 		////////////////////////////////////////////////////////////////////////
 
 		// 必要ないかも？
-		// case "lookMessage":
+//		 case "lookMessage":
 			// System.out.println("lookMessage処理にきました");
 
 			/**　セッションがない場合エラー画面に移動
@@ -248,7 +248,7 @@ public class DirectMessageServlet extends HttpServlet {
 			//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
 			//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			//	}
-			directMessageBean.setToSendUserNo("2"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
+			directMessageBean.setToSendUserNo("3"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
 			System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
 
 			// リクエストスコープから送信対象者の表示名取得
