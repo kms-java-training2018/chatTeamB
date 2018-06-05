@@ -98,6 +98,8 @@ public class DirectMessageModelLook {
 				directMessageBean.setListMessage(rs.getString("MESSAGE"));
 				// 会話番号をクラスDirectMessageBeanのlistMessageNoに入れる
 				directMessageBean.setListMessageNo(rs.getString("MESSAGE_NO"));
+				// 会員番号をクラスDirectMessageBeanのlistMessageNoに入れる
+				directMessageBean.setUserNo(rs.getString("SEND_USER_NO"));
 				// 送信者番号がログインユーザーの会員番号と一致した場合、listjudgeに0を代入
 				if (userNo.equals(rs.getString("SEND_USER_NO"))) {
 					directMessageBean.setListJudge("0");
@@ -109,7 +111,7 @@ public class DirectMessageModelLook {
 				}
 				System.out.println("会話内容：" + directMessageBean.getListMessage()
 						+ "：判別内容：" + directMessageBean.getListJudge()
-						+ "：会員番号：" + directMessageBean.getListMessageNo()
+						+ "：会員番号：" + directMessageBean.getUserNo()
 						+ "：会話番号：" + directMessageBean.getListMessageNo());
 				list.add(directMessageBean);
 			}

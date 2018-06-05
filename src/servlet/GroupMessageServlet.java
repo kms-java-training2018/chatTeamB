@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -8,72 +9,111 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import bean.DirectMessageBean;
+import bean.SessionBean;
+import model.GroupMessageModelLook;
 import model.MessageInfoModel;
 
 public class GroupMessageServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		System.out.println("GroupMessageServletにきました");
 
-		// 初期化
-		MessageInfoModel model = new MessageInfoModel();
-		boolean result;
-
-		// セッションの値を取得
+		//セッション取得
 		HttpSession session = req.getSession();
-		String userName = (String)session.getAttribute("userName");
-		String userNo = (String)session.getAttribute("userNo");
-
-// 【ページ遷移時】-----------------------------------------------------------------------------------------------------
-//		メインメニューでグループ名のリンクを押下することで実行される処理。
-//		セッションにあるログイン情報とグループ情報テーブルにある会員情報を比較して不正な遷移ではないかチェックした後、
-//		会話情報を取得してグループメッセージ画面に遷移する。
-
-		// (1)-1 セッションの存在チェックを行う。
-		// (1)-2 チェックでエラーが発生した場合、不正な遷移と判断して、エラー画面に遷移する。
-		if (userName == null && userNo == null) {
-			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		}
-
-		// (1)-3 グループ番号をパラメータとして持っているか確認する。
-		// (1)-4 パラメータが足りなかった場合、不正な遷移と判断して、エラー画面に遷移する。
-		String groupNo  = req.getParameter("groupNo");
-		if (groupNo == null) {
-			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		}
-
-		// (1)-5 セッションに保持している会員番号、パラメータとして受け取ったグループ番号を条件に
-		//       グループ情報テーブルから自身のデータを取得する
-		// (1)-6 データが取得できなかった場合、グループのメンバーでないと判断してエラー画面に遷移する
-		if (model.judgeGroupMember("1", "1") == false) {
-			// セッションを削除
+		/**　セッションがない場合エラー画面に移動
+		if (session == null) {
+			System.out.println("セッションがないです");
 			session = req.getSession(false);
 			session = null;
-			// エラーページへ遷移
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+		 */
+
+		////////////////////////////////////////////////////////////////////////
+		//		初期化
+		////////////////////////////////////////////////////////////////////////
+
+		// ページの行き先変更変数
+		String direction = "/WEB-INF/jsp/groupMessage.jsp";
+		/** クラスSessionBeanの初期化 */
+		SessionBean sessionBean = new SessionBean();
+		/** クラスDirectMessageBeanの初期化 */
+		DirectMessageBean directMessageBean = new DirectMessageBean();
+		/** クラスDirectMessageModelLookのインスタンス取得　*/
+		GroupMessageModelLook model = new GroupMessageModelLook();
+		/** jspに持っていくArrayList（会話内容、judge、会話番号）初期化　*/
+		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
+
+		////////////////////////////////////////////////////////////////////////
+		//		ここからdirectMessageBeanに必要な値を入れる
+		////////////////////////////////////////////////////////////////////////
+
+		// セッションスコープの"session"をクラスSessionBeanに代入
+		sessionBean = (SessionBean) session.getAttribute("session");
+
+
+		// SessionBeanからログインユーザの会員番号取得
+		directMessageBean.setUserNo("1"/*メインページが出来次第こちらを使う　sessionBean.getUserNo()*/);
+		System.out.println("UserNo：" + directMessageBean.getUserNo());
+
+		// SessionBeanからログインユーザの表示名取得
+		directMessageBean.setUserName("私の表示名"/*メインページが出来次第こちらを使う　sessionBean.getUserName()*/);
+		String userName = directMessageBean.getUserName();
+		System.out.println("UserName：" + userName);
+
+		// セッションスコープから送信対象者の会員番号取得
+		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
+		//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
+		//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		//	}
+		directMessageBean.setToSendUserNo("1"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
+		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
+
+		// リクエストスコープから送信対象者の表示名取得
+		directMessageBean.setOtherName("お~い"/*(String) req.getParameter("相手の表示名")*/);
+		String otherName = directMessageBean.getOtherName();
+		System.out.println("OtherName：" + otherName);
+
+		////////////////////////////////////////////////////////////////////////
+		//		ここまでdirectMessageBeanに必要な値を入れる
+		////////////////////////////////////////////////////////////////////////
+
+		// DirectMessageModelLookへ移動会話情報取得処理
+		try {
+			System.out.println("GroupMessageModelLookにいきます");
+			list = model.lookMessage(directMessageBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("DirectMessageServlet、認証処理キャッチ");
+		}
+		System.out.println("GroupMessageServletに帰ってきました");
+
+		// レコードが取得出来なかった場合エラー画面に遷移する
+		if (list == null) {
+			System.out.println("レコードがないです");
+			session = req.getSession(false);
+			session = null;
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
+		// デバック用
+		DirectMessageBean dMBean = new DirectMessageBean();
+		for (int i = 0; i < list.size(); i++) {
+			dMBean = list.get(i);
+			System.out.println("会話内容：" + dMBean.getListMessage()
+			+ "：判別内容：" + dMBean.getListJudge()
+			+ "：会員番号：" + dMBean.getUserNo()
+			+ "：表示名：" + dMBean.getUserName()
+			+ "：会話番号：" + dMBean.getListMessageNo());
+		}
 
-		// (2)-1 グループ会話情報を取得する。
-
-
-
-		// (2)-2 チェックでエラーが発生した場合
-
-		//       エラーメッセージを設定して、ログイン画面に遷移する。
-		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-
-
-		req.getRequestDispatcher("/WEB-INF/jsp/groupMessage.jsp").forward(req, res);
-
-
-
-
-//		//セッションにログイン情報が保持されていない場合、エラーページに遷移
-//		HttpSession session = req.getSession();
-//		if (session.getAttribute("userName") == null) {
-//			System.out.println("セッションがありませんでした");
-//			req.getRequestDispatcher("/WEB-INF/jsp/ersrorPage.jsp").forward(req, res);
-//		}
+		// リクエストスコープにいれてjspに送る
+		req.setAttribute("list", list);
+		req.setAttribute("otherName", otherName);
+		req.setAttribute("userName", userName);
+		req.setAttribute("directMessageBean", directMessageBean);
+		req.getRequestDispatcher(direction).forward(req, res);
 	}
 
 
@@ -178,7 +218,7 @@ public class GroupMessageServlet extends HttpServlet {
 
 
 		// パラメーターを設定
-		
+
 
 
 

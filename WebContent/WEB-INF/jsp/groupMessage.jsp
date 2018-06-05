@@ -45,6 +45,73 @@
 	<br>
 
 
+	<h2>
+		<a href="/chat/showProfile">${otherName} さん</a>
+	</h2>
+
+	<!-- for文でメッセージを全て表示させる -->
+	<c:forEach var="list" items="${list}" varStatus="status">
+		<!-- if文で自分と他人のメッセージを分ける -->
+		<c:if test="${list.listJudge == '0'}" var="judge" />
+		<!-- 自分のメッセージの場合 -->
+		<c:if test="${judge}">
+			<br>
+			<div align="center" >
+			<div style="display:inline-block; border: 1px solid #cccccc">
+				<br> ｛
+				<c:out value="${list.userName}" />
+				<br>：
+				<c:out value="${list.listMessage}" />
+				<br>：Judge番号
+				<c:out value="${list.listJudge}" />
+				<br>：会話番号
+				<c:out value="${list.listMessageNo}" />
+				<br>：会員番号
+				<c:out value="${list.userNo}" />
+				｝ <br>
+				<form action="/chat/directMessage" method="POST">
+					<button type="submit" name="action" value="deleteMessage"
+						class="deleteMessage">削除</button>
+					<input type="hidden" name="messageNo" value="${list.listMessageNo}">
+				</form>
+			</div>
+			</div>
+		</c:if>
+
+		<!-- 他人のメッセージの場合 -->
+		<c:if test="${!judge}">
+			<br>
+			<div style="display:inline-block; border: 1px solid #cccccc">
+				<br> <a href="/chat/showProfile?userNo=${list.toSendUserNo}"
+					class="link" target=”_blank”> ｛<c:out value="${list.otherName}" />さん
+				</a> <br>：
+				<c:out value="${list.listMessage}" />
+				<br>：Judge番号
+				<c:out value="${list.listJudge}" />
+				<br>：会話番号
+				<c:out value="${list.listMessageNo}" />
+				<br>：会員番号
+				<c:out value="${list.userNo}" />
+				｝ <br>
+			</div>
+		</c:if>
+	</c:forEach>
+	<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- 	【メッセージ送信】 -->

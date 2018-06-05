@@ -67,7 +67,7 @@ public class DirectMessageServlet extends HttpServlet {
 		//	if ((String) req.getParameter("相手の会員番号（送信対象者番号）").equals(null)) {
 		//		req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		//	}
-		directMessageBean.setToSendUserNo("2"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
+		directMessageBean.setToSendUserNo("3"/*(String) req.getParameter("相手の会員番号（送信対象者番号）")*/);
 		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
 
 		// リクエストスコープから送信対象者の表示名取得
@@ -103,7 +103,7 @@ public class DirectMessageServlet extends HttpServlet {
 			dMBean = list.get(i);
 			System.out.println("会話内容：" + dMBean.getListMessage()
 			+ "：判別内容：" + dMBean.getListJudge()
-			+ "：会員番号：" + dMBean.getListMessageNo()
+			+ "：会員番号：" + dMBean.getUserNo()
 			+ "：会話番号：" + dMBean.getListMessageNo());
 		}
 

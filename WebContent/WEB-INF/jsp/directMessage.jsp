@@ -39,6 +39,8 @@
 				<c:out value="${list.listJudge}" />
 				<br>：会話番号
 				<c:out value="${list.listMessageNo}" />
+				<br>：会員番号
+				<c:out value="${list.userNo}" />
 				｝ <br>
 				<form action="/chat/directMessage" method="POST">
 					<button type="submit" name="action" value="deleteMessage"
@@ -61,6 +63,8 @@
 				<c:out value="${list.listJudge}" />
 				<br>：会話番号
 				<c:out value="${list.listMessageNo}" />
+				<br>：会員番号
+				<c:out value="${list.userNo}" />
 				｝ <br>
 			</div>
 		</c:if>
