@@ -18,7 +18,7 @@
 	<h2>プロフィール確認</h2>
 	<p>${userName}さん</p>
 	<p>自己紹介 ${myPageText}</p>
-	<input type="button" value="閉じる" class="closeTab">
+	<input type="button" value="閉じる" onClick="window.close();">
 
 </body>
 </html>
