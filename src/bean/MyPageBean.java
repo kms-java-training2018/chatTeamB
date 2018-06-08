@@ -14,11 +14,11 @@ public class MyPageBean {
 	/** エラーメッセージ */
 	private String errorMessage;
 
-	/** 編集したユーザ名 */
-	private String updateUserName;
-
-	/** 編集した自己紹介文 */
-	private String updateMyPageText;
+//	/** 編集したユーザ名 */
+//	private String updateUserName;
+//
+//	/** 編集した自己紹介文 */
+//	private String updateMyPageText;
 
 	public String getMyPageText() {
 		return myPageText;

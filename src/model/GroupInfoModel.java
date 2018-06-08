@@ -18,7 +18,6 @@ public class GroupInfoModel {
 
 	public boolean groupCreate(String userNo, String groupName, ArrayList<String> allUserNo) {
 		// 初期化
-		//GroupCreateBean gcBean = new GroupCreateBean(); //自動採番されたグループ番号格納用
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
 		boolean result = true; // 処理実行結果格納用(戻り値用)
 		String newGroupNo=""; //自動採番されたグループ番号格納用
