@@ -19,7 +19,7 @@
 	<br>■会員一覧
 	<br>
 
-	<c:forEach var="otherUser" items="${otherUserList}" varStatus="status">
+	<c:forEach var="otherUser" items="${otherUserList}">
 		<a
 			href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
 			class="partnerNameLink">${otherUser.otherNo} ${otherUser.otherName}
@@ -35,7 +35,7 @@
 	<br>■グループ一覧
 	<br>
 
-	<c:forEach var="userGroup" items="${userGroupList}" varStatus="status">
+	<c:forEach var="userGroup" items="${userGroupList}">
 		<a href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
 			class="nameLink">${userGroup.groupNo} ${userGroup.groupName}（グループメッセージへ）<br>
 		</a>

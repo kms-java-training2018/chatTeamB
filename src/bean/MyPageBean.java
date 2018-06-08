@@ -44,21 +44,21 @@ public class MyPageBean {
 		this.errorMessage = errorMessage;
 	}
 
-	public String getUpdateUserName() {
-		return updateUserName;
-	}
-
-	public void setUpdateUserName(String updateUserName) {
-		this.updateUserName = updateUserName;
-	}
-
-	public String getUpdateMyPageText() {
-		return updateMyPageText;
-	}
-
-	public void setUpdateMyPageText(String updateMyPageText) {
-		this.updateMyPageText = updateMyPageText;
-	}
+//	public String getUpdateUserName() {
+//		return updateUserName;
+//	}
+//
+//	public void setUpdateUserName(String updateUserName) {
+//		this.updateUserName = updateUserName;
+//	}
+//
+//	public String getUpdateMyPageText() {
+//		return updateMyPageText;
+//	}
+//
+//	public void setUpdateMyPageText(String updateMyPageText) {
+//		this.updateMyPageText = updateMyPageText;
+//	}
 
 	public String getUserNo() {
 		return userNo;
