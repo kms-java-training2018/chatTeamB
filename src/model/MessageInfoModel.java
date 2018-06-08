@@ -130,12 +130,12 @@ public class MessageInfoModel {
 			// SQL作成
 			// 会話番号を条件に会話情報を論理削除する
 			sb.append("UPDATE ");
-				sb.append(" T_MESSAGE_INFO ");
+			sb.append(" T_MESSAGE_INFO ");
 			sb.append("SET ");
-				sb.append(" DELETE_FLAG  = 1,");
-				sb.append(" UPDATE_DATE  =  systimestamp ");
+			sb.append(" DELETE_FLAG  = 1,");
+			sb.append(" UPDATE_DATE  =  systimestamp ");
 			sb.append("WHERE ");
-				sb.append(" MESSAGE_NO = '" + messageNo + "' ");
+			sb.append(" MESSAGE_NO = '" + messageNo + "' ");
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
