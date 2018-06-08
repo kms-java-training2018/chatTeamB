@@ -10,41 +10,35 @@ import java.util.ArrayList;
 import bean.DirectMessageBean;
 
 public class GroupMessageModelLook {
-	// メッセージ閲覧メソッドの宣言
+	/**
+	 * グループ会話内容を取得するメソッド。戻り値は、要素がDirectMessageBean型のArrayListで、
+	 * 1つの会話情報を格納したBeanを、リストで返します。(グループの会話内容全体)
+	 * @param bean (DirectMessageBean)
+	 * @return ArrayList<DirectMessageBean>
+	 */
 	public ArrayList<DirectMessageBean> lookMessage(DirectMessageBean bean) {
-		System.out.println("GroupMessageModelLookにきました");
 
-		// jspに持っていくリスト（会話内容、judge）初期化
-		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
-
-		// 初期化
-		StringBuilder sb = new StringBuilder(); // SQL文の格納用
-		// DirectMessageBeanクラス内の会員番号を参照する
-		/** ログインユーザーの会員番号 */
+		////////////////////////////////////////////////////////////////////////
+		//		引数beanから情報を取得
+		////////////////////////////////////////////////////////////////////////
 		String userNo = bean.getUserNo();
-		System.out.println("UserNo：" + userNo);
+		String toSendGroupNo = bean.getToSendUserNo();
 
-		// DirectMessageBeanクラス内の相手ユーザーの表示名を参照する
-		/** ログインユーザーの表示名 */
-		String userName = bean.getUserName();
-		System.out.println("UserName：" + userName);
 
-		// DirectMessageBeanクラス内の送信対象者番号を参照する
-		/** 相手ユーザーの会員番号 */
-		String toSendUserNo = bean.getToSendUserNo();
-		System.out.println("ToSendUserNo：" + toSendUserNo);
+		////////////////////////////////////////////////////////////////////////
+		//		初期化
+		////////////////////////////////////////////////////////////////////////
+		// 戻り値用リスト
+		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
+		// SQL文の格納用
+		StringBuilder sb = new StringBuilder();
+		// SQL文実行結果格納用
+		ResultSet rs = null;
 
-		// DirectMessageBeanクラス内の相手ユーザーの表示名を参照する
-		/** 相手ユーザーの表示名 */
-		String otherName = bean.getOtherName();
-		System.out.println("OtherName：" + otherName);
 
 		/////////////////////////////////////////////////////////////////////////////
 		//		SQL文実行
 		/////////////////////////////////////////////////////////////////////////////
-
-		/** SQL文実行結果を格納する */
-		ResultSet rs = null;
 
 		// データベースに接続する準備
 		Connection conn = null;
@@ -63,10 +57,6 @@ public class GroupMessageModelLook {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			//------------------------------------------------------------------------------
-			// 今日はここまで
-			//------------------------------------------------------------------------------
-
 			// SQL作成
 			sb.append("SELECT ");
 			sb.append(" MESSAGE, ");
@@ -78,7 +68,7 @@ public class GroupMessageModelLook {
 			sb.append(" FULL OUTER JOIN M_USER B ");
 			sb.append(" ON A.SEND_USER_NO = B.USER_NO ");
 			sb.append("WHERE ");
-			sb.append(" TO_SEND_GROUP_NO =" + toSendUserNo);
+			sb.append(" TO_SEND_GROUP_NO =" + toSendGroupNo);
 			sb.append(" AND DELETE_FLAG = 0 ");
 			sb.append("ORDER BY A.REGIST_DATE ");
 
@@ -87,24 +77,37 @@ public class GroupMessageModelLook {
 			rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
 
 
+		/////////////////////////////////////////////////////////////////////////////
+		//		処理：レコードごとに、DirectMessageBeanのフィールドに値をセット
+		/////////////////////////////////////////////////////////////////////////////
 			while (rs.next()) {
-				// クラスDirectMessageBean初期化
+				// DirectMessageBean初期化
 				DirectMessageBean directMessageBean = new DirectMessageBean();
-				// メッセージをクラスDirectMessageBeanのlistMessageに入れる
+				// メッセージ→listMessage
 				directMessageBean.setListMessage(rs.getString("MESSAGE"));
-				// 会話番号をクラスDirectMessageBeanのlistMessageNoに入れる
+				// 会話番号→listMessageNo
 				directMessageBean.setListMessageNo(rs.getString("MESSAGE_NO"));
-				// 会員番号をクラスDirectMessageBeanのlistMessageNoに入れる
+				// 送信者の会員番号→userNo
 				directMessageBean.setUserNo(rs.getString("SEND_USER_NO"));
-				// 送信者番号がログインユーザーの会員番号と一致した場合、listjudgeに0を代入
+
+				// 【送信者がログインユーザーかどうかを判定】
+				// 送信者の会員番号がログインユーザーの会員番号と一致した場合
 				if (userNo.equals(rs.getString("SEND_USER_NO"))) {
+					// listjudge→0
 					directMessageBean.setListJudge("0");
+					// 送信者の表示名→userName
 					directMessageBean.setUserName(rs.getString("USER_NAME"));
-					// 送信者番号がログインユーザーの会員番号と一致しなかった場合、listjudgeに0を代入
+
+				// 送信者の会員番号がログインユーザーの会員番号と一致しなかった場合
 				} else {
+					// listjudge→1
 					directMessageBean.setListJudge("1");
+					// 送信者の表示名→otherName
 					directMessageBean.setOtherName(rs.getString("USER_NAME"));
 				}
+
+
+				// デバッグ用：取得した会話内容をコンソールに表示
 				System.out.println("会話内容：" + directMessageBean.getListMessage()
 						+ "：判別内容：" + directMessageBean.getListJudge()
 						+ "：会員番号：" + directMessageBean.getUserNo()

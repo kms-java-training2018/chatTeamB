@@ -21,6 +21,10 @@
 ・1つのformタグの中に複数のsubmitは設置可能だが、そのform内のすべてがパラメーターとして送られる。
 	→パラメーターを限定したい場合は、それぞれformタグでくくる
 
+
+	<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
+	<input type="hidden" name="groupName" value="${groupInfo.groupName}">
+
  以上メモ============================================================================================================-->
 
 	<!-- ここからヘッダー ===============================================================================================-->
@@ -40,14 +44,15 @@
 	<h1>チャット研修プログラム</h1>
 	<h2>グループメッセージ</h2>
 		<h2>
-		<a href="/chat/showProfile">グループ：${groupNo}</a>
+		<a href="/chat/showProfile">グループ：${groupInfo.groupName}</a>
 	</h2>
 
 	<!-- 	【グループ脱退】 -->
 	<form action="/chat/groupMessage" method="POST">
 		<button type="submit" name="action" value="leaveGroup"
 			class="leaveGroup">グループ脱退</button>
-		<input type="hidden" name="groupNo" value="${requestScope.groupNo}">
+		<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
+		<input type="hidden" name="groupName" value="${groupInfo.groupName}">
 	</form>
 
 	<!-- for文でメッセージを全て表示させる -->
@@ -75,6 +80,8 @@
 							class="deleteMessage">削除</button>
 						<input type="hidden" name="messageNo"
 							value="${list.listMessageNo}">
+						<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
+						<input type="hidden" name="groupName" value="${groupInfo.groupName}">
 					</form>
 				</div>
 			</div>
@@ -128,9 +135,9 @@
 
 	<!-- 	【メッセージ送信】 -->
 	<form action="/chat/groupMessage" method="POST">
-		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage"
-			class="messageInputBox"> <input type="hidden" name="groupNo"
-			value="${requestScope.groupNo}">
+		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage" class="messageInputBox" id="midashi1">
+		<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
+		<input type="hidden" name="groupName" value="${groupInfo.groupName}">
 		<button type='submit' name='action' value='sendMessage' class="button">送信</button>
 	</form>
 
