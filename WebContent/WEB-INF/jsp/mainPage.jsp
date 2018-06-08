@@ -21,7 +21,7 @@
 
 	<c:forEach var="otherUser" items="${otherUserList}" varStatus="status">
 		<a
-			href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
+			href="/chat/directMessage?otherUserNo=${otherUserList[status.index]}"
 			class="partnerNameLink">${otherUser.otherNo} ${otherUser.otherName}
 			さん（メッセージへ）<br>
 		</a>
