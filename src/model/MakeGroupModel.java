@@ -64,8 +64,6 @@ public class MakeGroupModel {
 				e.printStackTrace();
 			}
 		}
-//		makeGroupBean.setAllUserNo(allUserNo);
-//		makeGroupBean.setAllUserName(allUserName);
 
 		return allUserList;
 	}
