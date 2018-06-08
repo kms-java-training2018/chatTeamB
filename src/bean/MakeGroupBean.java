@@ -1,31 +1,29 @@
 package bean;
 
-import java.util.ArrayList;
-
 public class MakeGroupBean {
 
 	/** 全ユーザの会員番号*/
-	private ArrayList<String> allUserNo = new ArrayList<String>();
+	private String allUserNo;
 
 	/** 全ユーザの会員名*/
-	private ArrayList<String> allUserName = new ArrayList<String>();
+	private String allUserName;
 
-	/** エラーメッセージ */
+	/** エラーメッセージ*/
 	private String errorMessage;
 
-	public ArrayList<String> getAllUserNo() {
+	public String getAllUserNo() {
 		return allUserNo;
 	}
 
-	public void setAllUserNo(ArrayList<String> allUserNo) {
+	public void setAllUserNo(String allUserNo) {
 		this.allUserNo = allUserNo;
 	}
 
-	public ArrayList<String> getAllUserName() {
+	public String getAllUserName() {
 		return allUserName;
 	}
 
-	public void setAllUserName(ArrayList<String> allUserName) {
+	public void setAllUserName(String allUserName) {
 		this.allUserName = allUserName;
 	}
 

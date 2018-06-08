@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import bean.GroupCreateBean;
-
 public class GroupInfoModel {
 	//【グループ作成用】-------------------------------------------------------------------------------------------------
 	/**
@@ -20,9 +18,10 @@ public class GroupInfoModel {
 
 	public boolean groupCreate(String userNo, String groupName, ArrayList<String> allUserNo) {
 		// 初期化
-		GroupCreateBean gcBean = new GroupCreateBean(); //自動採番されたグループ番号格納用
+		//GroupCreateBean gcBean = new GroupCreateBean(); //自動採番されたグループ番号格納用
 		StringBuilder sb = new StringBuilder(); // SQL文の格納用
 		boolean result = true; // 処理実行結果格納用(戻り値用)
+		String newGroupNo=""; //自動採番されたグループ番号格納用
 
 		Connection conn = null;
 		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
@@ -96,7 +95,7 @@ public class GroupInfoModel {
 			ResultSet rs = stmt.executeQuery(sb2.toString()); // 実行し、その結果(更新された行数)を格納
 			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
 			if (rs.next()) { // あった場合
-				gcBean.setGroupNo(rs.getString("MAX(GROUP_NO)"));
+				newGroupNo = rs.getString("MAX(GROUP_NO)");
 			}
 
 		} catch (SQLException e) {
@@ -115,7 +114,6 @@ public class GroupInfoModel {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-
 			// SQL作成
 			// グループマスタの情報を基に
 			// グループ情報テーブルに登録(自分以外のユーザ番号)
@@ -128,7 +126,7 @@ public class GroupInfoModel {
 				sb3.append("USER_NO, ");
 				sb3.append("REGIST_DATE )");
 				sb3.append("VALUES ");
-				sb3.append("( '" + gcBean.getGroupNo() + "', '");
+				sb3.append("( '" + newGroupNo + "', '");
 				sb3.append(num + "', ");
 				sb3.append("systimestamp)");
 
@@ -277,7 +275,7 @@ public class GroupInfoModel {
 
 			// 処理
 			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
-			if (!rs.next()) {	// 無かった場合
+			if (!rs.next()) { // 無かった場合
 				result = false;
 			}
 

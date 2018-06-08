@@ -11,14 +11,15 @@ import bean.MakeGroupBean;
 
 public class MakeGroupModel {
 
-	public MakeGroupBean allUserGet() {
+	public ArrayList<MakeGroupBean> allUserGet() {
 		// 初期化
-		MakeGroupBean makeGroupBean = new MakeGroupBean();
+
+
+//		ArrayList<String> allUserNo = new ArrayList<String>();
+//		ArrayList<String> allUserName = new ArrayList<String>();
+		ArrayList<MakeGroupBean> allUserList = new ArrayList<MakeGroupBean>();
+
 		StringBuilder sb = new StringBuilder();
-
-		ArrayList<String> allUserNo = new ArrayList<String>();
-		ArrayList<String> allUserName = new ArrayList<String>();
-
 		Connection conn = null;
 		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
 		String user = "DEV_TEAM_B";
@@ -47,10 +48,10 @@ public class MakeGroupModel {
 			ResultSet rs = stmt.executeQuery(sb.toString());
 
 			while (rs.next()) {
-
-				allUserNo.add(rs.getString("user_no"));
-				allUserName.add(rs.getString("user_name"));
-
+				MakeGroupBean makeGroupBean = new MakeGroupBean();
+				makeGroupBean.setAllUserNo(rs.getString("user_no"));
+				makeGroupBean.setAllUserName(rs.getString("user_name"));
+				allUserList.add(makeGroupBean);
 			}
 
 		} catch (SQLException e) {
@@ -63,10 +64,10 @@ public class MakeGroupModel {
 				e.printStackTrace();
 			}
 		}
-		makeGroupBean.setAllUserNo(allUserNo);
-		makeGroupBean.setAllUserName(allUserName);
+//		makeGroupBean.setAllUserNo(allUserNo);
+//		makeGroupBean.setAllUserName(allUserName);
 
-		return makeGroupBean;
+		return allUserList;
 	}
 
 }

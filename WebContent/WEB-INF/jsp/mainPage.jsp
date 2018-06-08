@@ -19,13 +19,13 @@
 	<br>■会員一覧
 	<br>
 
-	<c:forEach var="nom" items="${otherNo}" varStatus="status">
+	<c:forEach var="oUList" items="${otherUserList}" varStatus="status">
 		<a
-			href="/chat/directMessage?otherNo=${otherNo[status.index]}&otherName=${otherName[status.index]}"
-			class='partnerNameLink'>${nom} ${otherName[status.index]}
+			href="/chat/directMessage?otherUserList=${oUList}"
+			class="partnerNameLink">${oUList.otherNo} ${oUList.otherName}
 			さん（メッセージへ）<br>
 		</a>
-		<c:out value="${message[status.index]}" />
+		<c:out value="${oUList.message}" />
 		<br>
 		<br>
 	</c:forEach>
@@ -34,11 +34,11 @@
 	<br>■グループ一覧
 	<br>
 
-	<c:forEach var="group" items="${groupNo}" varStatus="status">
-		<a href="/chat/groupMessage?groupNo=${groupNo[status.index]}"
-			class='nameLink'>${group} ${groupName[status.index]}（グループメッセージへ）<br>
+	<c:forEach var="uGList" items="${userGroupList}" varStatus="status">
+		<a href="/chat/groupMessage?userGroupList=${uGList}"
+			class='nameLink'>${uGList.groupNo} ${uGList.groupName}（グループメッセージへ）<br>
 		</a>
-		<c:out value="${groupMessage[status.index]}" />
+		<c:out value="${uGList.groupMessage}" />
 		<br>
 		<br>
 	</c:forEach>

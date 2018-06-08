@@ -17,14 +17,11 @@ import bean.SessionBean;
  */
 public class MainModel {
 
-	public MainBean newMessage(SessionBean bean) {
+	public ArrayList<MainBean> newMessage(SessionBean bean) {
 		// 初期化
-		MainBean mainBean = new MainBean();
+
 		String userNo = bean.getUserNo();
-		String userName = bean.getUserName();
-		ArrayList<String> otherNo = new ArrayList<String>();
-		ArrayList<String> otherName = new ArrayList<String>();
-		ArrayList<String> message = new ArrayList<String>();
+		ArrayList<MainBean> otherUserList = new ArrayList<MainBean>();
 
 		StringBuilder sb = new StringBuilder();
 		Connection conn = null;
@@ -61,9 +58,13 @@ public class MainModel {
 
 			while (rs.next()) {
 				//ログインしているユーザの会員番号と名前を省く
-				if (!((rs.getString("user_no").equals(userNo)) || (rs.getString("user_name").equals(userName)))) {
-					otherNo.add(rs.getString("user_no"));
-					otherName.add(rs.getString("user_name"));
+				if (!(rs.getString("user_no").equals(userNo))) {
+
+					//他のユーザの会員番号と表示名をリストに追加
+					MainBean mainBean = new MainBean();
+					mainBean.setOtherNo(rs.getString("user_no"));
+					mainBean.setOtherName(rs.getString("user_name"));
+					otherUserList.add(mainBean);
 
 				}
 			}
@@ -83,7 +84,7 @@ public class MainModel {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			for (String nom : otherNo) {
+			for (MainBean userInfo : otherUserList) {
 
 				StringBuilder sb2 = new StringBuilder();
 				// SQL作成
@@ -99,19 +100,20 @@ public class MainModel {
 				sb2.append("t_message_info ");
 				sb2.append("WHERE ");
 				sb2.append("((send_user_no = " + userNo );
-				sb2.append("OR send_user_no = " + nom + ")");
+				sb2.append("OR send_user_no = " + userInfo.getOtherNo() + ")");
 				sb2.append("AND (to_send_user_no = " + userNo );
-				sb2.append("OR to_send_user_no = " + nom + "))))");
+				sb2.append("OR to_send_user_no = " + userInfo.getOtherNo() + "))))");
 
 				// SQL実行
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sb2.toString());
 
 				if (rs.next()) {
-					message.add(rs.getString("message"));
+					//今参照されている会員に最新のメッセージをセット
+					userInfo.setMessage(rs.getString("message"));
 				} else {
-					//falseなら"会話を始めましょう"をアレイリストに追加
-					message.add("会話を始めましょう");
+					//falseなら"会話を始めましょう"を今参照されている会員にセット
+					userInfo.setMessage("会話を始めましょう");
 				}
 
 			}
@@ -127,12 +129,7 @@ public class MainModel {
 			}
 		}
 
-		//mainBeanにセット
-		mainBean.setOtherNo(otherNo);
-		mainBean.setOtherName(otherName);
-		mainBean.setMessage(message);
-
 		//まとめてmainBeanを返す
-		return mainBean;
+		return otherUserList;
 	}
 }

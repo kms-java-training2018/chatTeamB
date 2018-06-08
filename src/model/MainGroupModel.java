@@ -16,16 +16,15 @@ import java.util.ArrayList;
 import bean.MainBean;
 import bean.SessionBean;
 
-public class MainModelGroup {
-	public MainBean getGroup(SessionBean bean) {
+public class MainGroupModel {
+
+	public ArrayList<MainBean> getGroup(SessionBean bean) {
 
 		// 初期化
-		MainBean mainBean = new MainBean();
+
 		StringBuilder sb = new StringBuilder();
 		String userNo = bean.getUserNo();
-		ArrayList<String> groupNo = new ArrayList<String>();
-		ArrayList<String> groupName = new ArrayList<String>();
-		ArrayList<String> groupMessage = new ArrayList<String>();
+		ArrayList<MainBean> userGroupList = new ArrayList<MainBean>();
 
 		Connection conn = null;
 		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
@@ -67,9 +66,11 @@ public class MainModelGroup {
 			ResultSet rs = stmt.executeQuery(sb.toString());
 
 			while (rs.next()) {
-				//得た値をアレイリストに追加
-				groupNo.add(rs.getString("group_no"));
-				groupName.add(rs.getString("group_name"));
+				//得た値をBeanにセット
+				MainBean mainBean = new MainBean();
+				mainBean.setGroupNo(rs.getString("group_no"));
+				mainBean.setGroupName(rs.getString("group_name"));
+				userGroupList.add(mainBean);
 			}
 
 		} catch (SQLException e) {
@@ -88,33 +89,33 @@ public class MainModelGroup {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			for (String nom : groupNo) {
+			for (MainBean groupInfo : userGroupList) {
 
-				StringBuilder sb3 = new StringBuilder();
+				StringBuilder sb2 = new StringBuilder();
 				// SQL作成
-				sb3.append("SELECT ");
-				sb3.append("message ");
-				sb3.append("FROM ");
-				sb3.append("t_message_info ");
-				sb3.append("WHERE ");
-				sb3.append("(message_no = (");
-				sb3.append("SELECT ");
-				sb3.append("MAX(message_no) ");
-				sb3.append("FROM ");
-				sb3.append("t_message_info ");
-				sb3.append("WHERE ");
-				sb3.append("to_send_group_no = " + nom + "))");
+				sb2.append("SELECT ");
+				sb2.append("message ");
+				sb2.append("FROM ");
+				sb2.append("t_message_info ");
+				sb2.append("WHERE ");
+				sb2.append("(message_no = (");
+				sb2.append("SELECT ");
+				sb2.append("MAX(message_no) ");
+				sb2.append("FROM ");
+				sb2.append("t_message_info ");
+				sb2.append("WHERE ");
+				sb2.append("to_send_group_no = " + groupInfo.getGroupNo() + "))");
 
 				// SQL実行
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sb3.toString());
+				ResultSet rs = stmt.executeQuery(sb2.toString());
 
 				if (rs.next()) {
-					//trueならアレイリストに値を追加
-					groupMessage.add(rs.getString("message"));
+					//trueなら今参照されているグループに最新メッセージをセット
+					groupInfo.setGroupMessage(rs.getString("message"));
 				} else {
-					//falseならアレイリストに会話を始めましょうを追加
-					groupMessage.add("会話を始めましょう");
+					//falseなら会話を始めましょうをセット
+					groupInfo.setGroupMessage("会話を始めましょう");
 				}
 
 			}
@@ -130,12 +131,7 @@ public class MainModelGroup {
 			}
 		}
 
-		//mainBeanにセット
-		mainBean.setGroupNo(groupNo);
-		mainBean.setGroupName(groupName);
-		mainBean.setGroupMessage(groupMessage);
-
 		//mainBeanをまとめて返す
-		return mainBean;
+		return userGroupList;
 	}
 }

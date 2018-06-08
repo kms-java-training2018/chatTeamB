@@ -1,89 +1,71 @@
 package bean;
 
-/**
- * @author mitsuno-shinki
- * メインメニュー用のBean
- */
-
-import java.util.ArrayList;
-
 public class MainBean {
 
 	/** 他のユーザの会員番号*/
-	private ArrayList<String> otherNo = new ArrayList<String>();
+	private String otherNo;
 
 	/** 他のユーザの会員名*/
-	private ArrayList<String> otherName = new ArrayList<String>();
+	private String otherName;
 
 	/** 会話内容 */
-	private ArrayList<String> message = new ArrayList<String>();
+	private String message;
 
 	/** ログインしたユーザの属しているグループ番号*/
-	private ArrayList<String> groupNo;
+	private String groupNo;
 
 	/** ログインしたユーザの属しているグループ名*/
-	private ArrayList<String> groupName = new ArrayList<String>();
+	private String groupName;
 
 	/** ログインしたユーザの属しているグループの最新メッセージ*/
-	private ArrayList<String> groupMessage;
+	private String groupMessage;
 
-	/** エラーメッセージ */
-	private String errorMessage;
-
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-
-	public ArrayList<String> getOtherNo() {
+	public String getOtherNo() {
 		return otherNo;
 	}
 
-	public void setOtherNo(ArrayList<String> otherNo) {
+	public void setOtherNo(String otherNo) {
 		this.otherNo = otherNo;
 	}
 
-	public ArrayList<String> getOtherName() {
+	public String getOtherName() {
 		return otherName;
 	}
 
-	public void setOtherName(ArrayList<String> otherName) {
+	public void setOtherName(String otherName) {
 		this.otherName = otherName;
 	}
 
-	public ArrayList<String> getMessage() {
+	public String getMessage() {
 		return message;
 	}
 
-	public void setMessage(ArrayList<String> message) {
+	public void setMessage(String message) {
 		this.message = message;
 	}
 
-	public ArrayList<String> getGroupNo() {
+	public String getGroupNo() {
 		return groupNo;
 	}
 
-	public void setGroupNo(ArrayList<String> groupNo) {
+	public void setGroupNo(String groupNo) {
 		this.groupNo = groupNo;
 	}
 
-	public ArrayList<String> getGroupMessage() {
-		return groupMessage;
-	}
-
-	public void setGroupMessage(ArrayList<String> groupMessage) {
-		this.groupMessage = groupMessage;
-	}
-
-	public ArrayList<String> getGroupName() {
+	public String getGroupName() {
 		return groupName;
 	}
 
-	public void setGroupName(ArrayList<String> groupName) {
+	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+
+	public String getGroupMessage() {
+		return groupMessage;
+	}
+
+	public void setGroupMessage(String groupMessage) {
+		this.groupMessage = groupMessage;
 	}
 
 }

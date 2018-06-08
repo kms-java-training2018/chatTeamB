@@ -20,23 +20,28 @@
 	<p>${errorMessage}</p>
 	<p>グループ名</p>
 	<form action="/chat/makeGroup" method="post">
-	<input type="text" name="inputGroupName" class="inputGroupCreate">
-	<p>メンバーを選ぶ</p>
+		<input type="text" name="inputGroupName" class="inputGroupCreate">
+		<p>メンバーを選ぶ</p>
 
-	<!-- 【グループ作成画面、グループメンバー選択箇所】 -->
+		<!-- 【グループ作成画面、グループメンバー選択箇所】 -->
 
-		<!-- 自分 -->
-		<label><input type="checkbox" name="selectMember"
-			value="${userNo}" checked="checked" required>${userName}さん<br></label>
-
-		<!-- 他ユーザ -->
-		<c:forEach var="nom" items="${allUserNo}" varStatus="status">
-			<c:if test="${nom != userNo}">
-
-				<label><input type="checkbox" name="selectMember"
-					value="${nom}">${allUserName[status.index]} さん</label><br>
-			</c:if>
+		<c:forEach var="allUserList" items="${allUserList}" varStatus="status">
+			<c:choose>
+				<c:when test="${allUserList.allUserName == sessionScope.userName}">
+					<%-- 自分 --%>
+					<label><input type="checkbox" name="selectMember"
+						value="${allUserList.allUserNo}" checked="checked" required>${allUserList.allUserName}さん<br></label>
+				</c:when>
+				<%-- 他ユーザ --%>
+				<c:otherwise>
+					<label><input type="checkbox" name="selectMember"
+						value="${allUserList.allUserNo}">${allUserList.allUserName} さん</label>
+					<br>
+				</c:otherwise>
+			</c:choose>
 		</c:forEach>
+
+
 		<button type='submit' name='action' value='groupCreate'>グループ作成</button>
 	</form>
 
