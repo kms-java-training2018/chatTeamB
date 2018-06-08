@@ -120,7 +120,7 @@ public class GroupInfoModel {
 			// グループマスタの情報を基に
 			// グループ情報テーブルに登録(自分以外のユーザ番号)
 
-			for (String nom : allUserNo) {
+			for (String num : allUserNo) {
 				StringBuilder sb3 = new StringBuilder(); // SQL文の格納用
 				sb3.append("INSERT INTO ");
 				sb3.append("T_GROUP_INFO ");
@@ -129,7 +129,7 @@ public class GroupInfoModel {
 				sb3.append("REGIST_DATE )");
 				sb3.append("VALUES ");
 				sb3.append("( '" + gcBean.getGroupNo() + "', '");
-				sb3.append(nom + "', ");
+				sb3.append(num + "', ");
 				sb3.append("systimestamp)");
 
 				// SQL実行
@@ -269,23 +269,16 @@ public class GroupInfoModel {
 			sb.append("t_group_info ");
 			sb.append("WHERE ");
 			sb.append("group_no = '" + groupNo + "'");
+			sb.append("AND user_no = '" + userNo + "'");
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
 			ResultSet rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
 
 			// 処理
-			// 取得した参加メンバー一覧に、ログインユーザーの会員番号があった場合
-			while (rs.next()) {
-				if (rs.getString("user_no").equals(userNo)) {
-					// 実行結果はtrueのまま、while文を抜ける
-					result = true;
-					break;
-				} else {
-					// レコードを確認し、該当なしのたびに、実行結果をfalseに設定
-					result = false;
-
-				}
+			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
+			if (!rs.next()) {	// 無かった場合
+				result = false;
 			}
 
 		} catch (SQLException e) {
