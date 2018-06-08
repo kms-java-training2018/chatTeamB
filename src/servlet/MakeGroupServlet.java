@@ -35,6 +35,7 @@ public class MakeGroupServlet extends HttpServlet {
 			session = null;
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
+
 		MakeGroupBean mgBean = new MakeGroupBean();
 		String action = req.getParameter("action");
 		switch (action) {
