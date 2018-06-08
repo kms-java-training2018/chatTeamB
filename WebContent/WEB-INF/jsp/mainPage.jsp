@@ -21,11 +21,11 @@
 
 	<c:forEach var="otherUser" items="${otherUserList}" varStatus="status">
 		<a
-			href="/chat/directMessage"<%--?otherUser=${otherUser}"--%>
+			href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
 			class="partnerNameLink">${otherUser.otherNo} ${otherUser.otherName}
 			さん（メッセージへ）<br>
 		</a>
-		<bean:parameter id="oUser" name="otherUser" value="${otherUser}"/>
+
 		<c:out value="${otherUser.message}" />
 		<br>
 		<br>
@@ -36,7 +36,7 @@
 	<br>
 
 	<c:forEach var="userGroup" items="${userGroupList}" varStatus="status">
-		<a href="/chat/groupMessage?userGroup=${userGroup}"
+		<a href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
 			class="nameLink">${userGroup.groupNo} ${userGroup.groupName}（グループメッセージへ）<br>
 		</a>
 
