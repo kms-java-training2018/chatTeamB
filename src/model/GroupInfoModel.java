@@ -261,7 +261,7 @@ public class GroupInfoModel {
 
 			// SQL作成
 			sb.append("SELECT ");
-			sb.append("USER_NO");
+			sb.append("USER_NO ");
 			sb.append("FROM ");
 			sb.append("t_group_info ");
 			sb.append("WHERE ");
