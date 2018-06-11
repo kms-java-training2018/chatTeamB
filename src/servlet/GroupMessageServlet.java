@@ -24,11 +24,24 @@ public class GroupMessageServlet extends HttpServlet {
 
 // 【ページ遷移時】-------------------------------------------------------------------------------------------------
 
+//		// 【デバッグ用】
+//		// セッション切れた状況を作り出す
+//		HttpSession session = req.getSession(true);
+//		session.invalidate();
+
+		// セッションがタイムアウトしてるかどうかの判定
+		HttpSession session = req.getSession(false);
+		if(session == null){
+			//nullならセッションは切れている。
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "セッションがタイムアウトになりました。");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			}
+
 		////////////////////////////////////////////////////////////////////////
 		//		セッションとパラメーターから情報を取得
 		////////////////////////////////////////////////////////////////////////
 		// セッションから：ログインユーザーの会員番号・表示名
-		HttpSession session = req.getSession();
 		SessionBean sessionBean = (SessionBean) session.getAttribute("session");
 		String userNo = sessionBean.getUserNo();
 		String userName = sessionBean.getUserName();

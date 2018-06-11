@@ -7,7 +7,7 @@
 <title>エラー</title>
 </head>
 <body>
-<p>エラーです</p>
+<p>エラーです：${errorMessage}</p>
 <a href="/chat/login"> ログイン画面へ </a>
 </body>
 </html>
