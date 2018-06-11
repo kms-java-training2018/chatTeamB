@@ -44,7 +44,7 @@
 	<h1>チャット研修プログラム</h1>
 	<h2>グループメッセージ</h2>
 		<h2>
-		<a href="/chat/showProfile">グループ：${groupInfo.groupName}</a>
+		グループ：${groupInfo.groupName}
 	</h2>
 
 	<!-- 	【グループ脱退】 -->
