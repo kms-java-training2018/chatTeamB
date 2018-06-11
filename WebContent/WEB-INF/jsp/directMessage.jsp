@@ -28,6 +28,7 @@
 
 		<!-- 自分のメッセージの場合 -->
 		<c:if test="${judge}">
+			<br>
 			<div style="display: inline-block; border: 1px solid #cccccc; position: relative; left: 350px">
 				<c:out value="${directMessageList.userName}" /> さん
 				<br> <c:out value="${directMessageList.message}" />
@@ -48,6 +49,7 @@
 
 		<!-- 他人のメッセージの場合 -->
 		<c:if test="${!judge}">
+			<br>
 			<div style="display: inline-block; border: 1px solid #cccccc; position: relative; left: 50px">
 				<a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
 					<c:out value="${directMessageList.otherName}" /> さん
@@ -63,6 +65,7 @@
 	</c:forEach>
 
 	<br>
+	${errorMessage}
 	<form action="/chat/directMessage" method="POST">
 		<textarea placeholder="ここにメッセージを入力" name="inputMessage" rows="5"
 			cols="50"></textarea>
@@ -72,7 +75,7 @@
 	</form>
 
 	<form action="/chat/main" method="POST">
-		<button type="submit" name="action" value="toMainPage" class="button">メインメニューへ戻る</button>
+		<button type="submit" name="action" value="toMainPage" class="button">メインページへ戻る</button>
 	</form>
 
 </body>
