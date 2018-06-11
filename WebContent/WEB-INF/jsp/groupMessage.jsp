@@ -58,28 +58,25 @@
 	<!-- for文でメッセージを全て表示させる -->
 	<c:forEach var="list" items="${list}" varStatus="status">
 		<!-- if文で自分と他人のメッセージを分ける -->
-		<c:if test="${list.listJudge == '0'}" var="judge" />
+		<c:if test="${list.judge == '0'}" var="judge" />
 		<!-- 自分のメッセージの場合 -->
 		<c:if test="${judge}">
 			<br>
 			<div style="position: relative; left: 500px">
 				<div style="display: inline-block; border: 1px solid #cccccc">
-					<br> ｛
-					<c:out value="${list.userName}" />
-					<br>：
-					<c:out value="${list.listMessage}" />
-					<br>：Judge番号
-					<c:out value="${list.listJudge}" />
-					<br>：会話番号
-					<c:out value="${list.listMessageNo}" />
-					<br>：会員番号
-					<c:out value="${list.userNo}" />
-					｝ <br>
+					<br>
+					<c:out value="${list.userName}" /> さん
+					<br><c:out value="${list.message}" />
+					<p hidden>
+					<br>：会話番号：<c:out value="${list.messageNo}" />
+					<br>：会員番号：<c:out value="${list.userNo}" />
+					</p>
+					<br>
+				<!-- 削除ボタン -->
 					<form action="/chat/groupMessage" method="POST">
 						<button type="submit" name="action" value="deleteMessage"
 							class="deleteMessage">削除</button>
-						<input type="hidden" name="messageNo"
-							value="${list.listMessageNo}">
+						<input type="hidden" name="messageNo" value="${list.messageNo}">
 						<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
 						<input type="hidden" name="groupName" value="${groupInfo.groupName}">
 					</form>
@@ -93,44 +90,23 @@
 			<div style="position: relative; left: 100px">
 				<div style="display: inline-block; border: 1px solid #cccccc">
 
-					<!-- ここから編集中 -->
+					<!-- 相手の表示名をリンク表示(別タブでプロフ画面遷移) -->
 
 					<br> <a href="/chat/showProfile?userNo=<c:out value="${list.userNo}" />"
-						class="link" target=”_blank”> ｛<c:out
-							value="${list.otherName}" />さん
-
-					<!-- ここまで編集中 -->
-
-					</a> <br>：
-					<c:out value="${list.listMessage}" />
-					<br>：Judge番号
-					<c:out value="${list.listJudge}" />
-					<br>：会話番号
-					<c:out value="${list.listMessageNo}" />
-					<br>：会員番号
-					<c:out value="${list.userNo}" />
-					｝ <br>
+						class="link" target=”_blank”>
+						<c:out value="${list.otherName}" />さん
+					</a>
+					<br><c:out value="${list.message}" />
+					<p hidden>
+					<br>：会話番号：<c:out value="${list.messageNo}" />
+					<br>：会員番号：<c:out value="${list.userNo}" />
+					</p>
+					<br>
 				</div>
 			</div>
 		</c:if>
 	</c:forEach>
 	<br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	<!-- 	【メッセージ送信】 -->

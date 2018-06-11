@@ -19,6 +19,9 @@ import model.MessageInfoModel;
 public class GroupMessageServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		// 文字コードを指定
+		req.setCharacterEncoding("utf-8");
+
 // 【ページ遷移時】-------------------------------------------------------------------------------------------------
 
 		////////////////////////////////////////////////////////////////////////
@@ -31,11 +34,8 @@ public class GroupMessageServlet extends HttpServlet {
 		String userName = sessionBean.getUserName();
 
 		// パラメーターから(メインメニュー)：遷移先groupNo･gropuName
-		// TODO メインメニューからのパラメーターからgroupNOとGroupNameが入ったビーンを取り出す
 		String groupNo = req.getParameter("userGroupNo");
 		String groupName =req.getParameter("userGroupName");
-//		String groupNo = userGroup.getGroupNo();
-//		String groupName = userGroup.getGroupName();
 
 
 		////////////////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ public class GroupMessageServlet extends HttpServlet {
 		////////////////////////////////////////////////////////////////////////
 
 		// 【セッションにログイン情報が保持されているか判定】
-		// 保持されていない場合
+		// ---保持されていない場合
 		if (userNo.equals(null) || userName.equals(null)) {
 		    // セッションを削除
 			session = req.getSession(false);
@@ -91,7 +91,7 @@ public class GroupMessageServlet extends HttpServlet {
 
 
 		// 	【遷移先グループにログインユーザーが参加しているか判定】
-		// グループメンバーでなかった場合
+		// ---グループメンバーでなかった場合
 		if(groupInfoModel.judgeGroupMember(userNo,groupNo) == false) {
 			// セッションを削除
 			session = req.getSession(false);
@@ -152,6 +152,8 @@ public class GroupMessageServlet extends HttpServlet {
 
 // 	【以下POSTメソッド】================================================================================================
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		// 文字コードを指定
+		req.setCharacterEncoding("utf-8");
 
 		////////////////////////////////////////////////////////////////////////
 		//		セッションとパラメーターから情報を取得
@@ -163,11 +165,8 @@ public class GroupMessageServlet extends HttpServlet {
 		String userNo = sessionBean.getUserNo();
 
 		// パラメーターから(グループメッセージ)：groupNo･gropuName
-		// TODO メインメニューからのパラメーターからgroupNOとGroupNameが入ったビーンを取り出す
 		String groupNo = req.getParameter("groupNo");
 		String groupName =req.getParameter("groupName");
-//				String groupNo = userGroup.getGroupNo();
-//				String groupName = userGroup.getGroupName();
 
 		// 処理分岐用
 		String action = req.getParameter("action");
@@ -181,7 +180,7 @@ public class GroupMessageServlet extends HttpServlet {
 		////////////////////////////////////////////////////////////////////////
 
 		// ページの行き先変更変数
-		String direction = "/WEB-INF/jsp/groupMessage.jsp#midashi1";
+		String direction = "/WEB-INF/jsp/groupMessage.jsp";
 
 		// MessageInfoModel：メッセージ送信・削除処理用
 		MessageInfoModel messageInfoModel = new MessageInfoModel();
@@ -227,23 +226,36 @@ public class GroupMessageServlet extends HttpServlet {
 
 		case "sendMessage":
 
-			// リクエストから入力されたメッセージを取得
+			// 【リクエストから入力されたメッセージを取得】
 			String inputMessage = req.getParameter("inputMessage");
 
-			// メッセージ登録用のメソッドを呼び出し(登録処理を実行し)、
-			// 【登録処理が失敗した場合(メソッドの戻り値がfalseの場合)】
-			if (messageInfoModel.entryMessage(userNo, inputMessage, groupNo, 1) == false) {
+			// 【メッセージを送信したユーザーがグループメンバーか判定】
+			// ---グループメンバーでなかった場合
+			if(groupInfoModel.judgeGroupMember(userNo,groupNo) == false) {
+				// セッションを削除
+				session = req.getSession(false);
+			    session = null;
+			    // エラー画面に遷移
+			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			}
 
+			// TODO 【入力されたメッセージが1桁以上100桁以内か判定】
+			// ---不正な入力だった場合、エラーメッセージを設定し、グループ画面に遷移する。
+			// TODO jspにもエラーメッセージ表示コード書く、beanにエラーメッセージフィールド追加
+
+
+
+			// 【入力されたメッセージを会話情報テーブルに登録】
+			// ---登録処理が失敗した場合(メソッドの戻り値がfalseの場合)
+			if (messageInfoModel.entryMessage(userNo, inputMessage, groupNo, 1) == false) {
 				// セッションの情報を削除する
 				session = req.getSession(false);
 				session = null;
-
 				// エラーページに遷移
 				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
 
-
-			// 【登録処理が成功した場合】
+			// ---登録処理が成功した場合
 			// switch文を抜けて、ページ遷移処理を行う。
 		break;
 
@@ -315,7 +327,7 @@ public class GroupMessageServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		// レコードが取得出来なかった場合
+		// ---レコードが取得出来なかった場合
 		if (list == null) {
 			// セッションを削除
 			session = req.getSession(false);

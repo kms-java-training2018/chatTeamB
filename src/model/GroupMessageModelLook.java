@@ -84,9 +84,9 @@ public class GroupMessageModelLook {
 				// DirectMessageBean初期化
 				DirectMessageBean directMessageBean = new DirectMessageBean();
 				// メッセージ→listMessage
-				directMessageBean.setListMessage(rs.getString("MESSAGE"));
+				directMessageBean.setMessage(rs.getString("MESSAGE"));
 				// 会話番号→listMessageNo
-				directMessageBean.setListMessageNo(rs.getString("MESSAGE_NO"));
+				directMessageBean.setMessageNo(rs.getString("MESSAGE_NO"));
 				// 送信者の会員番号→userNo
 				directMessageBean.setUserNo(rs.getString("SEND_USER_NO"));
 
@@ -94,26 +94,27 @@ public class GroupMessageModelLook {
 				// 送信者の会員番号がログインユーザーの会員番号と一致した場合
 				if (userNo.equals(rs.getString("SEND_USER_NO"))) {
 					// listjudge→0
-					directMessageBean.setListJudge("0");
+					directMessageBean.setJudge("0");
 					// 送信者の表示名→userName
 					directMessageBean.setUserName(rs.getString("USER_NAME"));
 
 				// 送信者の会員番号がログインユーザーの会員番号と一致しなかった場合
 				} else {
 					// listjudge→1
-					directMessageBean.setListJudge("1");
+					directMessageBean.setJudge("1");
 					// 送信者の表示名→otherName
 					directMessageBean.setOtherName(rs.getString("USER_NAME"));
 				}
-
-
-				// デバッグ用：取得した会話内容をコンソールに表示
-				System.out.println("会話内容：" + directMessageBean.getListMessage()
-						+ "：判別内容：" + directMessageBean.getListJudge()
-						+ "：会員番号：" + directMessageBean.getUserNo()
-						+ "：表示名：" + directMessageBean.getUserName()
-						+ "：会話番号：" + directMessageBean.getListMessageNo());
+				// 1つの会話情報をリストに追加
 				list.add(directMessageBean);
+
+//				// デバッグ用：取得した会話内容をコンソールに表示
+//				System.out.println("会話内容：" + directMessageBean.getMessage()
+//						+ "：判別内容：" + directMessageBean.getJudge()
+//						+ "：会員番号：" + directMessageBean.getUserNo()
+//						+ "：表示名：" + directMessageBean.getUserName()
+//						+ "：会話番号：" + directMessageBean.getMessageNo());
+
 			}
 
 
