@@ -9,34 +9,39 @@ import java.util.ArrayList;
 
 import bean.DirectMessageBean;
 
-public class DirectMessageModelLook {
+public class DirectMessageModel {
 	// メッセージ閲覧メソッドの宣言
-	public ArrayList<DirectMessageBean> lookMessage(DirectMessageBean bean) {
+	public ArrayList<DirectMessageBean> lookMessage(DirectMessageBean DirectMessageBean) {
 		System.out.println("DirectMessageModelLookにきました");
 
-		// jspに持っていくリスト（会話内容、judge）初期化
-		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
+		////////////////////////////////////////////////////////////////////////
+		//		初期化
+		////////////////////////////////////////////////////////////////////////
 
-		// 初期化
-		StringBuilder sb = new StringBuilder(); // SQL文の格納用
+		// jspに持っていくリスト（会話内容、judge、会話番号、表示名）初期化
+		ArrayList<DirectMessageBean> directMessageList = new ArrayList<DirectMessageBean>();
+
+		// SQL文の格納用変数初期化
+		StringBuilder sb = new StringBuilder();
+
 		// DirectMessageBeanクラス内の会員番号を参照する
 		/** ログインユーザーの会員番号 */
-		String userNo = bean.getUserNo();
+		String userNo = DirectMessageBean.getUserNo();
 		System.out.println("UserNo：" + userNo);
 
 		// DirectMessageBeanクラス内の相手ユーザーの表示名を参照する
 		/** ログインユーザーの表示名 */
-		String userName = bean.getUserName();
+		String userName = DirectMessageBean.getUserName();
 		System.out.println("UserName：" + userName);
 
 		// DirectMessageBeanクラス内の送信対象者番号を参照する
 		/** 相手ユーザーの会員番号 */
-		String toSendUserNo = bean.getToSendUserNo();
+		String toSendUserNo = DirectMessageBean.getToSendUserNo();
 		System.out.println("ToSendUserNo：" + toSendUserNo);
 
 		// DirectMessageBeanクラス内の相手ユーザーの表示名を参照する
 		/** 相手ユーザーの表示名 */
-		String otherName = bean.getOtherName();
+		String otherName = DirectMessageBean.getOtherName();
 		System.out.println("OtherName：" + otherName);
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -63,10 +68,6 @@ public class DirectMessageModelLook {
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
-			//------------------------------------------------------------------------------
-			// 今日はここまで
-			//------------------------------------------------------------------------------
-
 			// SQL作成
 			sb.append("SELECT ");
 			sb.append(" MESSAGE, ");
@@ -88,36 +89,33 @@ public class DirectMessageModelLook {
 			//				bean.setErrorMessage("パスワードが一致しませんでした。");
 			//			}
 
-			// 削除予定
-			//int i = 0;
-
 			while (rs.next()) {
 				// クラスDirectMessageBean初期化
 				DirectMessageBean directMessageBean = new DirectMessageBean();
-				// メッセージをクラスDirectMessageBeanのlistMessageに入れる
-				directMessageBean.setListMessage(rs.getString("MESSAGE"));
-				// 会話番号をクラスDirectMessageBeanのlistMessageNoに入れる
-				directMessageBean.setListMessageNo(rs.getString("MESSAGE_NO"));
-				// 会員番号をクラスDirectMessageBeanのlistMessageNoに入れる
+				// メッセージをクラスDirectMessageBeanのmessageに入れる
+				directMessageBean.setMessage(rs.getString("MESSAGE"));
+				// 会話番号をクラスDirectMessageBeanのmessageNoに入れる
+				directMessageBean.setMessageNo(rs.getString("MESSAGE_NO"));
+				// 会員番号をクラスDirectMessageBeanのmessageNoに入れる
 				directMessageBean.setUserNo(rs.getString("SEND_USER_NO"));
 				// 送信者番号がログインユーザーの会員番号と一致した場合、listjudgeに0を代入
 				if (userNo.equals(rs.getString("SEND_USER_NO"))) {
-					directMessageBean.setListJudge("0");
+					directMessageBean.setJudge("0");
 					directMessageBean.setUserName(userName);
 					// 送信者番号がログインユーザーの会員番号と一致しなかった場合、listjudgeに0を代入
 				} else {
-					directMessageBean.setListJudge("1");
+					directMessageBean.setJudge("1");
 					directMessageBean.setOtherName(otherName);
 				}
-				System.out.println("会話内容：" + directMessageBean.getListMessage()
-						+ "：判別内容：" + directMessageBean.getListJudge()
+				System.out.println("会話内容：" + directMessageBean.getMessage()
+						+ "：判別内容：" + directMessageBean.getJudge()
 						+ "：会員番号：" + directMessageBean.getUserNo()
-						+ "：会話番号：" + directMessageBean.getListMessageNo());
-				list.add(directMessageBean);
+						+ "：会話番号：" + directMessageBean.getMessageNo());
+				directMessageList.add(directMessageBean);
 			}
 
 			/**
-			必要ないかも？
+			SQLが実行されたかどうかのパラメーターチェック
 			bean.setMessage(message);
 			bean.setJudge(judge);
 			 */
@@ -144,6 +142,6 @@ public class DirectMessageModelLook {
 			}
 		}
 
-		return list;
+		return directMessageList;
 	}
 }

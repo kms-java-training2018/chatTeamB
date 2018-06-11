@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import bean.DirectMessageBean;
 import bean.SessionBean;
-import model.DirectMessageModelLook;
+import model.DirectMessageModel;
 import model.MessageInfoModel;
 
 public class DirectMessageServlet extends HttpServlet {
@@ -19,16 +19,11 @@ public class DirectMessageServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		System.out.println("DirectMessageServletにきました");
 
+		// 文字コード指定
+		req.setCharacterEncoding("utf-8");
+
 		//セッション取得
 		HttpSession session = req.getSession();
-		//　セッションがない場合エラー画面に移動
-		if (session == null) {
-			System.out.println("セッションがないです");
-			session = req.getSession(false);
-			session = null;
-			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		}
-
 
 		////////////////////////////////////////////////////////////////////////
 		//		初期化
@@ -37,47 +32,55 @@ public class DirectMessageServlet extends HttpServlet {
 		// ページの行き先変更変数
 		String direction = "/WEB-INF/jsp/directMessage.jsp";
 		/** クラスSessionBeanの初期化 */
-		SessionBean sessionBean = new SessionBean();
+		SessionBean sessionBean = (SessionBean) session.getAttribute("session");//new SessionBean();
+
+		/** クラスMainBeanの初期化 */
+//		MainBean mainBean =(MainBean) req.getParameter("otherUser");/////////////////////
+
 		/** クラスDirectMessageBeanの初期化 */
 		DirectMessageBean directMessageBean = new DirectMessageBean();
 		/** クラスDirectMessageModelLookのインスタンス取得　*/
-		DirectMessageModelLook model = new DirectMessageModelLook();
-		/** jspに持っていくArrayList（会話内容、judge、会話番号）初期化　*/
-		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
+		DirectMessageModel directMessageModel = new DirectMessageModel();
+		/** jspに持っていくArrayList（会話内容、judge、会話番号、表示名）初期化　*/
+		ArrayList<DirectMessageBean> directMessageList = new ArrayList<DirectMessageBean>();
+
+		// ログイン判定処理
+		// セッションがない場合エラー画面に移動
+		if (sessionBean.getUserNo().equals(null) || sessionBean.getUserName().equals(null)) {
+			System.out.println("セッションがないです");
+			session = req.getSession(false);
+			session = null;
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
 
 		////////////////////////////////////////////////////////////////////////
 		//		ここからdirectMessageBeanに必要な値を入れる
 		////////////////////////////////////////////////////////////////////////
 
-		// セッションスコープの"session"をクラスSessionBeanに代入
-		sessionBean = (SessionBean) session.getAttribute("session");
-
-
 		// SessionBeanからログインユーザの会員番号取得
-		directMessageBean.setUserNo(sessionBean.getUserNo()); /*"1"メインページが出来次第こちらを使う　*/
+		directMessageBean.setUserNo(sessionBean.getUserNo());
 		System.out.println("UserNo：" + directMessageBean.getUserNo());
 
 		// SessionBeanからログインユーザの表示名取得
-		directMessageBean.setUserName(sessionBean.getUserName()); /*"私の表示名"メインページが出来次第こちらを使う　*/
-		String userName = directMessageBean.getUserName();
-		System.out.println("UserName：" + userName);
+		directMessageBean.setUserName(sessionBean.getUserName());
+		System.out.println("UserName：" + directMessageBean.getUserName());
 
 		// セッションスコープから送信対象者の会員番号取得
-		directMessageBean.setToSendUserNo(/*"2"*/req.getParameter("otherNo"));
+		directMessageBean.setToSendUserNo(req.getParameter("otherUserNo")/*mainBean.getOtherNo()*/);////////////////////////
 		String toSendUserNo = directMessageBean.getToSendUserNo();
 		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
 		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
-			if (toSendUserNo.equals(null)) {
-				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-			}
+		if (toSendUserNo.equals(null)) {
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
 
 		// リクエストスコープから送信対象者の表示名取得
-		directMessageBean.setOtherName(/*"test"*/(String) req.getParameter("otherName"));
-		String otherName = directMessageBean.getOtherName();
-		System.out.println("OtherName：" + otherName);
+		directMessageBean.setOtherName(req.getParameter("otherUserName")/*mainBean.getOtherName()*/);/////////////////////
+		System.out.println("OtherName：" + directMessageBean.getOtherName());
 
-
+		// セッションスコープにdirectMessageBeanをセット
 		session.setAttribute("dMBean", directMessageBean);
+
 		////////////////////////////////////////////////////////////////////////
 		//		ここまでdirectMessageBeanに必要な値を入れる
 		////////////////////////////////////////////////////////////////////////
@@ -85,7 +88,7 @@ public class DirectMessageServlet extends HttpServlet {
 		// DirectMessageModelLookへ移動会話情報取得処理
 		try {
 			System.out.println("DirectMessageModelLookにいきます");
-			list = model.lookMessage(directMessageBean);
+			directMessageList = directMessageModel.lookMessage(directMessageBean);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("DirectMessageServlet、認証処理キャッチ");
@@ -93,7 +96,7 @@ public class DirectMessageServlet extends HttpServlet {
 		System.out.println("DirectMessageServletに帰ってきました");
 
 		// レコードが取得出来なかった場合エラー画面に遷移する
-		if (list == null) {
+		if (directMessageList == null) {
 			System.out.println("レコードがないです");
 			session = req.getSession(false);
 			session = null;
@@ -102,36 +105,36 @@ public class DirectMessageServlet extends HttpServlet {
 
 		// デバック用
 		DirectMessageBean dMBean = new DirectMessageBean();
-		for (int i = 0; i < list.size(); i++) {
-			dMBean = list.get(i);
-			System.out.println("会話内容：" + dMBean.getListMessage()
-			+ "：判別内容：" + dMBean.getListJudge()
-			+ "：会員番号：" + dMBean.getUserNo()
-			+ "：会話番号：" + dMBean.getListMessageNo());
+		for (int i = 0; i < directMessageList.size(); i++) {
+			dMBean = directMessageList.get(i);
+			System.out.println("会話内容：" + dMBean.getMessage()
+					+ "：判別内容：" + dMBean.getJudge()
+					+ "：会員番号：" + dMBean.getUserNo()
+					+ "：会話番号：" + dMBean.getMessageNo());
 		}
 
 		// リクエストスコープにいれてjspに送る
-		req.setAttribute("list", list);
-		req.setAttribute("otherName", otherName);
-		req.setAttribute("userName", userName);
-		req.setAttribute("toSendUserNo", toSendUserNo);
-		System.out.println("チェックしてください:" + userName);
+		req.setAttribute("directMessageList", directMessageList);
 		req.setAttribute("directMessageBean", directMessageBean);
 		req.getRequestDispatcher(direction).forward(req, res);
 	}
 
-
-
 	//------------------------------------------------------------------------------
-	// ここから先はdoPost
+	// ここからdoPost
 	//------------------------------------------------------------------------------
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		System.out.println("DirectMessageServletにきました");
+
+		// 文字コード指定
+		req.setCharacterEncoding("utf-8");
 
 		//セッション取得
 		HttpSession session = req.getSession();
 
 		String action = req.getParameter("action");
+
+		/** クラスDirectMessageBeanの初期化 */
+		DirectMessageBean directMessageBean = (DirectMessageBean) session.getAttribute("dMBean");
 
 		switch (action) {
 
@@ -142,10 +145,10 @@ public class DirectMessageServlet extends HttpServlet {
 		case "sendMessage":
 			/** クラスMessageInfoModelのインスタンス取得　*/
 			MessageInfoModel entryMessage = new MessageInfoModel();
-			// DirectMessageBean directMessageBean = new DirectMessageBean();
-			String sendUserNo = req.getParameter("userNo");
+
+			String sendUserNo = directMessageBean.getUserNo();//req.getParameter("userNo");
 			String message = req.getParameter("inputMessage");
-			String toSendAddress = req.getParameter("toSendUserNo");
+			String toSendAddress = directMessageBean.getToSendUserNo();//req.getParameter("toSendUserNo");
 			int judgeAddress = 0;
 			boolean result1 = entryMessage.entryMessage(sendUserNo, message, toSendAddress, judgeAddress);
 			System.out.println("会話情報を登録しました");
@@ -155,7 +158,6 @@ public class DirectMessageServlet extends HttpServlet {
 				session = null;
 				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
-
 
 			break;
 		////////////////////////////////////////////////////////////////////////
@@ -185,7 +187,6 @@ public class DirectMessageServlet extends HttpServlet {
 			// 【メッセージの論理削除処理が成功した場合】
 			// switch文を抜けて、ページ表示処理をする。
 
-
 			break;
 		////////////////////////////////////////////////////////////////////////
 		//		こまでdeleteMessage処理
@@ -202,130 +203,66 @@ public class DirectMessageServlet extends HttpServlet {
 			break;
 		}
 
-
-
 		////////////////////////////////////////////////////////////////////////
-		//		ここからlookMessage処理（遷移時の処理）
-		////////////////////////////////////////////////////////////////////////
-
-		// 必要ないかも？
-//		 case "lookMessage":
-			// System.out.println("lookMessage処理にきました");
-
-			//　セッションがない場合エラー画面に移動
-			if (session == null) {
-				System.out.println("セッションがないです");
-				session = req.getSession(false);
-				session = null;
-				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-			}
-
-
-			////////////////////////////////////////////////////////////////////////
-			//		初期化
-			////////////////////////////////////////////////////////////////////////
-
-			// ページの行き先変更変数
-			String direction = "/WEB-INF/jsp/directMessage.jsp";
-			/** クラスSessionBeanの初期化 */
-			SessionBean sessionBean = new SessionBean();
-			/** クラスDirectMessageBeanの初期化 */
-			DirectMessageBean directMessageBean = new DirectMessageBean();
-
-			DirectMessageBean dMessageBean = new DirectMessageBean();
-			dMessageBean = (DirectMessageBean) session.getAttribute("dMBean");
-
-
-
-
-
-
-
-
-
-			/** クラスDirectMessageModelLookのインスタンス取得　*/
-			DirectMessageModelLook model = new DirectMessageModelLook();
-			/** jspに持っていくArrayList（会話内容、judge、会話番号）初期化　*/
-			ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
-
-
-
-			////////////////////////////////////////////////////////////////////////
-			//		ここからdirectMessageBeanに必要な値を入れる
-			////////////////////////////////////////////////////////////////////////
-
-			// セッションスコープの"session"をクラスSessionBeanに代入
-			sessionBean = (SessionBean) session.getAttribute("session");
-
-			// SessionBeanからログインユーザの会員番号取得
-			directMessageBean.setUserNo(sessionBean.getUserNo()); /*req.getParameter("userNo")メインページが出来次第こちらを使う　sessionBean.getUserNo()*/
-			System.out.println("UserNoは" + directMessageBean.getUserNo());
-
-			// SessionBeanからログインユーザの表示名取得
-			directMessageBean.setUserName(sessionBean.getUserName()); /*req.getParameter("userName")メインページが出来次第こちらを使う　sessionBean.getUserName()*/
-			String userName = directMessageBean.getUserName();
-			System.out.println("UserName：" + userName);
-
-			// リクエストスコープから送信対象者の会員番号取得
-			directMessageBean.setToSendUserNo(dMessageBean.getToSendUserNo()/*req.getParameter("toSendUserNo")*/);
-			String toSendUserNo = directMessageBean.getToSendUserNo();
-			System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
-			// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する
-				if (toSendUserNo.equals(null)) {
-					req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-				}
-
-			// リクエストスコープから送信対象者の表示名取得
-			directMessageBean.setOtherName(dMessageBean.getOtherName()/*req.getParameter("otherName")*/);
-			String otherName = directMessageBean.getOtherName();
-			System.out.println("OtherName：" + otherName);
-
-			////////////////////////////////////////////////////////////////////////
-			//		ここまでdirectMessageBeanに必要な値を入れる
-			////////////////////////////////////////////////////////////////////////
-
-
-			// DirectMessageModelLookへ移動会話情報取得処理
-			try {
-				System.out.println("DirectMessageModelLookにいきます");
-				list = model.lookMessage(directMessageBean);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("DirectMessageServlet、認証処理キャッチ");
-			}
-			System.out.println("DirectMessageServletに帰ってきました");
-
-			// レコードが取得出来なかった場合エラー画面に遷移する
-			if (list == null) {
-				System.out.println("レコードがないです");
-				session = req.getSession(false);
-				session = null;
-				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-			}
-
-			// デバック用
-			DirectMessageBean dMBean = new DirectMessageBean();
-			for (int i = 0; i < list.size(); i++) {
-				dMBean = list.get(i);
-				System.out.println(dMBean.getListMessage());
-				System.out.println(dMBean.getListJudge());
-			}
-
-			// リクエストスコープにいれてjspに送る
-			req.setAttribute("list", list);
-			req.setAttribute("otherName", otherName);
-			req.setAttribute("userName", userName);
-			req.setAttribute("toSendUserNo", toSendUserNo);
-			req.setAttribute("directMessageBean", directMessageBean);
-			System.out.println("更新終わり");
-			req.getRequestDispatcher(direction).forward(req, res);
-
-			// 必要ないかも？
-			// break;
-		////////////////////////////////////////////////////////////////////////
-		//		ここまでlookMessage処理
+		//		ここから遷移時の処理
 		////////////////////////////////////////////////////////////////////////
 
 
+		////////////////////////////////////////////////////////////////////////
+		//		初期化
+		////////////////////////////////////////////////////////////////////////
+
+		// ページの行き先変更変数
+		String direction = "/WEB-INF/jsp/directMessage.jsp";
+		/** クラスSessionBeanの初期化 */
+		SessionBean sessionBean = (SessionBean) session.getAttribute("session");//new SessionBean();
+		/** クラスDirectMessageModelLookのインスタンス取得　*/
+		DirectMessageModel model = new DirectMessageModel();
+		/** jspに持っていくArrayList（会話内容、judge、会話番号）初期化　*/
+		ArrayList<DirectMessageBean> directMessageList = new ArrayList<DirectMessageBean>();
+
+		// ログイン判定処理
+		//　セッションがない場合エラー画面に移動
+		if (sessionBean.getUserNo().equals(null) || sessionBean.getUserName().equals(null)) {
+			System.out.println("セッションがないです");
+			session = req.getSession(false);
+			session = null;
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+
+		// DirectMessageModelLookへ移動会話情報取得処理
+		try {
+			System.out.println("DirectMessageModelLookにいきます");
+			directMessageList = model.lookMessage(directMessageBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("DirectMessageServlet、認証処理キャッチ");
+		}
+		System.out.println("DirectMessageServletに帰ってきました");
+
+		// レコードが取得出来なかった場合エラー画面に遷移する
+		if (directMessageList == null) {
+			System.out.println("レコードがないです");
+			session = req.getSession(false);
+			session = null;
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+		// デバック用
+		DirectMessageBean dMBean = new DirectMessageBean();
+		for (int i = 0; i < directMessageList.size(); i++) {
+			dMBean = directMessageList.get(i);
+			System.out.println("会話内容：" + dMBean.getMessage()
+			+ "：判別内容：" + dMBean.getJudge()
+			+ "：会員番号：" + dMBean.getUserNo()
+			+ "：会話番号：" + dMBean.getMessageNo());
+		}
+
+		// リクエストスコープにいれてjspに送る
+		req.setAttribute("directMessageList", directMessageList);
+		req.setAttribute("directMessageBean", directMessageBean);
+		System.out.println("更新終わり");
+		req.getRequestDispatcher(direction).forward(req, res);
 	}
 }
