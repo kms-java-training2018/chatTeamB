@@ -50,16 +50,25 @@ public class LoginServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// 取得に成功した場合セッション情報をセット
-		if ("".equals(bean.getErrorMessage())) {
+
+		// 登録済み会員情報の取得に成功した場合(ログイン可の場合)セッション情報をセット
+		if ("".equals(bean.getErrorMessage())) {			// ログイン成功の場合、エラーメッセは空文字
+			// ますはSessionBeanに情報をセット
 			SessionBean sessionBean = new SessionBean();
 			sessionBean.setUserName(bean.getUserName());
 			sessionBean.setUserNo(bean.getUserNo());
+			// セッションに、SessionBeanをセット
 			HttpSession session = req.getSession();
 			session.setAttribute("session", sessionBean);
 
-			// 行き先を次の画面に
+			// 行き先を次の画面に（サーブレットのURLを指定）
 			direction = "/main";
+
+		// 登録済み会員情報の取得に失敗した場合(ログイン不可の場合)、ログイン画面に遷移しエラーメッセを表示
+		} else {
+			// beanのerrorMessageをパラメーターにセット
+			req.setAttribute("errorMessage", bean.getErrorMessage());
+
 		}
 		req.getRequestDispatcher(direction).forward(req, res);
 	}

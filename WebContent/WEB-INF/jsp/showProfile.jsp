@@ -5,13 +5,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>プロフィール</title>
 </head>
 <body>
+	<header> ようこそ<br>
+	${sessionScope.userName}さん<br>
+	<form action="/chat/logout" method="POST">
+		<button type='submit' name='action' value='logout'>ログアウト</button>
+	</form>
+	</header>
 	<h1>チャット研修プログラム</h1>
 	<h2>プロフィール確認</h2>
-	<form action="" method="POST">
-		<input type="submit" value="閉じる">
-	</form>
+	<p>${userName}さん</p>
+	<p>自己紹介 ${myPageText}</p>
+	<input type="button" value="閉じる" onClick="window.close();">
+
 </body>
 </html>

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>	ログイン</title>
 </head>
 <body>
 	<h1>チャット研修プログラム</h1>
@@ -15,7 +15,7 @@
 		<p>パスワード</p>
 		<input type="text" name="password" value="${loginBean.password}">
 		<br>
-		<P>${loginBean.errorMessage}</P>
+		<p>${requestScope.errorMessage}</p>
 		<input type="submit" value="ログイン">
 	</form>
 </body>

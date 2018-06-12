@@ -5,24 +5,53 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>メインメニュー</title>
 </head>
 <body>
+	<header> ようこそ<br>
+	${sessionScope.userName}さん<br>
+	<form action="/chat/logout" method="POST">
+		<button type='submit' name='action' value='logout'>ログアウト</button>
+	</form>
+	</header>
 	<h1>チャット研修プログラム</h1>
 	<h2>メインメニュー</h2>
 	<br>■会員一覧
 	<br>
-	<a href="/chat/directMessage">他会員名（メッセージへ）</a>
+
+	<c:forEach var="otherUser" items="${otherUserList}">
+		<a
+			href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
+			class="partnerNameLink">${otherUser.otherNo} ${otherUser.otherName}
+			さん（メッセージへ）<br>
+		</a>
+
+		<c:out value="${otherUser.message}" />
+		<br>
+		<br>
+	</c:forEach>
+
+
 	<br>■グループ一覧
 	<br>
-	<a href="/chat/groupMessage">グループ名（グループメッセージへ）</a>
+
+	<c:forEach var="userGroup" items="${userGroupList}">
+		<a href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
+			class="nameLink">${userGroup.groupNo} ${userGroup.groupName}（グループメッセージへ）<br>
+		</a>
+
+		<c:out value="${userGroup.groupMessage}" />
+		<br>
+		<br>
+	</c:forEach>
+
 	<br>
 	<br>
 	<form action="/chat/makeGroup" method="POST">
-		<input type="submit" value="グループの作成">
+		<button type='submit' name='action' value='groupTransition'>グループ作成</button>
 	</form>
 	<form action="/chat/myPage" method="POST">
-		<input type="submit" value="プロフィール画面へ">
+		<button type='submit' name='action' value='myPageTransition'>プロフィール編集</button>
 	</form>
 
 

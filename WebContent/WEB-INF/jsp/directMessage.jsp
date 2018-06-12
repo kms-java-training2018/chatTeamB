@@ -5,22 +5,78 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>個人チャット</title>
 </head>
 <body>
-	<h1>チャット研修プログラム</h1>
-	<h2>メッセージ</h2>
-	あなた：メッセージのサンプルだよー（｀・ω・´）
-	<br>
-	<a href="/chat/showProfile">あいて</a>：いえーい（｀・ω・´）
-	<br>
-	<br>
 
+	<header> ようこそ<br>
+	${directMessageBean.userName} さん <br>
+	<form action="/chat/logout" method="POST">
+		<button type="submit" name="action" value="logout" class="button">ログアウト</button>
+	</form>
+	</header>
+
+	<h1>
+		<a href="/chat/showProfile?userNo=${directMessageBean.toSendUserNo}"
+			class="link" target=”_blank”>${directMessageBean.otherName} さん</a>
+	</h1>
+
+	<!-- for文でメッセージを全て表示させる -->
+	<c:forEach var="directMessageList" items="${directMessageList}" varStatus="status">
+		<!-- if文で自分と他人のメッセージを分ける -->
+		<c:if test="${directMessageList.judge == '0'}" var="judge" />
+
+		<!-- 自分のメッセージの場合 -->
+		<c:if test="${judge}">
+			<br>
+			<div style="display: inline-block; border: 1px solid #cccccc; position: relative; left: 350px">
+				<c:out value="${directMessageList.userName}" /> さん
+				<br> <c:out value="${directMessageList.message}" />
+				<p hidden>
+					<br>：会話番号：<c:out value="${directMessageList.messageNo}" />
+					<br>：会員番号：<c:out value="${directMessageList.userNo}" />
+				</p>
+				<br>
+				<div align="center">
+					<form action="/chat/directMessage" method="POST">
+						<button type="submit" name="action" value="deleteMessage" class="deleteMessage">削除</button>
+						<input type="hidden" name="messageNo" value="${directMessageList.messageNo}">
+					</form>
+				</div>
+			</div>
+			<br>
+		</c:if>
+
+		<!-- 他人のメッセージの場合 -->
+		<c:if test="${!judge}">
+			<br>
+			<div style="display: inline-block; border: 1px solid #cccccc; position: relative; left: 50px">
+				<a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
+					<c:out value="${directMessageList.otherName}" /> さん
+				</a>
+				<br> <c:out value="${directMessageList.message}" />
+				<p hidden>
+					<br>：会話番号：<c:out value="${directMessageList.messageNo}" />
+					<br>：会員番号：<c:out value="${directMessageList.userNo}" />
+				</p>
+			</div>
+			<br>
+		</c:if>
+	</c:forEach>
+
+	<br>
+	${errorMessage}
 	<form action="/chat/directMessage" method="POST">
-		<input type="submit" value="メッセージの送信">
+		<textarea placeholder="ここにメッセージを入力" name="inputMessage" rows="5"
+			cols="50"></textarea>
+		<input type="hidden" name="directMessageBean"
+			value="${directMessageBean}">
+		<br> <button type="submit" name="action" value="sendMessage" class="button">メッセージ送信</button>
 	</form>
+
 	<form action="/chat/main" method="POST">
-		<input type="submit" value="メインメニューへ戻る">
+		<button type="submit" name="action" value="toMainPage" class="button">メインページへ戻る</button>
 	</form>
+
 </body>
 </html>

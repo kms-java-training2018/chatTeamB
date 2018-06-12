@@ -7,6 +7,12 @@ public class SessionBean {
 	/** 表示名 */
 	private String userName;
 
+//	/** 他のユーザの会員番号*/
+//	private ArrayList<String> otherNo = new ArrayList<String>();
+//
+//	/** ログインしたユーザの属しているグループ番号*/
+//	private ArrayList<String> groupNo;
+
 	public String getUserNo() {
 		return userNo;
 	}
@@ -22,5 +28,21 @@ public class SessionBean {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
+//	public ArrayList<String> getOtherNo() {
+//		return otherNo;
+//	}
+//
+//	public void setOtherNo(ArrayList<String> otherNo) {
+//		this.otherNo = otherNo;
+//	}
+//
+//	public ArrayList<String> getGroupNo() {
+//		return groupNo;
+//	}
+//
+//	public void setGroupNo(ArrayList<String> groupNo) {
+//		this.groupNo = groupNo;
+//	}
 
 }
