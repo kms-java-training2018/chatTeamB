@@ -24,10 +24,11 @@ public class GroupMessageServlet extends HttpServlet {
 
 // 【ページ遷移時】-------------------------------------------------------------------------------------------------
 
-//		// 【デバッグ用】
+//		// 【デバッグ用】-------------------------------------
 //		// セッション切れた状況を作り出す
 //		HttpSession session = req.getSession(true);
 //		session.invalidate();
+//		------------------------------------------------------
 
 		// セッションがタイムアウトしてるかどうかの判定
 		HttpSession session = req.getSession(false);
@@ -322,7 +323,6 @@ public class GroupMessageServlet extends HttpServlet {
 		break;
 
 // 【どのcaseにも当てはまらない時】-------------------------------------------------------------------------------------
-
 		default:
 
 			System.out.println("不正なパラメーターが送られました。＠GroupMessageServlet");
