@@ -33,5 +33,30 @@ window.onload=function(){
 		window.close();
 		}
 
-};
+	// ログアウト確認ダイアログ
+	document.getElementsByClassName('logout').onclick=
+	    function(){
+		alert('ログアウトしますか？')
+		}
 
+}
+
+function logout(){
+
+	// 「OK」時の処理開始 ＋ 確認ダイアログの表示
+	if(window.confirm('ログアウトしますか？')){
+
+		location.href = "/chat/main"; // メインページ へジャンプ
+
+	}
+	// 「OK」時の処理終了
+
+	// 「キャンセル」時の処理開始
+	else{
+
+		window.alert('キャンセルされました'); // 警告ダイアログを表示
+
+	}
+	// 「キャンセル」時の処理終了
+
+}

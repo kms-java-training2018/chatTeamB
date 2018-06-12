@@ -30,7 +30,7 @@
 	<!-- ここからヘッダー ===============================================================================================-->
 	<header> ようこそ<br>
 	${userName}さん<br>
-	<form action="/chat/main" method="POST">
+	<form action="/chat/groupMessage" method="POST">
 		<button type='submit' name='action' value='logout'>ログアウト</button>
 	</form>
 
