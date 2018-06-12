@@ -6,12 +6,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>メインメニュー</title>
+<script type="text/javascript" src="./js/main.js"></script>
 </head>
 <body>
+
 	<header> ようこそ<br>
 	${sessionScope.userName}さん<br>
 	<form action="/chat/logout" method="POST">
-		<button type='submit' name='action' value='logout'>ログアウト</button>
+		<button type='submit' name='action' onclick='logout()' value='logout'>ログアウト</button>
 	</form>
 	</header>
 	<h1>チャット研修プログラム</h1>
@@ -22,8 +24,8 @@
 	<c:forEach var="otherUser" items="${otherUserList}">
 		<a
 			href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
-			class="partnerNameLink">${otherUser.otherNo} ${otherUser.otherName}
-			さん（メッセージへ）<br>
+			class="partnerNameLink">${otherUser.otherNo}
+			${otherUser.otherName} さん（メッセージへ）<br>
 		</a>
 
 		<c:out value="${otherUser.message}" />
@@ -36,8 +38,10 @@
 	<br>
 
 	<c:forEach var="userGroup" items="${userGroupList}">
-		<a href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
-			class="nameLink">${userGroup.groupNo} ${userGroup.groupName}（グループメッセージへ）<br>
+		<a
+			href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
+			class="nameLink">${userGroup.groupNo}
+			${userGroup.groupName}（グループメッセージへ）<br>
 		</a>
 
 		<c:out value="${userGroup.groupMessage}" />
