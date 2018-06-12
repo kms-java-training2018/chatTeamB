@@ -109,19 +109,20 @@ public class DirectMessageServlet extends HttpServlet {
 			//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
-		// デバック用
-		DirectMessageBean dMBean = new DirectMessageBean();
-		for (int i = 0; i < directMessageList.size(); i++) {
-			dMBean = directMessageList.get(i);
-			System.out.println("会話内容：" + dMBean.getMessage()
-					+ "：判別内容：" + dMBean.getJudge()
-					+ "：会員番号：" + dMBean.getUserNo()
-					+ "：会話番号：" + dMBean.getMessageNo());
-		}
+//		// デバック用
+//		DirectMessageBean dMBean = new DirectMessageBean();
+//		for (int i = 0; i < directMessageList.size(); i++) {
+//			dMBean = directMessageList.get(i);
+//			System.out.println("会話内容：" + dMBean.getMessage()
+//					+ "：判別内容：" + dMBean.getJudge()
+//					+ "：会員番号：" + dMBean.getUserNo()
+//					+ "：会話番号：" + dMBean.getMessageNo());
+//		}
 
 		// リクエストスコープにいれてjspに送る
 		req.setAttribute("directMessageList", directMessageList);
 		req.setAttribute("directMessageBean", directMessageBean);
+		System.out.println("表示終わり");
 		req.getRequestDispatcher(direction).forward(req, res);
 	}
 
@@ -149,6 +150,7 @@ public class DirectMessageServlet extends HttpServlet {
 		////////////////////////////////////////////////////////////////////////
 
 		case "sendMessage":
+			System.out.println("sendMessage処理にきました");
 			/** クラスMessageInfoModelのインスタンス取得　*/
 			MessageInfoModel entryMessage = new MessageInfoModel();
 
@@ -156,6 +158,7 @@ public class DirectMessageServlet extends HttpServlet {
 			String toSendAddress = directMessageBean.getToSendUserNo();//req.getParameter("toSendUserNo");
 			int judgeAddress = 0;
 			String message = req.getParameter("inputMessage");
+			System.out.println("メッセージ「 " + message + " 」を登録します");
 
 			// 文字数チェック
 			if (message.length() <= 0 || 100 < message.length()) {
@@ -186,9 +189,11 @@ public class DirectMessageServlet extends HttpServlet {
 		//		ここからdeleteMessage処理
 		////////////////////////////////////////////////////////////////////////
 		case "deleteMessage":
-
+			System.out.println("deleteMessage処理にきました");
 			// パラメーターを受け取る
 			String messageNo = req.getParameter("messageNo");
+			System.out.println("会話番号「 " + messageNo + " 」を論理削除します");
+
 
 			// メッセージの論理削除処理を実行
 			// 【メッセージの論理削除処理が失敗した場合】
@@ -201,6 +206,8 @@ public class DirectMessageServlet extends HttpServlet {
 				// エラーページへ遷移
 				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
+			System.out.println("会話情報を論理削除しました");
+
 
 			// 【メッセージの論理削除処理が成功した場合】
 			// switch文を抜けて、ページ表示処理をする。
@@ -278,15 +285,15 @@ public class DirectMessageServlet extends HttpServlet {
 			//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
-		// デバック用
-		DirectMessageBean dMBean = new DirectMessageBean();
-		for (int i = 0; i < directMessageList.size(); i++) {
-			dMBean = directMessageList.get(i);
-			System.out.println("会話内容：" + dMBean.getMessage()
-					+ "：判別内容：" + dMBean.getJudge()
-					+ "：会員番号：" + dMBean.getUserNo()
-					+ "：会話番号：" + dMBean.getMessageNo());
-		}
+//		// デバック用
+//		DirectMessageBean dMBean = new DirectMessageBean();
+//		for (int i = 0; i < directMessageList.size(); i++) {
+//			dMBean = directMessageList.get(i);
+//			System.out.println("会話内容：" + dMBean.getMessage()
+//					+ "：判別内容：" + dMBean.getJudge()
+//					+ "：会員番号：" + dMBean.getUserNo()
+//					+ "：会話番号：" + dMBean.getMessageNo());
+//		}
 
 		// リクエストスコープにいれてjspに送る
 		req.setAttribute("directMessageList", directMessageList);

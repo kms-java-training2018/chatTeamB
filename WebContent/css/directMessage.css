@@ -1,0 +1,22 @@
+/*@charset "UTF-8";*/
+#userMessage{
+	display: inline-block;
+	border: solid 1px #cccccc;
+	position: relative;
+	left: 350px;
+}
+
+#otherMessage{
+	display: inline-block;
+	border: solid 1px #cccccc;
+	position: relative;
+	left: 50px;
+}
+
+#deleteMessage{
+	text-align: center;
+}
+
+#header{
+	position:fixed;
+}

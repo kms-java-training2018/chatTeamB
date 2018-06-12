@@ -4,8 +4,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>個人チャット</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>個人チャット</title>
+	<link rel="stylesheet" type="text/css" href="./css/directMessage.css">
 </head>
 <body>
 
@@ -29,15 +30,16 @@
 		<!-- 自分のメッセージの場合 -->
 		<c:if test="${judge}">
 			<br>
-			<div style="display: inline-block; border: 1px solid #cccccc; position: relative; left: 350px">
-				<c:out value="${directMessageList.userName}" /> さん
+
+			<div id = "userMessage">
+				>><c:out value="${directMessageList.userName}" /> さん
 				<br> <c:out value="${directMessageList.message}" />
 				<p hidden>
 					<br>：会話番号：<c:out value="${directMessageList.messageNo}" />
 					<br>：会員番号：<c:out value="${directMessageList.userNo}" />
 				</p>
 				<br>
-				<div align="center">
+				<div id = "deleteMessage">
 					<form action="/chat/directMessage" method="POST">
 						<button type="submit" name="action" value="deleteMessage" class="deleteMessage">削除</button>
 						<input type="hidden" name="messageNo" value="${directMessageList.messageNo}">
@@ -50,8 +52,8 @@
 		<!-- 他人のメッセージの場合 -->
 		<c:if test="${!judge}">
 			<br>
-			<div style="display: inline-block; border: 1px solid #cccccc; position: relative; left: 50px">
-				<a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
+			<div id = "otherMessage">
+				>><a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
 					<c:out value="${directMessageList.otherName}" /> さん
 				</a>
 				<br> <c:out value="${directMessageList.message}" />
