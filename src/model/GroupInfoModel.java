@@ -267,6 +267,7 @@ public class GroupInfoModel {
 			sb.append("WHERE ");
 			sb.append("group_no = '" + groupNo + "'");
 			sb.append("AND user_no = '" + userNo + "'");
+			sb.append("AND out_flag = 0");
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
