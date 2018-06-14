@@ -12,10 +12,9 @@
 
 	<header> ようこそ<br>
 	${sessionScope.userName}さん<br>
-	<form action="/chat/logout" method="POST">
-		<button type='submit' name='action' onclick='logout()' value='logout'>ログアウト</button>
-	</form>
-	</header>
+	<%-- <form action="/chat/logout" method="GET" onsubmit="return false">
+		<button type="submit" name="action" value="logout" class="button">ログアウト</button>
+	</form>--%> <a href="javascript:void(0)" onclick="logout()">ログアウト</a></header>
 	<h1>チャット研修プログラム</h1>
 	<h2>メインメニュー</h2>
 	<br>■会員一覧
