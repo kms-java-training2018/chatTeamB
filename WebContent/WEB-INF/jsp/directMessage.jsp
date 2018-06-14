@@ -5,17 +5,22 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>個人チャット</title>
+	<title>メッセージ</title>
 	<link rel="stylesheet" type="text/css" href="./css/directMessage.css">
 </head>
 <body>
 
-	<header> ようこそ<br>
+<!-- ここからヘッダー ===============================================================================================-->
+<header>
+<!-- 	ログインユーザーの表示名 -->
+	ようこそ<br>
 	${directMessageBean.userName} さん <br>
-	<form action="/chat/logout" method="POST">
-		<button type="submit" name="action" value="logout" class="button">ログアウト</button>
-	</form>
-	</header>
+
+<!-- 	ログアウトリンク -->
+	<a href="javascript:void(0)" onclick="logout()">ログアウト</a>
+
+</header>
+<!-- ここまでヘッダー ===============================================================================================-->
 
 	<h1>
 		<a href="/chat/showProfile?userNo=${directMessageBean.toSendUserNo}"

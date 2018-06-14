@@ -8,12 +8,19 @@
 <title>プロフィール</title>
 </head>
 <body>
-	<header> ようこそ<br>
+<!-- ここからヘッダー ===============================================================================================-->
+<header>
+<!-- 	ログインユーザーの表示名 -->
+	ようこそ<br>
 	${sessionScope.userName}さん<br>
-	<form action="/chat/logout" method="POST">
-		<button type='submit' name='action' value='logout'>ログアウト</button>
-	</form>
-	</header>
+
+<!-- 	ログアウトリンク -->
+	<a href="javascript:void(0)" onclick="logout()">ログアウト</a>
+
+</header>
+<!-- ここまでヘッダー ===============================================================================================-->
+
+
 	<h1>チャット研修プログラム</h1>
 	<h2>プロフィール確認</h2>
 	<p>${userName}さん</p>
