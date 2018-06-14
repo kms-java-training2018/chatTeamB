@@ -80,7 +80,7 @@ public class DirectMessageModel {
 			sb.append(" SEND_USER_NO IN (" + userNo + "," + toSendUserNo + ") ");
 			sb.append(" AND TO_SEND_USER_NO IN (" + userNo + "," + toSendUserNo + ") ");
 			sb.append(" AND DELETE_FLAG = 0 ");
-			sb.append("ORDER BY MESSAGE_NO ");
+			sb.append("ORDER BY REGIST_DATE ");
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成

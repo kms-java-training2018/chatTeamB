@@ -29,38 +29,36 @@
 
 		<!-- 自分のメッセージの場合 -->
 		<c:if test="${judge}">
-			<br>
-
 			<div id = "userMessage">
 				>><c:out value="${directMessageList.userName}" /> さん
-				<br> <c:out value="${directMessageList.message}" />
-				<p hidden>
+				<p>
+					<c:out value="${directMessageList.message}" />
+				</p>
+				<p1 hidden>
 					<br>：会話番号：<c:out value="${directMessageList.messageNo}" />
 					<br>：会員番号：<c:out value="${directMessageList.userNo}" />
-				</p>
-				<br>
-				<div id = "deleteMessage">
-					<form action="/chat/directMessage" method="POST">
-						<button type="submit" name="action" value="deleteMessage" class="deleteMessage">削除</button>
-						<input type="hidden" name="messageNo" value="${directMessageList.messageNo}">
-					</form>
-				</div>
+				</p1>
+			  	<form action="/chat/directMessage" method="POST">
+					<button type="submit" name="action" value="deleteMessage" class="deleteMessage">削除</button>
+					<input type="hidden" name="messageNo" value="${directMessageList.messageNo}">
+				</form>
 			</div>
 			<br>
 		</c:if>
 
 		<!-- 他人のメッセージの場合 -->
 		<c:if test="${!judge}">
-			<br>
 			<div id = "otherMessage">
 				>><a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
 					<c:out value="${directMessageList.otherName}" /> さん
 				</a>
-				<br> <c:out value="${directMessageList.message}" />
-				<p hidden>
+				<p>
+					<c:out value="${directMessageList.message}" />
+				</p>
+				<p1 hidden>
 					<br>：会話番号：<c:out value="${directMessageList.messageNo}" />
 					<br>：会員番号：<c:out value="${directMessageList.userNo}" />
-				</p>
+				</p1>
 			</div>
 			<br>
 		</c:if>
@@ -69,10 +67,8 @@
 	<br>
 	${errorMessage}
 	<form action="/chat/directMessage" method="POST">
-		<textarea placeholder="ここにメッセージを入力" name="inputMessage" rows="5"
-			cols="50"></textarea>
-		<input type="hidden" name="directMessageBean"
-			value="${directMessageBean}">
+		<textarea placeholder="ここにメッセージを入力" name="inputMessage" rows="5" cols="50"></textarea>
+		<input type="hidden" name="directMessageBean"value="${directMessageBean}">
 		<br> <button type="submit" name="action" value="sendMessage" class="button">メッセージ送信</button>
 	</form>
 
