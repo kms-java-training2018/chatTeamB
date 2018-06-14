@@ -30,10 +30,11 @@
 	<!-- ここからヘッダー ===============================================================================================-->
 	<header> ようこそ<br>
 	${userName}さん<br>
-	<form action="/chat/groupMessage" method="POST">
-		<button type='submit' name='action' value='logout'>ログアウト</button>
-	</form>
 
+<!-- 	ログアウトリンク -->
+	<a href="javascript:void(0)" onclick="logout()">ログアウト</a>
+
+<!-- 	メインメニューへ戻るボタン -->
 	<form action="/chat/main" method="POST">
 		<button type="submit" name="action" value="toMainPage" class="button">メインメニューへ戻る</button>
 	</form>
@@ -110,6 +111,7 @@
 
 
 	<!-- 	【メッセージ送信】 -->
+	${errorMessage}
 	<form action="/chat/groupMessage" method="POST">
 		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage" class="messageInputBox" id="midashi1">
 		<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">

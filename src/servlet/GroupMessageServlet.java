@@ -24,26 +24,58 @@ public class GroupMessageServlet extends HttpServlet {
 
 // 【ページ遷移時】-------------------------------------------------------------------------------------------------
 
+		////////////////////////////////////////////////////////////////////////
+		//		パラメーターチェック
+		////////////////////////////////////////////////////////////////////////
+
 //		// 【デバッグ用】-------------------------------------
 //		// セッション切れた状況を作り出す
 //		HttpSession session = req.getSession(true);
 //		session.invalidate();
 //		------------------------------------------------------
 
-		// セッションがタイムアウトしてるかどうかの判定
+		// 【セッションが開始しているかどうかの判定】
 		HttpSession session = req.getSession(false);
+		// ---開始していない場合(タイムアウト含む)
 		if(session == null){
 			//nullならセッションは切れている。
 			// エラー画面に遷移
 			req.setAttribute("errorMessage", "セッションがタイムアウトになりました。");
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		// ---すでに開始している場合
+		}else {
+			// 開始済みセッションを取得
+			session = req.getSession(true);
 			}
+
+		// 【セッション内にログイン情報を保持しているかどうかの判定】
+		SessionBean sessionBean = (SessionBean) session.getAttribute("session");
+		// ---保持されていない場合
+		if (sessionBean == null
+				||sessionBean.getUserNo().equals(null)
+				||sessionBean.getUserName().equals(null)) {
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "ログインされていません。");
+		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+		// 【パラメータに遷移先groupNoが存在するかの判定】
+		// ---存在しない場合
+		if (req.getParameter("userGroupNo") == null) {
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "遷移先グループが選択されていません。");
+		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
 
 		////////////////////////////////////////////////////////////////////////
 		//		セッションとパラメーターから情報を取得
 		////////////////////////////////////////////////////////////////////////
 		// セッションから：ログインユーザーの会員番号・表示名
-		SessionBean sessionBean = (SessionBean) session.getAttribute("session");
 		String userNo = sessionBean.getUserNo();
 		String userName = sessionBean.getUserName();
 
@@ -58,7 +90,6 @@ public class GroupMessageServlet extends HttpServlet {
 		//			　メッセージ表示方法は個人チャット画面と同様の処理のため、
 		//			　DirectMessageBeanを使用する。
 		////////////////////////////////////////////////////////////////////////
-
 		// ページの行き先変更変数
 		String direction = "/WEB-INF/jsp/groupMessage.jsp";
 
@@ -93,27 +124,15 @@ public class GroupMessageServlet extends HttpServlet {
 		//		処理
 		////////////////////////////////////////////////////////////////////////
 
-		// 【セッションにログイン情報が保持されているか判定】
-		// ---保持されていない場合
-		if (userNo.equals(null) || userName.equals(null)) {
-		    // セッションを削除
-			session = req.getSession(false);
-		    session = null;
-		    // エラー画面に遷移
-		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		}
-
-
 		// 	【遷移先グループにログインユーザーが参加しているか判定】
 		// ---グループメンバーでなかった場合
 		if(groupInfoModel.judgeGroupMember(userNo,groupNo) == false) {
 			// セッションを削除
-			session = req.getSession(false);
-		    session = null;
-		    // エラー画面に遷移
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "グループメンバーではありません。");
 		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		}
-
+		    }
 
 		// 【グループ会話内容取得】
 		try {
@@ -125,11 +144,11 @@ public class GroupMessageServlet extends HttpServlet {
 		// レコードが取得出来なかった場合
 		if (list == null) {
 			// セッションを削除
-			session = req.getSession(false);
-			session = null;
-			// エラーページに遷移
-			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		}
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "会話情報が取得できませんでした。");
+		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		    }
 
 
 		////////////////////////////////////////////////////////////////////////
@@ -170,11 +189,47 @@ public class GroupMessageServlet extends HttpServlet {
 		req.setCharacterEncoding("utf-8");
 
 		////////////////////////////////////////////////////////////////////////
+		//		パラメーターチェック
+		////////////////////////////////////////////////////////////////////////
+
+//		// 【デバッグ用】-------------------------------------
+//		// セッション切れた状況を作り出す
+//		HttpSession session = req.getSession(true);
+//		session.invalidate();
+//		------------------------------------------------------
+
+		// 【セッションが開始しているかどうかの判定】
+		HttpSession session = req.getSession(false);
+		// ---開始していない場合(タイムアウト含む)
+		if(session == null){
+			//nullならセッションは切れている。
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "セッションがタイムアウトになりました。");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		// ---すでに開始している場合
+		}else {
+			// 開始済みセッションを取得
+			session = req.getSession(true);
+			}
+
+		// 【セッション内にログイン情報を保持しているかどうかの判定】
+		SessionBean sessionBean = (SessionBean) session.getAttribute("session");
+		// ---保持されていない場合
+		if (sessionBean == null
+				||sessionBean.getUserNo().equals(null)
+				||sessionBean.getUserName().equals(null)) {
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "ログインされていません。");
+		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+
+		////////////////////////////////////////////////////////////////////////
 		//		セッションとパラメーターから情報を取得
 		////////////////////////////////////////////////////////////////////////
 		// セッションから：ログインユーザーの会員番号・表示名
-		HttpSession session = req.getSession();
-		SessionBean sessionBean = (SessionBean)session.getAttribute("session");
 		String userName = sessionBean.getUserName();
 		String userNo = sessionBean.getUserNo();
 
@@ -247,31 +302,37 @@ public class GroupMessageServlet extends HttpServlet {
 			// ---グループメンバーでなかった場合
 			if(groupInfoModel.judgeGroupMember(userNo,groupNo) == false) {
 				// セッションを削除
-				session = req.getSession(false);
-			    session = null;
-			    // エラー画面に遷移
+				session.invalidate();
+				// エラー画面に遷移
+				req.setAttribute("errorMessage", "グループメンバーではありません。");
 			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			    }
+
+			//【入力されたメッセージが1桁以上100桁以内か判定】
+			// ---不正な入力だった場合、し、グループ画面に遷移する。
+			if (inputMessage.length() <= 0 || 100 < inputMessage.length()) {
+				// エラーメッセージを設定
+				req.setAttribute("errorMessage", "文字数は1以上100以下にしてください。");
+				// 行き先はGourpMessageServlet。(switch文を抜けてページ遷移処理を行う。)
+
+			} else {
+
+				// 【入力されたメッセージを会話情報テーブルに登録】
+				// ---登録処理が失敗した場合(メソッドの戻り値がfalseの場合)
+				if (messageInfoModel.entryMessage(userNo, inputMessage, groupNo, 1) == false) {
+					// セッションを削除
+					session.invalidate();
+					// エラー画面に遷移
+					req.setAttribute("errorMessage", "メッセージが送信できませんでした。");
+				    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+				}
+
+				// ---登録処理が成功した場合
+				// switch文を抜けて、ページ遷移処理を行う。
 			}
-
-			// TODO 【入力されたメッセージが1桁以上100桁以内か判定】
-			// ---不正な入力だった場合、エラーメッセージを設定し、グループ画面に遷移する。
-			// TODO jspにもエラーメッセージ表示コード書く、beanにエラーメッセージフィールド追加
-
-
-
-			// 【入力されたメッセージを会話情報テーブルに登録】
-			// ---登録処理が失敗した場合(メソッドの戻り値がfalseの場合)
-			if (messageInfoModel.entryMessage(userNo, inputMessage, groupNo, 1) == false) {
-				// セッションの情報を削除する
-				session = req.getSession(false);
-				session = null;
-				// エラーページに遷移
-				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-			}
-
-			// ---登録処理が成功した場合
-			// switch文を抜けて、ページ遷移処理を行う。
 		break;
+
+
 
 // 【メッセージ削除時】-------------------------------------------------------------------------------------------------
 //		グループ画面で削除ボタンを押したときに実行される処理。
@@ -283,20 +344,21 @@ public class GroupMessageServlet extends HttpServlet {
 			// リクエストから論理削除するmessageNoを取得
 			String messageNo = req.getParameter("messageNo");
 
-			// メッセージ削除用のメソッドを呼び出し(削除処理を実行し)、
-			// 【削除処理が失敗した場合(メソッドの戻り値がfalseの場合)】
+			// 【メッセージ削除用処理】
+			// ---削除処理が失敗した場合(メソッドの戻り値がfalseの場合)
 			if (messageInfoModel.deleteMessage(messageNo) == false) {
-				// セッションの情報を削除する
-				session = req.getSession(false);
-				session = null;
-
-				// エラーページに遷移
-				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+				// セッションを削除
+				session.invalidate();
+				// エラー画面に遷移
+				req.setAttribute("errorMessage", "メッセージを削除できませんでした。");
+			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
 
-			// 【削除処理が成功した場合】
+			// ---削除処理が成功した場合
 			// switch文を抜けて、ページ遷移処理を行う。
 		break;
+
+
 
 // 【グループ脱退時】---------------------------------------------------------------------------------------------------
 //		グループ画面で脱退ボタンを押したときに実行される処理。
@@ -305,18 +367,17 @@ public class GroupMessageServlet extends HttpServlet {
 
 		case "leaveGroup":
 
-			// グループ脱退用のメソッドを呼び出し
-			// 【グループ脱退処理が失敗した場合】
+			// 【グループ脱退処理】
+			// ---グループ脱退処理が失敗した場合
 			if(groupInfoModel.groupLeave(userNo, groupNo) == false) {
-				// セッションの情報を削除する
-				session = req.getSession(false);
-				session = null;
-
-				// エラーページに遷移
-				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+				// セッションを削除
+				session.invalidate();
+				// エラー画面に遷移
+				req.setAttribute("errorMessage", "グループ脱退に失敗しました。");
+			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
 
-			// 【グループ脱退処理が成功した場合】
+			// ---グループ脱退処理が成功した場合
 			// メインメニューに遷移
 			req.getRequestDispatcher("/main").forward(req, res);
 
