@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!-- JSを指定 -->
-<script src="../js/main.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
 <title>グループメッセージ</title>
 </head>
 <body>
