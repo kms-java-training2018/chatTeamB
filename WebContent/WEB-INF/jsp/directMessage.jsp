@@ -4,17 +4,25 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>個人チャット</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>メッセージ</title>
+<!-- JSを指定 -->
+	<script type="text/javascript" src="./js/main.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/directMessage.css">
 </head>
 <body>
 
-	<header> ようこそ<br>
+<!-- ここからヘッダー ===============================================================================================-->
+<header>
+<!-- 	ログインユーザーの表示名 -->
+	ようこそ<br>
 	${directMessageBean.userName} さん <br>
-	<form action="/chat/logout" method="POST">
-		<button type="submit" name="action" value="logout" class="button">ログアウト</button>
-	</form>
-	</header>
+
+<!-- 	ログアウトリンク -->
+	<a href="javascript:void(0)" onclick="logout()">ログアウト</a>
+
+</header>
+<!-- ここまでヘッダー ===============================================================================================-->
 
 	<h1>
 		<a href="/chat/showProfile?userNo=${directMessageBean.toSendUserNo}"
@@ -28,37 +36,36 @@
 
 		<!-- 自分のメッセージの場合 -->
 		<c:if test="${judge}">
-			<br>
-			<div style="display: inline-block; border: 1px solid #cccccc; position: relative; left: 350px">
-				<c:out value="${directMessageList.userName}" /> さん
-				<br> <c:out value="${directMessageList.message}" />
-				<p hidden>
+			<div id = "userMessage">
+				>><c:out value="${directMessageList.userName}" /> さん
+				<p>
+					<c:out value="${directMessageList.message}" />
+				</p>
+				<p1 hidden>
 					<br>：会話番号：<c:out value="${directMessageList.messageNo}" />
 					<br>：会員番号：<c:out value="${directMessageList.userNo}" />
-				</p>
-				<br>
-				<div align="center">
-					<form action="/chat/directMessage" method="POST">
-						<button type="submit" name="action" value="deleteMessage" class="deleteMessage">削除</button>
-						<input type="hidden" name="messageNo" value="${directMessageList.messageNo}">
-					</form>
-				</div>
+				</p1>
+			  	<form action="/chat/directMessage" method="POST">
+					<button type="submit" name="action" value="deleteMessage" class="deleteMessage">削除</button>
+					<input type="hidden" name="messageNo" value="${directMessageList.messageNo}">
+				</form>
 			</div>
 			<br>
 		</c:if>
 
 		<!-- 他人のメッセージの場合 -->
 		<c:if test="${!judge}">
-			<br>
-			<div style="display: inline-block; border: 1px solid #cccccc; position: relative; left: 50px">
-				<a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
+			<div id = "otherMessage">
+				>><a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
 					<c:out value="${directMessageList.otherName}" /> さん
 				</a>
-				<br> <c:out value="${directMessageList.message}" />
-				<p hidden>
+				<p>
+					<c:out value="${directMessageList.message}" />
+				</p>
+				<p1 hidden>
 					<br>：会話番号：<c:out value="${directMessageList.messageNo}" />
 					<br>：会員番号：<c:out value="${directMessageList.userNo}" />
-				</p>
+				</p1>
 			</div>
 			<br>
 		</c:if>
@@ -67,10 +74,8 @@
 	<br>
 	${errorMessage}
 	<form action="/chat/directMessage" method="POST">
-		<textarea placeholder="ここにメッセージを入力" name="inputMessage" rows="5"
-			cols="50"></textarea>
-		<input type="hidden" name="directMessageBean"
-			value="${directMessageBean}">
+		<textarea placeholder="ここにメッセージを入力" name="inputMessage" rows="5" cols="50"></textarea>
+		<input type="hidden" name="directMessageBean"value="${directMessageBean}">
 		<br> <button type="submit" name="action" value="sendMessage" class="button">メッセージ送信</button>
 	</form>
 

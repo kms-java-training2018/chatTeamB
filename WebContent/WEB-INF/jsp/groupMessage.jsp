@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!-- JSを指定 -->
-<script src="../js/main.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
 <title>グループメッセージ</title>
 </head>
 <body>
@@ -27,20 +27,19 @@
 
  以上メモ============================================================================================================-->
 
-	<!-- ここからヘッダー ===============================================================================================-->
-	<header> ようこそ<br>
+<!-- ここからヘッダー ===============================================================================================-->
+<header>
+<!-- 	ログインユーザーの表示名 -->
+	ようこそ<br>
 	${userName}さん<br>
-	<form action="/chat/main" method="POST">
-		<button type='submit' name='action' value='logout'>ログアウト</button>
-	</form>
 
-	<form action="/chat/main" method="POST">
-		<button type="submit" name="action" value="toMainPage" class="button">メインメニューへ戻る</button>
-	</form>
+<!-- 	ログアウトリンク -->
+	<a href="javascript:void(0)" onclick="logout()">ログアウト</a>
 
-	<!-- ここまでヘッダー ===============================================================================================-->
-	</header>
-	<!-- ここからボディ ===============================================================================================-->
+</header>
+<!-- ここまでヘッダー ===============================================================================================-->
+
+<!-- ここからボディ ===============================================================================================-->
 	<h1>チャット研修プログラム</h1>
 	<h2>グループメッセージ</h2>
 		<h2>
@@ -110,6 +109,7 @@
 
 
 	<!-- 	【メッセージ送信】 -->
+	${errorMessage}
 	<form action="/chat/groupMessage" method="POST">
 		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage" class="messageInputBox" id="midashi1">
 		<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">

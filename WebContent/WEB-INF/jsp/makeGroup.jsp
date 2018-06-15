@@ -4,16 +4,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>グループ作成</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>グループ作成</title>
+<!-- JSを指定 -->
+	<script type="text/javascript" src="./js/main.js"></script>
 </head>
 <body>
-	<header> ようこそ<br>
+
+<!-- ここからヘッダー ===============================================================================================-->
+<header>
+<!-- 	ログインユーザーの表示名 -->
+	ようこそ<br>
 	${sessionScope.userName}さん<br>
-	<form action="/chat/logout" method="POST">
-		<button type='submit' name='action' value='logout'>ログアウト</button>
-	</form>
-	</header>
+
+<!-- 	ログアウトリンク -->
+	<a href="javascript:void(0)" onclick="logout()">ログアウト</a>
+
+</header>
+<!-- ここまでヘッダー ===============================================================================================-->
 
 	<h1>チャット研修プログラム</h1>
 	<h2>グループ作成</h2>
