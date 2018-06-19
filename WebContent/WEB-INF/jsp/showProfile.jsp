@@ -16,9 +16,6 @@
 	ようこそ<br>
 	${sessionScope.userName}さん<br>
 
-<!-- 	ログアウトリンク -->
-	<a href="javascript:void(0)" onclick="logout()">ログアウト</a>
-
 </header>
 <!-- ここまでヘッダー ===============================================================================================-->
 
@@ -26,7 +23,7 @@
 	<h1>チャット研修プログラム</h1>
 	<h2>プロフィール確認</h2>
 	<p>${userName}さん</p>
-	<p>自己紹介 ${myPageText}</p>
+	<p>自己紹介： ${myPageText}</p>
 	<input type="button" value="閉じる" onClick="window.close();">
 
 </body>

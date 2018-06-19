@@ -23,8 +23,7 @@
 	<c:forEach var="otherUser" items="${otherUserList}">
 		<a
 			href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
-			class="partnerNameLink">${otherUser.otherNo}
-			${otherUser.otherName} さん（メッセージへ）<br>
+			class="partnerNameLink"> ${otherUser.otherName} さん（メッセージへ）<br>
 		</a>
 
 		<c:out value="${otherUser.message}" />
@@ -39,8 +38,7 @@
 	<c:forEach var="userGroup" items="${userGroupList}">
 		<a
 			href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
-			class="nameLink">${userGroup.groupNo}
-			${userGroup.groupName}（グループメッセージへ）<br>
+			class="nameLink"> ${userGroup.groupName}（グループメッセージへ）<br>
 		</a>
 
 		<c:out value="${userGroup.groupMessage}" />

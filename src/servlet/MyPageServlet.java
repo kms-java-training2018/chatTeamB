@@ -23,16 +23,31 @@ public class MyPageServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
 		req.setCharacterEncoding("utf-8");
-		//セッションが存在していたら処理を開始
-		//セッション取得
-		HttpSession session = req.getSession();
-		/** クラスSessionBeanの初期化 */
+		// 【セッションが開始しているかどうかの判定】
+		HttpSession session = req.getSession(false);
+		// ---開始していない場合(タイムアウト含む)
+		if (session == null) {
+			//nullならセッションは切れている。
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "セッションが開始されていない、もしくはタイムアウトになりました。");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			// ---すでに開始している場合
+		} else {
+			// 開始済みセッションを取得
+			session = req.getSession(true);
+		}
+
+		// 【セッション内にログイン情報を保持しているかどうかの判定】
 		SessionBean sessionBean = (SessionBean) session.getAttribute("session");
-		//　セッションがない場合エラー画面に移動
-		if (sessionBean.getUserNo().equals(null) || sessionBean.getUserName().equals(null)) {
-			System.out.println("セッションがないです");
-			session = req.getSession(false);
-			session = null;
+
+		// ---保持されていない場合
+		if (sessionBean == null
+				|| sessionBean.getUserNo().equals(null)
+				|| sessionBean.getUserName().equals(null)) {
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "ログインされていません。");
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
@@ -40,8 +55,7 @@ public class MyPageServlet extends HttpServlet {
 		String action = req.getParameter("action");
 		switch (action) {
 		case "myPageTransition":
-			// セッションがある場合
-			// Beanを使うための初期化
+
 			MyPageModel model = new MyPageModel();
 
 			// メインメニューからの遷移
@@ -50,7 +64,11 @@ public class MyPageServlet extends HttpServlet {
 				myPageBean = model.profileGet(sessionBean);
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println("プロフィールサーブレット、認証処理キャッチ");
+				// セッションを削除
+				session.invalidate();
+				// エラー画面に遷移
+				req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
+				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
 
 			String userName = myPageBean.getUserName();
@@ -94,8 +112,11 @@ public class MyPageServlet extends HttpServlet {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
-				System.out.println("プロフィール編集サーブレット、認証処理キャッチ");
+				// セッションを削除
+				session.invalidate();
+				// エラー画面に遷移
+				req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
+				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
 			if (result == false) {
 				System.out.println("プロフィール編集できませんでした");
@@ -113,6 +134,36 @@ public class MyPageServlet extends HttpServlet {
 			System.out.println("スイッチ文エラー");
 			break;
 
+		}
+	}
+
+	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		// 【セッションが開始しているかどうかの判定】
+		HttpSession session = req.getSession(false);
+		// ---開始していない場合(タイムアウト含む)
+		if (session == null) {
+			//nullならセッションは切れている。
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "セッションが開始されていない、もしくはタイムアウトになりました。");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			// ---すでに開始している場合
+		} else {
+			// 開始済みセッションを取得
+			session = req.getSession(true);
+		}
+
+		// 【セッション内にログイン情報を保持しているかどうかの判定】
+		SessionBean sessionBean = (SessionBean) session.getAttribute("session");
+
+		// ---保持されていない場合
+		if (sessionBean == null
+				|| sessionBean.getUserNo().equals(null)
+				|| sessionBean.getUserName().equals(null)) {
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "ログインされていません。");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 	}
 }
