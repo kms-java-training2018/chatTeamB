@@ -64,7 +64,7 @@ public class MessageInfoModel {
 			sb.append(" VALUES");
 			sb.append("( message_sequence.nextval,"); //1
 			sb.append(sendUserNo + ","); //2
-			sb.append(" ' " + message + "' ,"); //3
+			sb.append(" '" + message + "' ,"); //3
 			sb.append(toSendUserNo + ","); //4
 			sb.append(toSendGroupNo + ","); //5
 			sb.append("systimestamp)"); //6

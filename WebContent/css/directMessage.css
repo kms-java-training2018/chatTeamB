@@ -12,8 +12,8 @@
 	background-color : lightblue ;
 }
 
-#userMessage p button{
-	text-position: center;
+#deleteMessageButton{
+	display:inline;
 }
 
 #otherMessage{
