@@ -55,7 +55,7 @@
 
 <!-- 	ログインユーザーがグループ作成者でなかった場合 -->
 	<c:if test="${judgeGroupCreator == false}" >
-	<form action="/chat/groupMessage" name="leaveGroup" method="POST" onsubmit="return leaveGroup();">
+	<form action="/chat/groupMessage" name="leaveGroup" method="POST" onsubmit="return leaveGroupJS();">
 		<button name="action" value="leaveGroup">グループ脱退</button>
 		<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
 		<input type="hidden" name="groupName" value="${groupInfo.groupName}">

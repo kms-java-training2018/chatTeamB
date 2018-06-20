@@ -52,7 +52,7 @@ function deleteMessageJS() {
 
 }
 
-function leaveGroup() {
+function leaveGroupJS() {
 
 	// 「OK」時の処理開始 ＋ 確認ダイアログの表示
 	if (window.confirm('このグループから脱退しますか？')) {
