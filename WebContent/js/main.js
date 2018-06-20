@@ -9,35 +9,35 @@
  * =====以上メモ========================================================================================================
  */
 
-window.onload = function() {
-
-	// メッセージ削除ボタン押下時、確認ダイアログを表示
-//	document.getElementById("deleteMessage").onclick = function() {
-//		alert('このメッセージを削除してよろしいですか？');
+//window.onload = function() {
+//
+//	// メッセージ削除ボタン押下時、確認ダイアログを表示
+////	document.getElementById("deleteMessage").onclick = function() {
+////		alert('このメッセージを削除してよろしいですか？');
+////	}
+//
+//	// グループ脱退ボタン押下時、確認ダイアログを表示
+//	document.getElementsByClassName('leaveGroup').onclick = function() {
+//		alert('このグループから脱退してよろしいですか？')
 //	}
+//
+//	// 他ユーザープロフ確認画面で「閉じる」ボタン押下時、タブを閉じる
+//	document.getElementsByClassName('closeTab').onclick = function() {
+//		window.close();
+//	}
+//
+//	// ログアウト確認ダイアログ
+//	document.getElementsByClassName('logout').onclick = function() {
+//		alert('ログアウトしますか？')
+//	}
+//
+//}
 
-	// グループ脱退ボタン押下時、確認ダイアログを表示
-	document.getElementsByClassName('leaveGroup').onclick = function() {
-		alert('このグループから脱退してよろしいですか？')
-	}
-
-	// 他ユーザープロフ確認画面で「閉じる」ボタン押下時、タブを閉じる
-	document.getElementsByClassName('closeTab').onclick = function() {
-		window.close();
-	}
-
-	// ログアウト確認ダイアログ
-	document.getElementsByClassName('logout').onclick = function() {
-		alert('ログアウトしますか？')
-	}
-
-}
-
-function deleteMessage() {
+function deleteMessageJS() {
 
 	// 「OK」時の処理開始 ＋ 確認ダイアログの表示
 	if (window.confirm('メッセージを削除しますか？')) {
-
+		alert('削除しました'); // 警告ダイアログを表示
 		return true;
 	}
 	// 「OK」時の処理終了
@@ -45,7 +45,7 @@ function deleteMessage() {
 	// 「キャンセル」時の処理開始
 	else {
 
-		alert('キャンセルされました'); // 警告ダイアログを表示
+		alert('キャンセルしました'); // 警告ダイアログを表示
 		return false;
 	}
 	// 「キャンセル」時の処理終了
