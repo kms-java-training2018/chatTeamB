@@ -46,13 +46,21 @@
 		グループ：${groupInfo.groupName}
 	</h2>
 
-	<!-- 	【グループ脱退】 -->
+	<!-- 	【グループ脱退ボタン】 -->
+<!-- 	ログインユーザーがグループ作成者だった場合 -->
+	<c:if test="${judgeGroupCreator == true}" >
+	<button type="button" disabled>グループ脱退</button>
+	<p>※グループ作成者はグループを脱退できません。
+	</c:if>
+<!-- 	ログインユーザーがグループ作成者でなかった場合 -->
+	<c:if test="${judgeGroupCreator == false}" >
 	<form action="/chat/groupMessage" method="POST">
 		<button type="submit" name="action" value="leaveGroup"
-			class="leaveGroup">グループ脱退</button>
+			class="leaveGroup" onclick="leaveGroup()">グループ脱退</button>
 		<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
 		<input type="hidden" name="groupName" value="${groupInfo.groupName}">
 	</form>
+	</c:if>
 
 	<!-- for文でメッセージを全て表示させる -->
 	<c:forEach var="list" items="${list}" varStatus="status">
@@ -71,11 +79,15 @@
 					<br>：会員番号：<c:out value="${list.userNo}" />
 					</p>
 					<br>
+
+				<!-- 	メッセージ削除リンク -->
+					<a href="javascript:void(0)" onclick="deleteMessage()">削除</a>
+
 				<!-- 削除ボタン -->
-					<form action="/chat/groupMessage" method="POST">
+					<form method="POST">
 						<button type="submit" name="action" value="deleteMessage"
-							class="deleteMessage">削除</button>
-						<input type="hidden" name="messageNo" value="${list.messageNo}">
+							class="deleteMessage" onclick="deleteMessage()">削除</button>
+<%-- 						<input type="hidden" name="messageNo" value="${list.messageNo}"> --%>
 						<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
 						<input type="hidden" name="groupName" value="${groupInfo.groupName}">
 					</form>
@@ -92,7 +104,7 @@
 					<!-- 相手の表示名をリンク表示(別タブでプロフ画面遷移) -->
 
 					<br> <a href="/chat/showProfile?userNo=<c:out value="${list.userNo}" />"
-						class="link" target=”_blank”>
+						class="link" target="_blank">
 						<c:out value="${list.otherName}" />さん
 					</a>
 					<br><c:out value="${list.message}" />
