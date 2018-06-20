@@ -45,8 +45,8 @@
 					<br>：会話番号：<c:out value="${directMessageList.messageNo}" />
 					<br>：会員番号：<c:out value="${directMessageList.userNo}" />
 				</p1>
-			  	<form action="/chat/directMessage" method="POST" id = "deleteMessageButton">
-					<button type="submit" name="action" value="deleteMessage" class="deleteMessage">削除</button>
+			  	<form action="/chat/directMessage" method="POST" id = "deleteMessageButton" name = "deleteMessageButton" onsubmit="return deleteMessage();">
+					<button name="action" value="deleteMessage">削除</button>
 					<input type="hidden" name="messageNo" value="${directMessageList.messageNo}">
 				</form>
 			</div>

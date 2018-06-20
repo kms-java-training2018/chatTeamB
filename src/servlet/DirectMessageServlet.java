@@ -359,6 +359,11 @@ public class DirectMessageServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("DirectMessageServlet、認証処理キャッチ");
+            // セッションを削除
+            session.invalidate();
+            // エラー画面に遷移
+            req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
+            req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 		System.out.println("DirectMessageServletに帰ってきました");
 

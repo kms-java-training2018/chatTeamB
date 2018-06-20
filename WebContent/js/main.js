@@ -12,9 +12,9 @@
 window.onload = function() {
 
 	// メッセージ削除ボタン押下時、確認ダイアログを表示
-	document.getElementById("deleteMessage").onclick = function() {
-		alert('このメッセージを削除してよろしいですか？');
-	}
+//	document.getElementById("deleteMessage").onclick = function() {
+//		alert('このメッセージを削除してよろしいですか？');
+//	}
 
 	// グループ脱退ボタン押下時、確認ダイアログを表示
 	document.getElementsByClassName('leaveGroup').onclick = function() {
@@ -38,8 +38,7 @@ function deleteMessage() {
 	// 「OK」時の処理開始 ＋ 確認ダイアログの表示
 	if (window.confirm('メッセージを削除しますか？')) {
 
-		location.href = "/chat/logout"; // ログアウトページ へジャンプ
-
+		return true;
 	}
 	// 「OK」時の処理終了
 
@@ -47,7 +46,7 @@ function deleteMessage() {
 	else {
 
 		alert('キャンセルされました'); // 警告ダイアログを表示
-
+		return false;
 	}
 	// 「キャンセル」時の処理終了
 
