@@ -7,6 +7,7 @@ package servlet;
  */
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -51,36 +52,10 @@ public class MyPageServlet extends HttpServlet {
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
+		boolean byteCheck = true;
 		MyPageBean myPageBean = new MyPageBean();
 		String action = req.getParameter("action");
 		switch (action) {
-		case "myPageTransition":
-
-			MyPageModel model = new MyPageModel();
-
-			// メインメニューからの遷移
-			// プロフィール情報の取得（認証処理）
-			try {
-				myPageBean = model.profileGet(sessionBean);
-			} catch (Exception e) {
-				e.printStackTrace();
-				// セッションを削除
-				session.invalidate();
-				// エラー画面に遷移
-				req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
-				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-			}
-
-			String userName = myPageBean.getUserName();
-			String myPageText = myPageBean.getMyPageText();
-
-			//セット
-			req.setAttribute("userName", userName);
-			req.setAttribute("myPageText", myPageText);
-
-			// 自分のプロフィール画面に遷移
-			req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
-			break;
 
 		case "profileUpdate":
 
@@ -91,50 +66,74 @@ public class MyPageServlet extends HttpServlet {
 			String editText = (String) req.getParameter("inputUserSelfIntro");
 			//入力文字数のチェック
 			myPageBean.setErrorMessage("");
-			if (editName.length() > 30 || editText.length() > 100) {
-				myPageBean.setErrorMessage("入力文字数が不正です。\n正しい文字数で入力してください");
-
+			if (editName.getBytes(Charset.forName("UTF-8")).length == 0
+					|| editName.getBytes(Charset.forName("UTF-8")).length > 30
+					|| editText.getBytes(Charset.forName("UTF-8")).length == 0
+					|| editText.getBytes(Charset.forName("UTF-8")).length > 100) {
+				myPageBean.setErrorMessage("設定されているバイト数の範囲外です。");
+				byteCheck = false;
 				req.setAttribute("errorMessage", myPageBean.getErrorMessage());
-				req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
+
 			}
+			if (byteCheck == true) {
+				boolean result = true;
+				// Beanの初期化
+				MyPageModel updateModel = new MyPageModel();
+				//sessionBean = (SessionBean) session.getAttribute("session");
+				myPageBean.setUserNo(sessionBean.getUserNo());
+				myPageBean.setUserName(editName);
+				myPageBean.setMyPageText(editText);
 
-			boolean result = true;
-			// Beanの初期化
-			MyPageModel updateModel = new MyPageModel();
-			//sessionBean = (SessionBean) session.getAttribute("session");
-			myPageBean.setUserNo(sessionBean.getUserNo());
-			myPageBean.setUserName(editName);
-			myPageBean.setMyPageText(editText);
+				// 情報取得
+				try {
+					result = updateModel.profileUpdate(myPageBean);
 
-			// 情報取得
-			try {
-				result = updateModel.profileUpdate(myPageBean);
+				} catch (Exception e) {
+					e.printStackTrace();
+					// セッションを削除
+					session.invalidate();
+					// エラー画面に遷移
+					req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
+					req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+				}
+				if (result == false) {
+					System.out.println("プロフィール編集できませんでした");
+				}
+				//変更された表示名をセッションにセット
+				sessionBean.setUserName(myPageBean.getUserName());
+				session.setAttribute("userName", sessionBean.getUserName());
+				session.setAttribute("session", sessionBean);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				// セッションを削除
-				session.invalidate();
-				// エラー画面に遷移
-				req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
-				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+				// メインメニューに遷移
+				req.getRequestDispatcher("/main").forward(req, res);
+				break;
 			}
-			if (result == false) {
-				System.out.println("プロフィール編集できませんでした");
-			}
-			//変更された表示名をセッションにセット
-			sessionBean.setUserName(myPageBean.getUserName());
-			session.setAttribute("userName", sessionBean.getUserName());
-			session.setAttribute("session", sessionBean);
-
-			// メインメニューに遷移
-			req.getRequestDispatcher("/main").forward(req, res);
-			break;
-
-		default:
-			System.out.println("スイッチ文エラー");
-			break;
 
 		}
+		MyPageModel model = new MyPageModel();
+
+		// メインメニューからの遷移
+		// プロフィール情報の取得（認証処理）
+		try {
+			myPageBean = model.profileGet(sessionBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+		String userName = myPageBean.getUserName();
+		String myPageText = myPageBean.getMyPageText();
+
+		//セット
+		req.setAttribute("userName", userName);
+		req.setAttribute("myPageText", myPageText);
+
+		// 自分のプロフィール画面に遷移
+		req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
 	}
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {

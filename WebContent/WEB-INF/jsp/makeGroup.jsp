@@ -32,6 +32,7 @@
 		<p>メンバーを選ぶ</p>
 
 		<!-- 【グループ作成画面、グループメンバー選択箇所】 -->
+		<p>${userErrorMessage}</p>
 
 		<c:forEach var="allUserList" items="${allUserList}" varStatus="status">
 			<c:choose>
