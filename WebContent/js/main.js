@@ -55,17 +55,16 @@ function deleteMessageJS() {
 function leaveGroup() {
 
 	// 「OK」時の処理開始 ＋ 確認ダイアログの表示
-	if (window.confirm('ログアウトしますか？')) {
-
-		location.href = "/chat/logout"; // ログアウトページ へジャンプ
-
+	if (window.confirm('このグループから脱退しますか？')) {
+		alert('グループから脱退しました'); // 警告ダイアログを表示
+		return true;
 	}
 	// 「OK」時の処理終了
 
 	// 「キャンセル」時の処理開始
 	else {
-
 		alert('キャンセルされました'); // 警告ダイアログを表示
+		return false;
 
 	}
 	// 「キャンセル」時の処理終了

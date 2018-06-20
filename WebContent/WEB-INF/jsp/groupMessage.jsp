@@ -52,15 +52,16 @@
 	<button type="button" disabled>グループ脱退</button>
 	<p>※グループ作成者はグループを脱退できません。
 	</c:if>
+
 <!-- 	ログインユーザーがグループ作成者でなかった場合 -->
 	<c:if test="${judgeGroupCreator == false}" >
-	<form action="/chat/groupMessage" method="POST">
-		<button type="submit" name="action" value="leaveGroup"
-			class="leaveGroup" onclick="leaveGroup()">グループ脱退</button>
+	<form action="/chat/groupMessage" name="leaveGroup" method="POST" onsubmit="return leaveGroup();">
+		<button name="action" value="leaveGroup">グループ脱退</button>
 		<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
 		<input type="hidden" name="groupName" value="${groupInfo.groupName}">
 	</form>
 	</c:if>
+
 
 	<!-- for文でメッセージを全て表示させる -->
 	<c:forEach var="list" items="${list}" varStatus="status">
@@ -80,17 +81,15 @@
 					</p>
 					<br>
 
-				<!-- 	メッセージ削除リンク -->
-					<a href="javascript:void(0)" onclick="deleteMessage()">削除</a>
-
 				<!-- 削除ボタン -->
-					<form method="POST">
-						<button type="submit" name="action" value="deleteMessage"
-							class="deleteMessage" onclick="deleteMessage()">削除</button>
-<%-- 						<input type="hidden" name="messageNo" value="${list.messageNo}"> --%>
-						<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
-						<input type="hidden" name="groupName" value="${groupInfo.groupName}">
-					</form>
+				<form action="/chat/groupMessage" method="POST"
+					id = "deleteMessageButton" onsubmit="return deleteMessageJS();">
+					<button name="action" value="deleteMessage">削除</button>
+					<input type="hidden" name="messageNo" value="${list.messageNo}">
+					<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
+					<input type="hidden" name="groupName" value="${groupInfo.groupName}">
+				</form>
+
 				</div>
 			</div>
 		</c:if>
