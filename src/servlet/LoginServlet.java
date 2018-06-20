@@ -37,6 +37,7 @@ public class LoginServlet extends HttpServlet {
 		LoginBean bean = new LoginBean();
 		LoginModel model = new LoginModel();
 		String direction = "/WEB-INF/jsp/login.jsp";
+		HttpSession session = req.getSession();
 
 		// パラメータの取得
 		String userId = (String) req.getParameter("userId");
@@ -69,6 +70,11 @@ public class LoginServlet extends HttpServlet {
 			bean = model.authentication(bean);
 		} catch (Exception e) {
 			e.printStackTrace();
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "ログイン判定処理中にエラーが発生しました。");
+		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
 		// 登録済み会員情報の取得に成功した場合(ログイン可の場合)セッション情報をセット
@@ -78,7 +84,6 @@ public class LoginServlet extends HttpServlet {
 			sessionBean.setUserName(bean.getUserName());
 			sessionBean.setUserNo(bean.getUserNo());
 			// セッションに、SessionBeanをセット
-			HttpSession session = req.getSession();
 			session.setAttribute("session", sessionBean);
 
 			// 行き先を次の画面に（サーブレットのURLを指定）

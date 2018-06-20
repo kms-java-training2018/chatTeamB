@@ -13,7 +13,7 @@
 		<p>会員ID</p>
 		<input type="text" name="userId" value="${loginBean.userId}">
 		<p>パスワード</p>
-		<input type="text" name="password" value="${loginBean.password}">
+		<input type="password" name="password" value="${loginBean.password}">
 		<br>
 		<p>${requestScope.errorMessage}</p>
 		<input type="submit" value="ログイン">
