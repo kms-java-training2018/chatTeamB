@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,6 +41,25 @@ public class LoginServlet extends HttpServlet {
 		// パラメータの取得
 		String userId = (String) req.getParameter("userId");
 		String password = (String) req.getParameter("password");
+
+		// 桁数チェック：ID、パスワード共に1バイト以上20バイト以下
+		if (userId.getBytes(Charset.forName("UTF-8")).length <= 0
+				|| 20 < userId.getBytes(Charset.forName("UTF-8")).length
+				|| password.getBytes(Charset.forName("UTF-8")).length <= 0
+				|| 20 < password.getBytes(Charset.forName("UTF-8")).length) {
+			// エラーメッセージをリクエストにセット
+			req.setAttribute("errorMessage", "設定されているバイト数の範囲外です");
+			req.getRequestDispatcher(direction).forward(req, res);
+		}
+
+		// 文字種チェック：ID、パスワード共に半角英数のみ受け付ける
+		if (!userId.matches("^[0-9a-zA-Z]+$")
+				|| !password.matches("^[0-9a-zA-Z]+$")) {
+			// エラーメッセージをリクエストにセット
+			req.setAttribute("errorMessage", "IDとパスワードは半角英数で入力してください。");
+			req.getRequestDispatcher(direction).forward(req, res);
+		}
+
 
 		bean.setUserId(userId);
 		bean.setPassword(password);
