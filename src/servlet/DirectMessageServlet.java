@@ -64,7 +64,6 @@ public class DirectMessageServlet extends HttpServlet {
 		String direction = "/WEB-INF/jsp/directMessage.jsp";
 
 		/** クラスMainBeanの初期化 */
-		//		MainBean mainBean =(MainBean) req.getParameter("otherUser");/////////////////////
 
 		/** クラスDirectMessageBeanの初期化 */
 		DirectMessageBean directMessageBean = new DirectMessageBean();
@@ -72,16 +71,6 @@ public class DirectMessageServlet extends HttpServlet {
 		DirectMessageModel directMessageModel = new DirectMessageModel();
 		/** jspに持っていくArrayList（会話内容、judge、会話番号、表示名）初期化　*/
 		ArrayList<DirectMessageBean> directMessageList = new ArrayList<DirectMessageBean>();
-
-		//		// ログイン判定処理
-		//		// セッションがない場合エラー画面に移動
-		//		if (sessionBean.getUserNo().equals(null) || sessionBean.getUserName().equals(null)) {
-		//			System.out.println("セッションがないです");
-		//			session = req.getSession(false);
-		//			session = null;
-		//			direction = "/WEB-INF/jsp/errorPage.jsp";
-		//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		//		}
 
 		////////////////////////////////////////////////////////////////////////
 		//		ここからdirectMessageBeanに必要な値を入れる
@@ -104,7 +93,6 @@ public class DirectMessageServlet extends HttpServlet {
 		if (toSendUserNo == null || !(toSendUserNo.equals("1") || toSendUserNo.equals("2") || toSendUserNo.equals("3")
 				|| toSendUserNo.equals("4"))) {
 			direction = "/WEB-INF/jsp/errorPage.jsp";
-			//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			System.out.println("存在しない会員番号です");
 		}
 
@@ -140,18 +128,7 @@ public class DirectMessageServlet extends HttpServlet {
 			session = req.getSession(false);
 			session = null;
 			direction = "/WEB-INF/jsp/errorPage.jsp";
-			//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
-
-		//		// デバック用
-		//		DirectMessageBean dMBean = new DirectMessageBean();
-		//		for (int i = 0; i < directMessageList.size(); i++) {
-		//			dMBean = directMessageList.get(i);
-		//			System.out.println("会話内容：" + dMBean.getMessage()
-		//					+ "：判別内容：" + dMBean.getJudge()
-		//					+ "：会員番号：" + dMBean.getUserNo()
-		//					+ "：会話番号：" + dMBean.getMessageNo());
-		//		}
 
 		// リクエストスコープにいれてjspに送る
 		req.setAttribute("directMessageList", directMessageList);
@@ -240,15 +217,7 @@ public class DirectMessageServlet extends HttpServlet {
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					//					// 会話情報を登録チェック
-					//					if (result1 == false) {
 					System.out.println("会話情報を登録できません");
-					//						session = req.getSession(false);
-					//						session = null;
-					//						req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-					//					} else {
-					//						System.out.println("会話情報を登録しました");
-					// セッションを削除
 					session.invalidate();
 					// エラー画面に遷移
 					req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
@@ -284,16 +253,6 @@ public class DirectMessageServlet extends HttpServlet {
 				req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
 				System.out.println("会話情報を論理削除できません");
 				req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-
-//				if (deleteMessage.deleteMessage(messageNo) == false) {
-//					System.out.println("会話情報を論理削除できません");
-//					// セッションを削除
-//					session = req.getSession(false);
-//					session = null;
-//					// エラーページへ遷移
-//					req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-//				}
-//				System.out.println("会話情報を論理削除しました");
 			}
 			System.out.println("会話情報を論理削除しました");
 			// 【メッセージの論理削除処理が成功した場合】
@@ -337,7 +296,6 @@ public class DirectMessageServlet extends HttpServlet {
 			session = req.getSession(false);
 			session = null;
 			direction = "/WEB-INF/jsp/errorPage.jsp";
-			//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
 		// 送信対象者の会員番号取得
@@ -348,7 +306,6 @@ public class DirectMessageServlet extends HttpServlet {
 		if (toSendUserNo == null || !(toSendUserNo.equals("1") || toSendUserNo.equals("2") || toSendUserNo.equals("3")
 				|| toSendUserNo.equals("4"))) {
 			direction = "/WEB-INF/jsp/errorPage.jsp";
-			//					req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			System.out.println("存在しない会員番号です");
 		}
 
@@ -373,18 +330,7 @@ public class DirectMessageServlet extends HttpServlet {
 			session = req.getSession(false);
 			session = null;
 			direction = "/WEB-INF/jsp/errorPage.jsp";
-			//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
-
-		//		// デバック用
-		//		DirectMessageBean dMBean = new DirectMessageBean();
-		//		for (int i = 0; i < directMessageList.size(); i++) {
-		//			dMBean = directMessageList.get(i);
-		//			System.out.println("会話内容：" + dMBean.getMessage()
-		//					+ "：判別内容：" + dMBean.getJudge()
-		//					+ "：会員番号：" + dMBean.getUserNo()
-		//					+ "：会話番号：" + dMBean.getMessageNo());
-		//		}
 
 		// リクエストスコープにいれてjspに送る
 		req.setAttribute("directMessageList", directMessageList);
