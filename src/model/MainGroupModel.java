@@ -55,7 +55,7 @@ public class MainGroupModel {
 			sb.append("m_group.group_no = t_group_info.group_no ");
 			sb.append("WHERE ");
 			sb.append("user_no = " + userNo);
-			sb.append( " AND out_flag = 0 ");
+			sb.append(" AND out_flag = 0 ");
 			sb.append("ORDER ");
 			sb.append("BY ");
 			sb.append("m_group.group_no ");
@@ -84,7 +84,6 @@ public class MainGroupModel {
 			}
 		}
 
-
 		// ログインしたユーザが属しているグループの最新メッセージ取得
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
@@ -104,7 +103,8 @@ public class MainGroupModel {
 				sb2.append("FROM ");
 				sb2.append("t_message_info ");
 				sb2.append("WHERE ");
-				sb2.append("to_send_group_no = " + groupInfo.getGroupNo() + "))");
+				sb2.append("to_send_group_no = " + groupInfo.getGroupNo());
+				sb2.append("AND delete_flag = " + 0 + "))");
 
 				// SQL実行
 				Statement stmt = conn.createStatement();
