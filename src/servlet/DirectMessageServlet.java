@@ -88,13 +88,42 @@ public class DirectMessageServlet extends HttpServlet {
 		directMessageBean.setToSendUserNo(req.getParameter("otherUserNo")/*mainBean.getOtherNo()*/);////////////////////////
 		String toSendUserNo = directMessageBean.getToSendUserNo();
 		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
+
+
+
+/** ここから修正 */
+
 		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する//////////////////////////////////////////////
+		//デバッグ用
+		ArrayList<String> toSendUserNoCheck = new ArrayList<String>();//(ArrayList<MainBean>) session.getAttribute("otherUserList");
+		toSendUserNoCheck.add("1");
+		toSendUserNoCheck.add("2");
+		toSendUserNoCheck.add("3");
+		toSendUserNoCheck.add("4");
+
 		// for文で送信対象者の会員番号のリストをまわして確認する
-		if (toSendUserNo == null || !(toSendUserNo.equals("1") || toSendUserNo.equals("2") || toSendUserNo.equals("3")
-				|| toSendUserNo.equals("4"))) {
-			direction = "/WEB-INF/jsp/errorPage.jsp";
-			System.out.println("存在しない会員番号です");
+		int notToSendUserNo = 0;
+		for (int i = 0; i < toSendUserNoCheck.size(); i++) {
+			if (toSendUserNo.equals(toSendUserNoCheck.get(i))) {
+				notToSendUserNo = 1;
+				System.out.println("toSendUserNo：" + toSendUserNo + " は存在します");
+			}
 		}
+
+		if (notToSendUserNo == 0) {
+			System.out.println("存在しない会員番号です");
+			direction = "/WEB-INF/jsp/errorPage.jsp";
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "存在しない会員番号です");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+
+/** ここまで修正 */
+
+
 
 		// リクエストスコープから送信対象者の表示名取得
 		directMessageBean.setOtherName(req.getParameter("otherUserName")/*mainBean.getOtherName()*/);/////////////////////
