@@ -78,6 +78,9 @@ public class MainPageServlet extends HttpServlet {
 		req.setAttribute("otherUserList", otherUserList);
 		req.setAttribute("userGroupList", userGroupList);
 
+		//セッションにも他ユーザーの情報をセット
+		session.setAttribute("toSendUserList", otherUserList);
+
 		req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, res);
 	}
 
