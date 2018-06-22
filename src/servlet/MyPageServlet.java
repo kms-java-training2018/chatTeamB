@@ -164,5 +164,31 @@ public class MyPageServlet extends HttpServlet {
 			req.setAttribute("errorMessage", "ログインされていません。");
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
+
+		MyPageModel model = new MyPageModel();
+		MyPageBean myPageBean = new MyPageBean();
+
+		// メインメニューからの遷移
+		// プロフィール情報の取得（認証処理）
+		try {
+			myPageBean = model.profileGet(sessionBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+		String userName = myPageBean.getUserName();
+		String myPageText = myPageBean.getMyPageText();
+
+		//セット
+		req.setAttribute("userName", userName);
+		req.setAttribute("myPageText", myPageText);
+
+		// 自分のプロフィール画面に遷移
+		req.getRequestDispatcher("/WEB-INF/jsp/myPage.jsp").forward(req, res);
 	}
 }
