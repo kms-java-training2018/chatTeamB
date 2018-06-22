@@ -91,6 +91,24 @@ function logout() {
 
 }
 
+//判定用フラグ
+var isSubmit = false;
+
+function checkDoubleSubmit(){
+  if(isSubmit){
+    //フラグがtrueならアラートを表示してsubmitしない
+    alert("二重送信は禁止です");
+    return false;
+  }else{
+    //フラグがtrueでなければ、フラグをtrueにした上でsubmitする
+    isSubmit = true;
+    alert("登録します");
+    return true;
+  }
+}
+
+
+
 //メッセージ削除　チェック用
 /*function logout() {
 

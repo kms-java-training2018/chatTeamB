@@ -77,7 +77,7 @@
 
 	<br>
 	${errorMessage}
-	<form action="/chat/directMessage" method="POST">
+	<form action="/chat/directMessage" method="POST" onsubmit="return checkDoubleSubmit();">
 		<textarea placeholder="ここにメッセージを入力" name="inputMessage" rows="5" cols="50"></textarea>
 		<input type="hidden" name="directMessageBean"value="${directMessageBean}">
 		<br> <button type="submit" name="action" value="sendMessage" class="button">メッセージ送信</button>
