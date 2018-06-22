@@ -100,18 +100,36 @@
 			<div style="position: relative; left: 100px">
 				<div style="display: inline-block; border: 1px solid #cccccc">
 
-					<!-- 相手の表示名をリンク表示(別タブでプロフ画面遷移) -->
+<!-- 					【送信者が脱退者かどうかで表示名の表示方法を変える】 -->
+					<c:if test="${list.otherName == '送信者不明'}" var="leaver" />
 
-					<br> <a href="/chat/showProfile?userNo=<c:out value="${list.userNo}" />"
-						class="link" target="_blank">
-						<c:out value="${list.otherName}" />さん
-					</a>
-					<br><c:out value="${list.message}" />
-					<p hidden>
-					<br>：会話番号：<c:out value="${list.messageNo}" />
-					<br>：会員番号：<c:out value="${list.userNo}" />
-					</p>
-					<br>
+	<!-- 					----送信者がグループメンバーだった場合 -->
+						<c:if test="${!leaver}">
+							<!-- 相手の表示名をリンク表示(別タブでプロフ画面遷移) -->
+							<br> <a href="/chat/showProfile?userNo=<c:out value="${list.userNo}" />"
+								class="link" target="_blank">
+								<c:out value="${list.otherName}" />さん
+							</a>
+							<br><c:out value="${list.message}" />
+							<p hidden>
+							<br>：会話番号：<c:out value="${list.messageNo}" />
+							<br>：会員番号：<c:out value="${list.userNo}" />
+							</p>
+							<br>
+						</c:if>
+
+	<!-- 					----送信者が脱退者だった場合 -->
+						<!-- 相手の表示名をラベル表示) -->
+						<c:if test="${leaver}">
+							<br> <c:out value="${list.otherName}" />
+							<br><c:out value="${list.message}" />
+							<p hidden>
+							<br>：会話番号：<c:out value="${list.messageNo}" />
+							<br>：会員番号：<c:out value="${list.userNo}" />
+							</p>
+							<br>
+						</c:if>
+
 				</div>
 			</div>
 		</c:if>
