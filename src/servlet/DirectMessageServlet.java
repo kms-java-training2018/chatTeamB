@@ -124,12 +124,12 @@ public class DirectMessageServlet extends HttpServlet {
 		}
 
 		if (notToSendUserNo == 0) {
-			System.out.println("存在しない会員番号です");
+			System.out.println("不正な会員番号です");
 			direction = "/WEB-INF/jsp/errorPage.jsp";
 			// セッションを削除
 			session.invalidate();
 			// エラー画面に遷移
-			req.setAttribute("errorMessage", "存在しない会員番号です");
+			req.setAttribute("errorMessage", "不正な会員番号です");
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
