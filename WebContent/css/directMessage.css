@@ -1,4 +1,10 @@
 /*@charset "UTF-8";*/
+
+#backGround {
+
+}
+
+/*
 #userMessage{
 	position: relative;
 	left: 350px;
@@ -11,11 +17,37 @@
 	padding: 10px;
 	background-color : lightblue ;
 }
+*/
+
+.userMessage {
+    position: relative;
+	left: 350px;
+    margin: 2em 0;
+    background: #dcefff;
+    display: inline-block;
+}
+.userMessage .userMessage-title {
+    font-size: 1.2em;
+    background: #5fb3f5;
+    padding: 4px;
+    text-align: center;
+    color: #FFF;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+.userMessage p {
+    padding: 15px 20px;
+    margin: 0;
+    display: inline-block;
+}
 
 #deleteMessageButton{
+	position: relative;
+	left: 350px;
 	display:inline;
 }
 
+/*
 #otherMessage{
 	position: relative;
 	left: 50px;
@@ -28,3 +60,38 @@
 	padding: 10px;
 	background-color : lightgreen ;
 }
+*/
+
+.otherMessage {
+    position: relative;
+	left: 50px;
+    margin: 2em 0;
+    background: #eaf8df;
+    display: inline-block;
+}
+.otherMessage .otherMessage-title {
+    font-size: 1.2em;
+    background: #eaffff;
+    padding: 4px;
+    text-align: center;
+    color: #FFF;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+.otherMessage p {
+    padding: 15px 20px;
+    margin: 0;
+    display: inline-block;
+}
+
+
+
+
+
+
+
+
+
+
+
+

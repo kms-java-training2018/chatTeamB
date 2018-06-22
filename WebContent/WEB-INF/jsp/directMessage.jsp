@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="./js/main.js"></script>
 	<link rel="stylesheet" type="text/css" href="./css/directMessage.css">
 </head>
-<body>
+<body id = "backGround">
 
 <!-- ここからヘッダー ===============================================================================================-->
 <header>
@@ -36,8 +36,10 @@
 
 		<!-- 自分のメッセージの場合 -->
 		<c:if test="${judge}">
-			<div id = "userMessage">
-				>><c:out value="${directMessageList.userName}" /> さん
+			<div class = "userMessage">
+				<div class= "userMessage-title">
+					>><c:out value="${directMessageList.userName}" /> さん
+				</div>
 				<p>
 					<c:out value="${directMessageList.message}" />
 				</p>
@@ -45,20 +47,22 @@
 					<br>：会話番号：<c:out value="${directMessageList.messageNo}" />
 					<br>：会員番号：<c:out value="${directMessageList.userNo}" />
 				</p1>
-			  	<form action="/chat/directMessage" method="POST" id = "deleteMessageButton" onsubmit="return deleteMessageJS();">
-					<button name="action" value="deleteMessage">削除</button>
-					<input type="hidden" name="messageNo" value="${directMessageList.messageNo}">
-				</form>
 			</div>
+			<form action="/chat/directMessage" method="POST" id = "deleteMessageButton" onsubmit="return deleteMessageJS();">
+				<button name="action" value="deleteMessage">削除</button>
+				<input type="hidden" name="messageNo" value="${directMessageList.messageNo}">
+			</form>
 			<br>
 		</c:if>
 
 		<!-- 他人のメッセージの場合 -->
 		<c:if test="${!judge}">
-			<div id = "otherMessage">
-				>><a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
-					<c:out value="${directMessageList.otherName}" /> さん
-				</a>
+			<div class = "otherMessage">
+				<div class= "otherMessage-title">
+					>><a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
+						<c:out value="${directMessageList.otherName}" /> さん
+					</a>
+				</div>
 				<p>
 					<c:out value="${directMessageList.message}" />
 				</p>
