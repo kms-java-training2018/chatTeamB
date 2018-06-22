@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bean.DirectMessageBean;
+import bean.MainBean;
 import bean.SessionBean;
 import model.DirectMessageModel;
 import model.MessageInfoModel;
@@ -72,6 +73,8 @@ public class DirectMessageServlet extends HttpServlet {
 		/** jspに持っていくArrayList（会話内容、judge、会話番号、表示名）初期化　*/
 		ArrayList<DirectMessageBean> directMessageList = new ArrayList<DirectMessageBean>();
 
+		MainBean mainBean = new MainBean();
+
 		////////////////////////////////////////////////////////////////////////
 		//		ここからdirectMessageBeanに必要な値を入れる
 		////////////////////////////////////////////////////////////////////////
@@ -87,7 +90,7 @@ public class DirectMessageServlet extends HttpServlet {
 		// セッションスコープから送信対象者の会員番号取得
 		directMessageBean.setToSendUserNo(req.getParameter("otherUserNo")/*mainBean.getOtherNo()*/);////////////////////////
 		String toSendUserNo = directMessageBean.getToSendUserNo();
-		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
+		System.out.println("ToSendUserNo：" + toSendUserNo);
 
 
 
@@ -95,16 +98,26 @@ public class DirectMessageServlet extends HttpServlet {
 
 		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する//////////////////////////////////////////////
 		//デバッグ用
-		ArrayList<String> toSendUserNoCheck = new ArrayList<String>();//(ArrayList<MainBean>) session.getAttribute("otherUserList");
-		toSendUserNoCheck.add("1");
-		toSendUserNoCheck.add("2");
-		toSendUserNoCheck.add("3");
-		toSendUserNoCheck.add("4");
+		ArrayList<MainBean> toSendUserNoCheck = new ArrayList<MainBean>();
+		toSendUserNoCheck = (ArrayList<MainBean>) session.getAttribute("toSendUserList");
 
-		// for文で送信対象者の会員番号のリストをまわして確認する
+		// 送信対象者の会員番号が存在するか確認する
 		int notToSendUserNo = 0;
+
+		// 送信対象者の会員番号が存在するか確認する
+		if(toSendUserNo == null) {
+			System.out.println("会員番号が存在しません");
+			direction = "/WEB-INF/jsp/errorPage.jsp";
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "会員番号が存在しません");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
 		for (int i = 0; i < toSendUserNoCheck.size(); i++) {
-			if (toSendUserNo.equals(toSendUserNoCheck.get(i))) {
+			mainBean = toSendUserNoCheck.get(i);
+			if (toSendUserNo.equals(mainBean.getOtherNo())) {
 				notToSendUserNo = 1;
 				System.out.println("toSendUserNo：" + toSendUserNo + " は存在します");
 			}
