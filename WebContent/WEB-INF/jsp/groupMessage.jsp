@@ -140,7 +140,7 @@
 
 	<!-- 	【メッセージ送信】 -->
 	${errorMessage}
-	<form action="/chat/groupMessage" method="POST">
+	<form action="/chat/groupMessage" method="POST" onsubmit="return checkDoubleSubmit();">
 		<input type="text" placeholder="ここにメッセージを入力" name="inputMessage" class="messageInputBox" id="midashi1">
 		<input type="hidden" name="groupNo" value="${groupInfo.groupNo}">
 		<input type="hidden" name="groupName" value="${groupInfo.groupName}">
