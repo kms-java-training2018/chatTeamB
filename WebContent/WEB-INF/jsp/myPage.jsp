@@ -4,26 +4,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>プロフィール編集</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>プロフィール編集</title>
 <!-- JSを指定 -->
-	<script type="text/javascript" src="./js/main.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
+
 </head>
 <body>
 
-<!-- ここからヘッダー ===============================================================================================-->
-<header>
-<!-- 	ログインユーザーの表示名 -->
-	ようこそ<br>
+	<!-- ここからヘッダー ===============================================================================================-->
+	<header> <!-- 	ログインユーザーの表示名 --> ようこそ<br>
 	${sessionScope.userName}さん<br>
 
-<!-- 	ログアウトリンク -->
-	<a href="javascript:void(0)" onclick="logout()">ログアウト</a>
+	<!-- 	ログアウトリンク --> <a href="javascript:void(0)" onclick="logout()">ログアウト</a>
 
-</header>
-<!-- ここまでヘッダー ===============================================================================================-->
+	</header>
+	<!-- ここまでヘッダー ===============================================================================================-->
 
-	<h1>チャット研修プログラム</h1>
+
 	<h2>マイページ</h2>
 	<p>${errorMessage}</p>
 
@@ -46,6 +44,7 @@
 	<form action="/chat/main" method="POST">
 		<input type="submit" value="メインメニューに戻る">
 	</form>
+
 
 </body>
 </html>
