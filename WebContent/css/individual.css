@@ -28,14 +28,22 @@
 :root{
 	--blue: #2E9AFE;
 		/* var(--blue); */
-	--green:
+	--green:#9FF781;
 		/* var(--green); */
-	--red:
+	--greenD:#01DF3A;
+		/* var(--greenD); */
+	--red: #F5A9A9;
 		/* var(--red); */
-	--orange:
+	--redD: #FE2E2E;
+		/* var(--redD); */
+	--orange: #F5DA81;
 		/* var(--orange); */
-}
+		--orangeD: #FF8000;
+		/* var(--orangeD); */
 
+	--headerHeight: 100px;
+	/* var(--headerHeight); */
+}
 
 /*
 ログイン画面================================================
@@ -62,8 +70,26 @@ div img{
 	max-width: 400px;
 }
 
+/* ログインボタン */
+.loginBtn{
+	display: block;
+	width: 160px;
+	padding: 0.8em;
+	margin: 0 auto;
+	text-align: center;
+	text-decoration: none;
+	color: var(--greenD);
+	border: 2px solid var(--greenD);
+	background-color: white;
+	border-radius: 3px;
+	transition: .4s;
+}
 
-
+/* ログインボタン(押下時) */
+.loginBtn:hover{
+	background: var(--greenD);
+	color: #fff;
+}
 
 
 /*
@@ -76,6 +102,15 @@ div img{
 	min-width: 500px;
 	padding: 10px;
 	margin: 10px;
+}
+
+/* 個チャ・グルチャごとの大枠のインナー */
+.messageLinkAreaInner{
+	display: block;
+	padding: 20px;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
 }
 
 /* リンク+最新メッセージ全体 */
@@ -93,13 +128,15 @@ div img{
 	margin: 1px;
 	border-radius: 30px;
 	text-align: left;
-	border: 10px;
-	border-color: #F2F2F2;
+	border: 5px  dotted;
+	background-color: white;
+	border-color: var(--red);
 }
 
 /* それぞれのリンク+最新メッセージ(奇数番目) */
 .messageLinkList li:nth-child(odd){
-	background-color: #F2F2F2;
+	border: 10px  none;
+	background-color: var(--orange);;
 }
 
 /* 最新メッセージ */
@@ -117,6 +154,7 @@ div img{
 	display: inline-block;
 }
 
+/* グループ作成ボタン */
 .listHeadding form{
 	float: right;
 }
