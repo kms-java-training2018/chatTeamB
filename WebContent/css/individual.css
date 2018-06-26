@@ -1,0 +1,194 @@
+@charset "UTF-8";
+
+/*
+=====以下メモ===========================================================================================================
+【!!!これはこれは、個別ページ用のCSSです!!!】
+作成者：いよ
+
+【このcssを指定するときは、以下をjspファイル内<head></head>に追加】
+	<!-- 個別ページcssを指定 -->
+	<link rel="stylesheet" type="text/css" href="./css/individual.css">
+
+
+【idセレクタ→#で指定】
+#bgcolor {
+	background:#81F7F3,
+	color:white;
+}
+
+【classセレクタ→.で指定】
+.bgcolor {
+	background:pink,
+	color:#B40431;
+}
+=====以上メモ===========================================================================================================
+*/
+
+/* メインのカラーを指定 */
+:root{
+	--blue: #2E9AFE;
+		/* var(--blue); */
+	--green:
+		/* var(--green); */
+	--red:
+		/* var(--red); */
+	--orange:
+		/* var(--orange); */
+}
+
+
+/*
+ログイン画面================================================
+*/
+.chatTitle{
+	display: inline-block;
+	padding: 10px;
+	margin: 10px;
+	width: 500px;
+	min-width: 200px;
+	max-width: 700px;
+}
+
+div img{
+	width: 60%;
+	min-width: 200px;
+}
+
+.loginForm{
+	display: inline-block;
+	padding: 10px;
+	margin: 10px;
+	min-width: 100px;
+	max-width: 400px;
+}
+
+
+
+
+
+/*
+メインページ画面================================================
+*/
+/* 個チャ・グルチャごとの大枠 */
+.messageLinkArea{
+	display: inline-block;
+	width: 80%;
+	min-width: 500px;
+	padding: 10px;
+	margin: 10px;
+}
+
+/* リンク+最新メッセージ全体 */
+.messageLinkList{
+	list-style: none;
+	display: block;
+	padding: 10px;
+	margin: 0;
+}
+
+/* それぞれのリンク+最新メッセージ */
+.messageLinkList li{
+	display: block;
+	padding: 10px;
+	margin: 1px;
+	border-radius: 30px;
+	text-align: left;
+	border: 10px;
+	border-color: #F2F2F2;
+}
+
+/* それぞれのリンク+最新メッセージ(奇数番目) */
+.messageLinkList li:nth-child(odd){
+	background-color: #F2F2F2;
+}
+
+/* 最新メッセージ */
+.messageLinkList li p{
+	text-align: right;
+}
+
+/* グルチャ・個チャ一覧の見出し */
+.listHeadding{
+	overflow:auto;
+	text-align: center;
+}
+
+.listHeadding *{
+	display: inline-block;
+}
+
+.listHeadding form{
+	float: right;
+}
+
+
+/*
+メッセージ画面(個チャ・グルチャ共通)================================================
+*/
+
+
+
+
+
+/* メッセージ入力・送信ボタン欄 */
+.inputMessageArea{
+	position: fixed;
+	bottom: 0;/*基準を画面の左下に*/
+	left: 0;
+	margin: 0;/*余白が入らないように*/
+	padding-bottom: 10px;
+	/*以下装飾*/
+	width: 100%;
+}
+
+/* メッセージ入力欄 */
+.inputMessageArea div form textarea{
+	display: block;
+
+}
+
+/* エラーメッセージ */
+.inputMessageArea div form p{
+	display:inline-block;
+	margin: 0;
+	padding-left: 20px;
+	float: left;
+}
+
+/* 送信ボタン */
+.inputMessageArea div form button{
+	display:inline-block;
+		margin: 0;
+	padding-left: 20px;
+	float: right;
+}
+
+
+/*
+グループ作成画面================================================
+*/
+
+/*
+プロフ編集画面================================================
+*/
+
+/*
+他ユーザープロフ確認画面================================================
+*/
+
+/*
+エラー画面================================================
+*/
+
+
+
+
+
+
+/*
+ログイン画面================================================
+*/
+
+/*
+ログイン画面================================================
+*/
