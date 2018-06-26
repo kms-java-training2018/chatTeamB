@@ -102,7 +102,6 @@ function checkDoubleSubmit(){
   }else{
     //フラグがtrueでなければ、フラグをtrueにした上でsubmitする
     isSubmit = true;
-    alert("登録します");
     return true;
   }
 }
