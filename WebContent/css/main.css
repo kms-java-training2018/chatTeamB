@@ -72,7 +72,7 @@ header{
 	padding: 0;
 	/*以下装飾*/
 	width: 100%;
-	height: 8em;
+	height: 5em;
 	color:white;
 	background-color: var(--blue);
 	box-shadow: -5px -5px 20px #0174DF inset;
@@ -80,6 +80,7 @@ header{
 
 #header{
 	display: table;
+	box-sizing: border-box;
 	padding: 0 20px;
 	width: 100%;
 }

@@ -3,7 +3,7 @@
  * 【!!!これはこれは、メイン(全画面共通)のJavaScriptです!!!】 作成者：いよ
  *
  * 【このjsを指定するときは、以下をjspファイル内<head></head>に追加】 <!-- 全画面共通jsを指定 --> <script
- * src="../js/main.js"></script>
+ * src="./js/main.js"></script>
  *
  *
  * =====以上メモ========================================================================================================
@@ -107,6 +107,14 @@ function checkDoubleSubmit(){
   }
 }
 
+
+$(function(){
+    $('#menu li').hover(function(){
+        $("ul:not(:animated)", this).slideDown();
+    }, function(){
+        $("ul.child",this).slideUp();
+    });
+});
 
 
 //メッセージ削除　チェック用
