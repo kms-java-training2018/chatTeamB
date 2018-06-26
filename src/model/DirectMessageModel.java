@@ -86,10 +86,6 @@ public class DirectMessageModel {
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
 			rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
 
-			//			if (!rs.next()) {	// 無かった場合
-			//				bean.setErrorMessage("パスワードが一致しませんでした。");
-			//			}
-
 			while (rs.next()) {
 				// クラスDirectMessageBean初期化
 				DirectMessageBean directMessageBean = new DirectMessageBean();
@@ -109,29 +105,7 @@ public class DirectMessageModel {
 					directMessageBean.setOtherName(DirectMessageBean.getOtherName());
 				}
 				directMessageList.add(directMessageBean);
-
-//				System.out.println("会話内容：" + directMessageBean.getMessage()
-//						+ "：判別内容：" + directMessageBean.getJudge()
-//						+ "：会員番号：" + directMessageBean.getUserNo()
-//						+ "：会話番号：" + directMessageBean.getMessageNo());
 			}
-
-			/**
-			SQLが実行されたかどうかのパラメーターチェック
-			directMessageBean.setMessage(message);
-			directMessageBean.setJudge(judge);
-			 */
-			/**
-			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
-			if (!rs.next()) { // 無かった場合
-				directMessageBean.setErrorMessage("パスワードが一致しませんでした。");
-			} else { // あった場合
-				// directMessageBeanに、DB会員マスタの各値を代入
-				directMessageBean.setUserNo(rs.getString("user_no"));
-				directMessageBean.setUserName(rs.getString("user_name"));
-				directMessageBean.setErrorMessage("");
-			}
-			*/
 
 		} catch (SQLException e) {
 			e.printStackTrace();

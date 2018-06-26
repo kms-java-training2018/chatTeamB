@@ -22,31 +22,42 @@ public class ShowProfileServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		System.out.println("ShowProfileServletにきました");
 		// メインメニューからの遷移
-		// セッションが保持されているかの確認
-		// セッションがない場合
-		HttpSession session = req.getSession();
+		// 【セッションが開始しているかどうかの判定】
+		HttpSession session = req.getSession(false);
+		// ---開始していない場合(タイムアウト含む)
 		if (session == null) {
+			//nullならセッションは切れている。
 			// エラー画面に遷移
-			session = req.getSession(false);
-			session = null;
+			req.setAttribute("errorMessage", "セッションが開始されていない、もしくはタイムアウトになりました。");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			// ---すでに開始している場合
+		} else {
+			// 開始済みセッションを取得
+			session = req.getSession(true);
+		}
+
+		// 【セッション内にログイン情報を保持しているかどうかの判定】
+		SessionBean sessionBean = (SessionBean) session.getAttribute("session");
+
+		// ---保持されていない場合
+		if (sessionBean == null
+				|| sessionBean.getUserNo().equals(null)
+				|| sessionBean.getUserName().equals(null)) {
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "ログインされていません。");
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 		String userNo = req.getParameter("userNo");
 		System.out.println("userNo：" + userNo);
 
-//		TODO セッションチェックは後で確認
-//		if (userNo == null) {
-//			// エラー画面に遷移
-//			session = req.getSession(false);
-//			session = null;
-//			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-//		}
-
 		// 初期化
 		MyPageModel showProfileModel = new MyPageModel();
-		SessionBean sessionBean = new SessionBean();
 		MyPageBean showProfileBean = new MyPageBean();
-//		sessionBean = (SessionBean) session.getAttribute("session");
+		//		sessionBean = (SessionBean) session.getAttribute("session");
+		String logInUserNo = sessionBean.getUserNo();//////////////石井////////////////
+		System.out.println("一時保管logInUserNo：" + logInUserNo);//////////////石井////////////////
 		sessionBean.setUserNo(userNo);
 
 		// プロフィール情報の取得（認証処理）
@@ -55,12 +66,17 @@ public class ShowProfileServlet extends HttpServlet {
 			showProfileBean = showProfileModel.profileGet(sessionBean);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("ShowProfileサーブレット、認証処理キャッチ");
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "DB接続中にエラーが発生しました。");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
-		System.out.println("ShowProfileServletに帰ってきました");
 
 		String userName = showProfileBean.getUserName();
 		String myPageText = showProfileBean.getMyPageText();
+		sessionBean.setUserNo(logInUserNo);/////////////////////////石井////////////////////
+		System.out.println("再度代入logInUserNo：" + sessionBean.getUserNo());//////////////石井////////////////
 
 		//セット
 		req.setAttribute("userName", userName);

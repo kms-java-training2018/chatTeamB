@@ -1,30 +1,84 @@
 /*@charset "UTF-8";*/
-#userMessage{
-	position: relative;
-	left: 350px;
+
+
+.userMessageArea{
+	margin: 0;
+	padding: 0;
+	right: 20px;
+	text-align: right;
 }
 
-#userMessage p{
-	display: inline-block;
-	border: solid 2px black;
-	margin: 5px 0;
-	padding: 10px;
-	background-color : lightblue ;
+.userMessage {
+    margin: 2em 0;
+    background: #dcefff;
+    display: inline-block;
+    text-align: center;
+}
+.userMessage .userMessage-title {
+    font-size: 1.2em;
+    background: #5fb3f5;
+    padding: 4px;
+    text-align: center;
+    color: #FFF;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+.userMessage p {
+    padding: 15px 20px;
+    margin: 0;
+    display: inline-block;
 }
 
-#userMessage p button{
-	text-position: center;
+#deleteMessageButton{
+/* 	position: relative; */
+/* 	bottom: 0; */
+/* 	right; 5px; */
+	display:inline;
 }
 
-#otherMessage{
-	position: relative;
-	left: 50px;
+
+
+.otherMessageArea{
+	margin: 0;
+	padding: 0;
+	text-align: left;
 }
 
-#otherMessage p{
-	display: inline-block;
-	border: solid 2px black;
-	margin: 5px 0;
-	padding: 10px;
-	background-color : lightgreen ;
+
+.otherMessage {
+    margin: 2em 0;
+    background: #eaf8df;
+    display: inline-block;
+    text-align: center;
 }
+.otherMessage .otherMessage-title {
+    font-size: 1.2em;
+    background: #eaffff;
+    padding: 4px;
+    text-align: center;
+    color: #FFF;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+.otherMessage p {
+    padding: 15px 20px;
+    margin: 0;
+    display: inline-block;
+}
+
+/* 送信ボタン */
+.sendMessageButton{
+	text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+

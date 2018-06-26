@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -40,7 +41,7 @@ public class GroupMessageServlet extends HttpServlet {
 		if(session == null){
 			//nullならセッションは切れている。
 			// エラー画面に遷移
-			req.setAttribute("errorMessage", "セッションがタイムアウトになりました。");
+			req.setAttribute("errorMessage", "セッションが開始されていない、もしくはタイムアウトになりました。");
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		// ---すでに開始している場合
 		}else {
@@ -106,6 +107,9 @@ public class GroupMessageServlet extends HttpServlet {
 		// ArrayList：1つの会話情報を要素に、グループ会話内容を格納する
 		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
 
+		// ログインユーザーが遷移先グループの作成者かどうかの判定結果を格納用
+		boolean judgeGroupCreator = true;
+
 
 		////////////////////////////////////////////////////////////////////////
 		//		Beanに情報をセット
@@ -124,31 +128,62 @@ public class GroupMessageServlet extends HttpServlet {
 		//		処理
 		////////////////////////////////////////////////////////////////////////
 
-		// 	【遷移先グループにログインユーザーが参加しているか判定】
+		// 【遷移先グループにログインユーザーが参加しているか判定】
 		// ---グループメンバーでなかった場合
-		if(groupInfoModel.judgeGroupMember(userNo,groupNo) == false) {
+		try {
+			if(groupInfoModel.judgeGroupMember(userNo,groupNo) == false) {
+				// セッションを削除
+				session.invalidate();
+				// エラー画面に遷移
+				req.setAttribute("errorMessage", "グループメンバーではありません。");
+			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			    }
+		// ---DB接続中にエラーが発生した場合
+		} catch (Exception e) {
+			e.printStackTrace();
 			// セッションを削除
 			session.invalidate();
 			// エラー画面に遷移
-			req.setAttribute("errorMessage", "グループメンバーではありません。");
+			req.setAttribute("errorMessage", "グループメンバー判定処理中にエラーが発生しました。");
 		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		    }
+		}
+
+		// 【遷移先グループのグループ作成者がログインユーザーか判定】
+		try {
+			// ----作成者でなかった場合
+			if(groupInfoModel.judgeGroupCreator(userNo,groupNo) == false) {
+				judgeGroupCreator = false;
+			    }
+		// ---DB接続中にエラーが発生した場合
+		} catch (Exception e) {
+			e.printStackTrace();
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "グループ作成者判定処理中にエラーが発生しました。");
+		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
 
 		// 【グループ会話内容取得】
 		try {
 			list = groupMessageModelLook.lookMessage(directMessageBean);
+			// レコードが取得出来なかった場合
+			if (list == null) {
+				// セッションを削除
+				session.invalidate();
+				// エラー画面に遷移
+				req.setAttribute("errorMessage", "会話内容が取得できませんでした。");
+			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			    }
+		// ---DB接続中にエラーが発生した場合
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		// レコードが取得出来なかった場合
-		if (list == null) {
 			// セッションを削除
 			session.invalidate();
 			// エラー画面に遷移
-			req.setAttribute("errorMessage", "会話情報が取得できませんでした。");
+			req.setAttribute("errorMessage", "会話内容取得処理中にエラーが発生しました。");
 		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-		    }
+		}
 
 
 		////////////////////////////////////////////////////////////////////////
@@ -158,6 +193,8 @@ public class GroupMessageServlet extends HttpServlet {
 		req.setAttribute("list", list);
 		// 	グループ情報（グループ番号・グループ名）
 		req.setAttribute("groupInfo", groupMessageBean);
+		// グループ作成者かどうか
+		req.setAttribute("judgeGroupCreator", judgeGroupCreator);
 
 		// groupMessage.jspへ遷移
 		req.getRequestDispatcher(direction).forward(req, res);
@@ -204,7 +241,7 @@ public class GroupMessageServlet extends HttpServlet {
 		if(session == null){
 			//nullならセッションは切れている。
 			// エラー画面に遷移
-			req.setAttribute("errorMessage", "セッションがタイムアウトになりました。");
+			req.setAttribute("errorMessage", "セッションが開始されていない、もしくはタイムアウトになりました。");
 			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		// ---すでに開始している場合
 		}else {
@@ -266,6 +303,8 @@ public class GroupMessageServlet extends HttpServlet {
 		// ArrayList：1つの会話情報を要素に、グループ会話内容を格納する
 		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
 
+		// ログインユーザーが遷移先グループの作成者かどうかの判定結果を格納用
+		boolean judgeGroupCreator = true;
 
 		////////////////////////////////////////////////////////////////////////
 		//		Beanに情報をセット
@@ -300,32 +339,54 @@ public class GroupMessageServlet extends HttpServlet {
 
 			// 【メッセージを送信したユーザーがグループメンバーか判定】
 			// ---グループメンバーでなかった場合
-			if(groupInfoModel.judgeGroupMember(userNo,groupNo) == false) {
+			try {
+				if(groupInfoModel.judgeGroupMember(userNo,groupNo) == false) {
+					// セッションを削除
+					session.invalidate();
+					// エラー画面に遷移
+					req.setAttribute("errorMessage", "グループメンバーではありません。");
+				    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+				    }
+			// ---DB接続中にエラーが発生した場合
+			} catch (Exception e) {
+				e.printStackTrace();
 				// セッションを削除
 				session.invalidate();
 				// エラー画面に遷移
-				req.setAttribute("errorMessage", "グループメンバーではありません。");
+				req.setAttribute("errorMessage", "グループメンバー判定処理中にエラーが発生しました。");
 			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
-			    }
+			}
 
-			//【入力されたメッセージが1桁以上100桁以内か判定】
-			// ---不正な入力だった場合、し、グループ画面に遷移する。
-			if (inputMessage.length() <= 0 || 100 < inputMessage.length()) {
+			//【入力されたメッセージが1バイト以上100バイト以内か判定】
+			// ---不正な入力だった場合
+			if (inputMessage.getBytes(Charset.forName("UTF-8")).length <= 0
+					|| 100 < inputMessage.getBytes(Charset.forName("UTF-8")).length) {
 				// エラーメッセージを設定
-				req.setAttribute("errorMessage", "文字数は1以上100以下にしてください。");
+				req.setAttribute("errorMessage", "文字数は1バイト以上100バイト以下にしてください。");
 				// 行き先はGourpMessageServlet。(switch文を抜けてページ遷移処理を行う。)
 
 			} else {
 
 				// 【入力されたメッセージを会話情報テーブルに登録】
 				// ---登録処理が失敗した場合(メソッドの戻り値がfalseの場合)
-				if (messageInfoModel.entryMessage(userNo, inputMessage, groupNo, 1) == false) {
+				try {
+					if (messageInfoModel.entryMessage(userNo, inputMessage, groupNo, 1) == false) {
 					// セッションを削除
 					session.invalidate();
 					// エラー画面に遷移
 					req.setAttribute("errorMessage", "メッセージが送信できませんでした。");
 				    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+					}
+				// ---DB接続中にエラーが発生した場合
+				} catch (Exception e) {
+					e.printStackTrace();
+					// セッションを削除
+					session.invalidate();
+					// エラー画面に遷移
+					req.setAttribute("errorMessage", "メッセージ登録処理中にエラーが発生しました。");
+				    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 				}
+
 
 				// ---登録処理が成功した場合
 				// switch文を抜けて、ページ遷移処理を行う。
@@ -346,13 +407,24 @@ public class GroupMessageServlet extends HttpServlet {
 
 			// 【メッセージ削除用処理】
 			// ---削除処理が失敗した場合(メソッドの戻り値がfalseの場合)
-			if (messageInfoModel.deleteMessage(messageNo) == false) {
+			try {
+				if (messageInfoModel.deleteMessage(messageNo) == false) {
+					// セッションを削除
+					session.invalidate();
+					// エラー画面に遷移
+					req.setAttribute("errorMessage", "メッセージを削除できませんでした。");
+				    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+				}
+			// ---DB接続中にエラーが発生した場合
+			} catch (Exception e) {
+				e.printStackTrace();
 				// セッションを削除
 				session.invalidate();
 				// エラー画面に遷移
-				req.setAttribute("errorMessage", "メッセージを削除できませんでした。");
+				req.setAttribute("errorMessage", "メッセージ論理削除処理中にエラーが発生しました。");
 			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
+
 
 			// ---削除処理が成功した場合
 			// switch文を抜けて、ページ遷移処理を行う。
@@ -369,13 +441,24 @@ public class GroupMessageServlet extends HttpServlet {
 
 			// 【グループ脱退処理】
 			// ---グループ脱退処理が失敗した場合
-			if(groupInfoModel.groupLeave(userNo, groupNo) == false) {
+			try {
+				if(groupInfoModel.groupLeave(userNo, groupNo) == false) {
+					// セッションを削除
+					session.invalidate();
+					// エラー画面に遷移
+					req.setAttribute("errorMessage", "グループ脱退に失敗しました。");
+				    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+				}
+			// ---DB接続中にエラーが発生した場合
+			} catch (Exception e) {
+				e.printStackTrace();
 				// セッションを削除
 				session.invalidate();
 				// エラー画面に遷移
-				req.setAttribute("errorMessage", "グループ脱退に失敗しました。");
+				req.setAttribute("errorMessage", "グループ脱退処理中にエラーが発生しました。");
 			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 			}
+
 
 			// ---グループ脱退処理が成功した場合
 			// メインメニューに遷移
@@ -394,20 +477,41 @@ public class GroupMessageServlet extends HttpServlet {
 //	【ページ遷移処理】==============================================================================================
 	// メッセージ送信時、メッセージ削除時にこの処理に入る。
 
+		// 【遷移先グループのグループ作成者がログインユーザーか判定】
+		try {
+			// ----作成者でなかった場合
+			if(groupInfoModel.judgeGroupCreator(userNo,groupNo) == false) {
+				judgeGroupCreator = false;
+			    }
+		// ---DB接続中にエラーが発生した場合
+		} catch (Exception e) {
+			e.printStackTrace();
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "グループ作成者判定処理中にエラーが発生しました。");
+		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
 		// 【グループ会話内容取得】
 		try {
 			list = groupMessageModelLook.lookMessage(directMessageBean);
+			// レコードが取得出来なかった場合
+			if (list == null) {
+				// セッションを削除
+				session.invalidate();
+				// エラー画面に遷移
+				req.setAttribute("errorMessage", "会話内容が取得できませんでした。");
+			    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			    }
+		// ---DB接続中にエラーが発生した場合
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		// ---レコードが取得出来なかった場合
-		if (list == null) {
 			// セッションを削除
-			session = req.getSession(false);
-			session = null;
-			// エラーページに遷移
-			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "会話内容取得中にエラーが発生しました。");
+		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
 
@@ -418,6 +522,8 @@ public class GroupMessageServlet extends HttpServlet {
 		req.setAttribute("list", list);
 		// 	グループ情報（グループ番号・グループ名）
 		req.setAttribute("groupInfo", groupMessageBean);
+		// グループ作成者かどうか
+		req.setAttribute("judgeGroupCreator", judgeGroupCreator);
 
 		// groupMessage.jspへ遷移
 		req.getRequestDispatcher(direction).forward(req, res);

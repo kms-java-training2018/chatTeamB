@@ -3,60 +3,115 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>メインメニュー</title>
-<script type="text/javascript" src="./js/main.js"></script>
-</head>
-<body>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>メインメニュー</title>
+		<!-- jsを指定 -->
+		<script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="./js/main.js"></script>
+		<!-- cssを指定 -->
+		<link rel="stylesheet" type="text/css" href="./css/main.css">
+		<link rel="stylesheet" type="text/css" href="./css/individual.css">
+	</head>
+	<body>
 
-	<header> ようこそ<br>
-	${sessionScope.userName}さん<br>
-	<%-- <form action="/chat/logout" method="GET" onsubmit="return false">
-		<button type="submit" name="action" value="logout" class="button">ログアウト</button>
-	</form>--%> <a href="javascript:void(0)" onclick="logout()">ログアウト</a></header>
-	<h1>チャット研修プログラム</h1>
-	<h2>メインメニュー</h2>
-	<br>■会員一覧
-	<br>
+<!-- ここからヘッダー ===============================================================================================-->
+	<header>
+		<div id="header">
+			<!-- ヘッダーの中で中央寄せのものたち -->
+			<div></div>
 
-	<c:forEach var="otherUser" items="${otherUserList}">
-		<a
-			href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
-			class="partnerNameLink">${otherUser.otherNo}
-			${otherUser.otherName} さん（メッセージへ）<br>
-		</a>
+			<!-- ヘッダーの中で左寄せのものたち -->
+			<div></div>
 
-		<c:out value="${otherUser.message}" />
-		<br>
-		<br>
-	</c:forEach>
+			<!-- ヘッダーの中で右寄せのものたち -->
+			<div class="right">
+				<div id="menu">
+					<!-- 	ログインユーザーの表示名 -->
+					<div id="loginUserName">${sessionScope.userName}さん</div>
+					    <ul class="child">
+							<!-- 	プロフィール編集リンク -->
+							<li><a href="/chat/myPage">マイページ(プロフィール編集)</a></li>
+							<!-- 	ログアウトリンク -->
+							<li><div id="logoutLink"><a href="javascript:void(0)" onclick="logout()">ログアウト</a></div></li>
+						</ul>
+				</div>
+			</div>
+		</div>
+	</header>
+<!-- ここまでヘッダー ===============================================================================================-->
+<!-- ここからメイン ================================================================-->
+	<main>
+		<div class="space"></div>
+
+<!-- 		会員一覧(個チャへのリンク) -->
+		<div class="messageLinkArea">
+			<div class="contentsBox">
+				<div class="listHeadding">
+					<label>■会員一覧</label>
+				</div>
+				<ul class="messageLinkList">
+
+<!-- 					会員一覧を表示 -->
+					<c:forEach var="otherUser" items="${otherUserList}">
+						<li>
+							<a
+								href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
+								class="partnerNameLink"> ${otherUser.otherName} さん（メッセージへ）
+							</a>
+							<p><c:out value="${otherUser.message}" /></p>
+						</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</div>
 
 
-	<br>■グループ一覧
-	<br>
+<!-- 		グループ一覧(グルチャへのリンク) -->
+		<div class="messageLinkArea">
+			<div class="contentsBox">
+				<div class="listHeadding">
+					<label>■グループ一覧</label>
+					<form action="/chat/makeGroup" method="POST">
+						<button type='submit' name='action' value='groupTransition'>グループ作成</button>
+					</form>
+				</div>
+				<ul class="messageLinkList">
+					<c:forEach var="userGroup" items="${userGroupList}">
+						<li>
+							<a
+								href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
+								class="nameLink"> ${userGroup.groupName}（グループメッセージへ）
+							</a>
+							<p><c:out value="${userGroup.groupMessage}" /></p>
+						</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</div>
 
-	<c:forEach var="userGroup" items="${userGroupList}">
-		<a
-			href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
-			class="nameLink">${userGroup.groupNo}
-			${userGroup.groupName}（グループメッセージへ）<br>
-		</a>
 
-		<c:out value="${userGroup.groupMessage}" />
-		<br>
-		<br>
-	</c:forEach>
+		<div>
+						<!-- 	プロフィール編集リンク -->
+		<a href="/chat/myPage">マイページ(プロフィール編集)</a>
+	<!-- プロフィール編集ボタン -->
+		<form action="/chat/makeGroup" method="POST">
+			<button type='submit' name='action' value='groupTransition'>グループ作成</button>
+		</form>
 
-	<br>
-	<br>
-	<form action="/chat/makeGroup" method="POST">
-		<button type='submit' name='action' value='groupTransition'>グループ作成</button>
-	</form>
-	<form action="/chat/myPage" method="POST">
-		<button type='submit' name='action' value='myPageTransition'>プロフィール編集</button>
-	</form>
+		<form action="/chat/myPage" method="POST">
+			<button type='submit' name='action' value='myPageTransition'>プロフィール編集</button>
+		</form>
+		</div>
 
 
-</body>
+
+
+	</main>
+<!-- ここまでメイン ================================================================-->
+<!-- ここからフッター ================================================================-->
+	<footer>
+	</footer>
+<!-- ここまでフッター ================================================================-->
+	</body>
 </html>

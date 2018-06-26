@@ -55,7 +55,6 @@ public class MainModel {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sb.toString());
 
-
 			while (rs.next()) {
 				//ログインしているユーザの会員番号と名前を省く
 				if (!(rs.getString("user_no").equals(userNo))) {
@@ -99,10 +98,11 @@ public class MainModel {
 				sb2.append("FROM ");
 				sb2.append("t_message_info ");
 				sb2.append("WHERE ");
-				sb2.append("((send_user_no = " + userNo );
+				sb2.append("((send_user_no = " + userNo);
 				sb2.append("OR send_user_no = " + userInfo.getOtherNo() + ")");
-				sb2.append("AND (to_send_user_no = " + userNo );
-				sb2.append("OR to_send_user_no = " + userInfo.getOtherNo() + "))))");
+				sb2.append("AND (to_send_user_no = " + userNo);
+				sb2.append("OR to_send_user_no = " + userInfo.getOtherNo() + ") ");
+				sb2.append("AND (delete_flag = " + 0 + "))))");
 
 				// SQL実行
 				Statement stmt = conn.createStatement();

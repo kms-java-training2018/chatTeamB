@@ -6,7 +6,7 @@
 
 【このcssを指定するときは、以下をjspファイル内<head></head>に追加】
 <!-- 全画面共通cssを指定 -->
-	<link rel="stylesheet" type="text/css" href="../css/main.css">
+	<link rel="stylesheet" type="text/css" href="./css/main.css">
 
 
 【idセレクタ→#で指定】
@@ -23,17 +23,201 @@
 =====以上メモ===========================================================================================================
 */
 
+/* メインのカラーを指定 */
+:root{
+	--blue: #2E9AFE;
+		/* var(--blue); */
+	--green:
+		/* var(--green); */
+	--red:
+		/* var(--red); */
+	--orange:
+		/* var(--orange); */
+}
+
 
 /* -----ページ全体----- */
+body{
+	background: var(--blue);
+	text-align: center;
+}
 
+.contentsBox{
+	display: block;
+	background: #FFFFFF;
+	border-radius: 10px;
+	padding: 10px;
+	margin: 10px;
+	text-align: center;
+}
+
+footer{
+	color:white;
+}
+
+.space{
+	margin-bottom: 10em;
+}
 
 
 /* -----ヘッダー----- */
 
+/* ヘッダー：固定のため */
+header{
+	position: fixed;
+	top: 0;/*基準を画面の左上に*/
+	left: 0;
+	margin: 0;/*余白が入らないように*/
+	padding: 0;
+	/*以下装飾*/
+	width: 100%;
+	height: 5em;
+	color:white;
+	background-color: var(--blue);
+	box-shadow: -5px -5px 20px #0174DF inset;
+}
+
+/* ヘッダー表示 */
+#header{
+	display: table;
+	box-sizing: border-box;
+	padding: 0 20px;
+	width: 100%;
+	height: 100%;
+}
 
 
+/* ヘッダーの中で左寄せのもの */
+#header div.left{
+	display: table-cell;
+	text-align: left;
+}
+
+/* ヘッダーの中で中央寄せのもの */
+#header div.center{
+	display: table-cell;
+	text-align: center;
+}
+
+/* ヘッダーの中で右寄せのもの */
+#header div.right{
+	display: table-cell;
+	text-align: right;
+}
+
+
+
+#menu{
+	display: inline-block;
+	height: 100%;
+}
+
+ul{
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#loginUserName {
 
 }
+
+#logoutLink {
+
+}
+
+
+
+
+/*ボックス全体*/
+.accbox {
+    margin: 2em 0;
+    padding: 0;
+    max-width: 400px;/*最大幅*/
+}
+
+/*ラベル*/
+.accbox label {
+    display: block;
+    margin: 1.5px 0;
+    padding : 13px 12px;
+/*     color: #ffba47; */
+    font-weight: bold;
+/*     background: #fff2cc; */
+    cursor :pointer;
+    transition: all 0.5s;
+}
+
+/*アイコンを表示*/
+.accbox label:after {
+    content: '▼';
+/*     font-family: 'FontAwesome'; */
+    padding-right: 8px;
+}
+
+/*ラベルホバー時*/
+.accbox label:hover {
+    background :#ffe9a9;
+}
+
+/*チェックは隠す*/
+.accbox input {
+    display: none;
+}
+
+/*中身を非表示にしておく*/
+.accbox .accshow {
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: 0.8s;
+}
+
+/*クリックで中身表示*/
+.cssacc:checked + label + .accshow {
+    height: auto;
+    padding: 5px;
+    background: #fff5eb;
+    opacity: 1;
+}
+
+.accbox .accshow p {
+    margin: 15px 10px}
+
+/* .child li { */
+/*     margin: 15px 10px */
+/* } */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* -----メイン----- */
 

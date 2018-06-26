@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,10 +37,30 @@ public class LoginServlet extends HttpServlet {
 		LoginBean bean = new LoginBean();
 		LoginModel model = new LoginModel();
 		String direction = "/WEB-INF/jsp/login.jsp";
+		HttpSession session = req.getSession();
 
 		// パラメータの取得
 		String userId = (String) req.getParameter("userId");
 		String password = (String) req.getParameter("password");
+
+		// 桁数チェック：ID、パスワード共に1バイト以上20バイト以下
+		if (userId.getBytes(Charset.forName("UTF-8")).length <= 0
+				|| 20 < userId.getBytes(Charset.forName("UTF-8")).length
+				|| password.getBytes(Charset.forName("UTF-8")).length <= 0
+				|| 20 < password.getBytes(Charset.forName("UTF-8")).length) {
+			// エラーメッセージをリクエストにセット
+			req.setAttribute("errorMessage", "設定されているバイト数の範囲外です");
+			req.getRequestDispatcher(direction).forward(req, res);
+		}
+
+		// 文字種チェック：ID、パスワード共に半角英数のみ受け付ける
+		if (!userId.matches("^[0-9a-zA-Z]+$")
+				|| !password.matches("^[0-9a-zA-Z]+$")) {
+			// エラーメッセージをリクエストにセット
+			req.setAttribute("errorMessage", "IDとパスワードは半角英数で入力してください。");
+			req.getRequestDispatcher(direction).forward(req, res);
+		}
+
 
 		bean.setUserId(userId);
 		bean.setPassword(password);
@@ -49,6 +70,11 @@ public class LoginServlet extends HttpServlet {
 			bean = model.authentication(bean);
 		} catch (Exception e) {
 			e.printStackTrace();
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "ログイン判定処理中にエラーが発生しました。");
+		    req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
 		// 登録済み会員情報の取得に成功した場合(ログイン可の場合)セッション情報をセット
@@ -58,7 +84,6 @@ public class LoginServlet extends HttpServlet {
 			sessionBean.setUserName(bean.getUserName());
 			sessionBean.setUserNo(bean.getUserNo());
 			// セッションに、SessionBeanをセット
-			HttpSession session = req.getSession();
 			session.setAttribute("session", sessionBean);
 
 			// 行き先を次の画面に（サーブレットのURLを指定）

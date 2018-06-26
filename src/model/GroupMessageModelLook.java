@@ -13,6 +13,7 @@ public class GroupMessageModelLook {
 	/**
 	 * グループ会話内容を取得するメソッド。戻り値は、要素がDirectMessageBean型のArrayListで、
 	 * 1つの会話情報を格納したBeanを、リストで返します。(グループの会話内容全体)
+	 * グループ脱退者はbean内userNameを「送信者不明」を入れます。
 	 * @param bean (DirectMessageBean)
 	 * @return ArrayList<DirectMessageBean>
 	 */
@@ -26,19 +27,20 @@ public class GroupMessageModelLook {
 
 
 		////////////////////////////////////////////////////////////////////////
-		//		初期化
+		//		初期化・DB接続準備
 		////////////////////////////////////////////////////////////////////////
+		// グループ脱退者の会員番号格納用
+		ArrayList<String> leaveUserNoList = new ArrayList<String>();
 		// 戻り値用リスト
 		ArrayList<DirectMessageBean> list = new ArrayList<DirectMessageBean>();
-		// SQL文の格納用
+
+		// SQL文(①グループ脱退者の会員番号取得)の格納用
 		StringBuilder sb = new StringBuilder();
+		// SQL文(②グループ全体の会話内容取得)の格納用
+		StringBuilder sb2 = new StringBuilder();
+
 		// SQL文実行結果格納用
 		ResultSet rs = null;
-
-
-		/////////////////////////////////////////////////////////////////////////////
-		//		SQL文実行
-		/////////////////////////////////////////////////////////////////////////////
 
 		// データベースに接続する準備
 		Connection conn = null;
@@ -53,69 +55,157 @@ public class GroupMessageModelLook {
 			e.printStackTrace();
 		}
 
+
+		/////////////////////////////////////////////////////////////////////////////
+		//		SQL文(①グループ脱退者の会員番号取得)実行
+		/////////////////////////////////////////////////////////////////////////////
+
+		// 接続作成
+		try {
+		conn = DriverManager.getConnection(url, user, dbPassword);
+
+		// SQL作成
+		sb.append("SELECT ");
+		sb.append(" USER_NO ");
+		sb.append("FROM ");
+		sb.append(" T_GROUP_INFO ");
+		sb.append("WHERE ");
+		sb.append(" GROUP_NO =" + toSendGroupNo);
+		sb.append(" AND OUT_FLAG = 1 ");
+
+		// SQL実行
+		Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
+		rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
+
+
+		/////////////////////////////////////////////////////////////////////////////
+		//		処理：脱退者の会員番号をListにセット
+		/////////////////////////////////////////////////////////////////////////////
+		while (rs.next()) {
+			leaveUserNoList.add(rs.getString("USER_NO"));
+		}
+
+		} catch (SQLException e) {
+		e.printStackTrace();
+		//SQLの接続は絶対に切断
+		} finally {
+		try {
+		conn.close();
+		} catch (SQLException e) {
+		e.printStackTrace();
+		}
+		}
+
+
+
+		/////////////////////////////////////////////////////////////////////////////
+		//		SQL文(②グループ全体の会話内容取得)実行
+		/////////////////////////////////////////////////////////////////////////////
+
 		// 接続作成
 		try {
 			conn = DriverManager.getConnection(url, user, dbPassword);
 
 			// SQL作成
-			sb.append("SELECT ");
-			sb.append(" MESSAGE, ");
-			sb.append(" SEND_USER_NO, ");
-			sb.append(" MESSAGE_NO, ");
-			sb.append(" USER_NAME ");
-			sb.append("FROM ");
-			sb.append(" T_MESSAGE_INFO A ");
-			sb.append(" FULL OUTER JOIN M_USER B ");
-			sb.append(" ON A.SEND_USER_NO = B.USER_NO ");
-			sb.append("WHERE ");
-			sb.append(" TO_SEND_GROUP_NO =" + toSendGroupNo);
-			sb.append(" AND DELETE_FLAG = 0 ");
-			sb.append("ORDER BY A.REGIST_DATE ");
+			sb2.append("SELECT ");
+			sb2.append(" A.MESSAGE, ");
+			sb2.append(" A.SEND_USER_NO, ");
+			sb2.append(" A.MESSAGE_NO, ");
+			sb2.append(" B.USER_NAME ");
+			sb2.append("FROM ");
+			sb2.append(" T_MESSAGE_INFO A ");
+			sb2.append(" FULL OUTER JOIN M_USER B ");
+			sb2.append(" ON A.SEND_USER_NO = B.USER_NO ");
+			sb2.append("WHERE ");
+			sb2.append(" A.TO_SEND_GROUP_NO =" + toSendGroupNo);
+			sb2.append(" AND A.DELETE_FLAG = 0 ");
+			sb2.append("ORDER BY A.REGIST_DATE ");
 
 			// SQL実行
 			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
-			rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
+			rs = stmt.executeQuery(sb2.toString()); // 実行し、その結果を格納
 
 
 		/////////////////////////////////////////////////////////////////////////////
 		//		処理：レコードごとに、DirectMessageBeanのフィールドに値をセット
 		/////////////////////////////////////////////////////////////////////////////
-			while (rs.next()) {
-				// DirectMessageBean初期化
-				DirectMessageBean directMessageBean = new DirectMessageBean();
-				// メッセージ→listMessage
-				directMessageBean.setMessage(rs.getString("MESSAGE"));
-				// 会話番号→listMessageNo
-				directMessageBean.setMessageNo(rs.getString("MESSAGE_NO"));
-				// 送信者の会員番号→userNo
-				directMessageBean.setUserNo(rs.getString("SEND_USER_NO"));
 
-				// 【送信者がログインユーザーかどうかを判定】
-				// 送信者の会員番号がログインユーザーの会員番号と一致した場合
-				if (userNo.equals(rs.getString("SEND_USER_NO"))) {
-					// listjudge→0
-					directMessageBean.setJudge("0");
-					// 送信者の表示名→userName
-					directMessageBean.setUserName(rs.getString("USER_NAME"));
+			// グループに脱退者がいない場合
+			if (leaveUserNoList.size() == 0) {
+				while (rs.next()) {
+					// DirectMessageBean初期化
+					DirectMessageBean directMessageBean = new DirectMessageBean();
+					// メッセージ→listMessage
+					directMessageBean.setMessage(rs.getString("MESSAGE"));
+					// 会話番号→listMessageNo
+					directMessageBean.setMessageNo(rs.getString("MESSAGE_NO"));
+					// 送信者の会員番号→userNo
+					directMessageBean.setUserNo(rs.getString("SEND_USER_NO"));
 
-				// 送信者の会員番号がログインユーザーの会員番号と一致しなかった場合
-				} else {
-					// listjudge→1
-					directMessageBean.setJudge("1");
-					// 送信者の表示名→otherName
-					directMessageBean.setOtherName(rs.getString("USER_NAME"));
+					// 【送信者がログインユーザーかどうかを判定】
+					// ----送信者の会員番号がログインユーザーの会員番号と一致した場合
+					if (userNo.equals(rs.getString("SEND_USER_NO"))) {
+						// listjudge→0(自分)
+						directMessageBean.setJudge("0");
+						// 送信者の表示名→userName
+						directMessageBean.setUserName(rs.getString("USER_NAME"));
+
+					// ----送信者の会員番号がログインユーザーの会員番号と一致しなかった場合
+					} else {
+						// listjudge→1(相手)
+						directMessageBean.setJudge("1");
+						// 送信者の表示名→otherName
+						directMessageBean.setOtherName(rs.getString("USER_NAME"));
+					}
+					// 1つの会話情報をリストに追加
+					list.add(directMessageBean);
+
 				}
-				// 1つの会話情報をリストに追加
-				list.add(directMessageBean);
+			// グループに脱退者がいた場合
+			}else {
+				while (rs.next()) {
+					// DirectMessageBean初期化
+					DirectMessageBean directMessageBean = new DirectMessageBean();
+					// メッセージ→listMessage
+					directMessageBean.setMessage(rs.getString("MESSAGE"));
+					// 会話番号→listMessageNo
+					directMessageBean.setMessageNo(rs.getString("MESSAGE_NO"));
+					// 送信者の会員番号→userNo
+					directMessageBean.setUserNo(rs.getString("SEND_USER_NO"));
 
-//				// デバッグ用：取得した会話内容をコンソールに表示
-//				System.out.println("会話内容：" + directMessageBean.getMessage()
-//						+ "：判別内容：" + directMessageBean.getJudge()
-//						+ "：会員番号：" + directMessageBean.getUserNo()
-//						+ "：表示名：" + directMessageBean.getUserName()
-//						+ "：会話番号：" + directMessageBean.getMessageNo());
+					// 【送信者がログインユーザーかどうかを判定】
+					// ----送信者の会員番号がログインユーザーの会員番号と一致した場合
+					if (userNo.equals(rs.getString("SEND_USER_NO"))) {
+						// listjudge→0(自分)
+						directMessageBean.setJudge("0");
+						// 送信者の表示名→userName
+						directMessageBean.setUserName(rs.getString("USER_NAME"));
 
+					// ----送信者の会員番号がログインユーザーの会員番号と一致しなかった場合
+					} else {
+						// 【送信者が脱退者がどうか判定】
+						// ----脱退者リストに送信者が含まれていた場合
+						if (leaveUserNoList.contains(rs.getString("SEND_USER_NO"))) {
+							// listjudge→1(相手)
+							directMessageBean.setJudge("1");
+							// 送信者の表示名→otherName
+							directMessageBean.setOtherName("送信者不明");
+						// ----そうでない場合
+						} else {
+							// listjudge→1(相手)
+							directMessageBean.setJudge("1");
+							// 送信者の表示名→otherName
+							directMessageBean.setOtherName(rs.getString("USER_NAME"));
+						}
+					}
+					// 1つの会話情報をリストに追加
+					list.add(directMessageBean);
+
+				}
 			}
+
+
+
 
 
 		} catch (SQLException e) {

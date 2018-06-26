@@ -296,4 +296,68 @@ public class GroupInfoModel {
 
 	}
 
+
+
+//【ログインユーザーがグループ作成者かどうか判定用】------------------------------------------------------------------------------------
+/**
+ * ログインユーザーがグループ作成者かどうか判定します。戻り値はboolean型で、判定結果が返ってきます。
+ * @param userNo (String)
+ * @param groupNo (String)
+ * @return boolean (判定の結果)
+ */
+	public boolean judgeGroupCreator(String userNo, String groupNo) {
+		// 初期化
+		StringBuilder sb = new StringBuilder(); // SQL文の格納用
+		boolean result = true; // 処理実行結果格納用(戻り値用)
+
+		Connection conn = null;
+		String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
+		String user = "DEV_TEAM_B";
+		String dbPassword = "B_DEV_TEAM";
+
+		// JDBCドライバーのロード
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		// 接続作成
+		try {
+			conn = DriverManager.getConnection(url, user, dbPassword);
+
+			// SQL作成
+			sb.append("SELECT");
+			sb.append(" GROUP_NO ");
+			sb.append("FROM");
+			sb.append(" M_GROUP ");
+			sb.append("WHERE");
+			sb.append(" GROUP_NO = '" + groupNo + "'");
+			sb.append(" AND REGIST_USER_NO = '" + userNo + "'");
+
+			// SQL実行
+			Statement stmt = conn.createStatement(); // SQL文をデータベースに送るためのStatementオブジェクトを生成
+			ResultSet rs = stmt.executeQuery(sb.toString()); // 実行し、その結果を格納
+
+			// 処理
+			// SQL実行結果に1行目があるかどうか(DBに該当データがあるかどうか)
+			if (!rs.next()) { // 無かった場合
+				result = false;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			//SQLの接続は絶対に切断
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// メソッドの戻り値(実行結果)を返す
+		return result;
+	}
 }
