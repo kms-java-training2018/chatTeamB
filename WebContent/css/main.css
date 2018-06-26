@@ -63,7 +63,7 @@ footer{
 
 /* -----ヘッダー----- */
 
-
+/* ヘッダー：固定のため */
 header{
 	position: fixed;
 	top: 0;/*基準を画面の左上に*/
@@ -78,6 +78,7 @@ header{
 	box-shadow: -5px -5px 20px #0174DF inset;
 }
 
+/* ヘッダー表示 */
 #header{
 	display: table;
 	box-sizing: border-box;
@@ -93,16 +94,18 @@ header{
 	text-align: left;
 }
 
+/* ヘッダーの中で中央寄せのもの */
+#header div.center{
+	display: table-cell;
+	text-align: center;
+}
 
+/* ヘッダーの中で右寄せのもの */
 #header div.right{
 	display: table-cell;
 	text-align: right;
 }
 
-#header div.center{
-	display: table-cell;
-	text-align: center;
-}
 
 
 #menu{

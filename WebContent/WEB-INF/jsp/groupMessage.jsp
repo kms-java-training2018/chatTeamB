@@ -180,7 +180,7 @@
 					<p>${errorMessage}</p>
 
 					<!-- 送信ボタン -->
-					<button type='submit' name='action' value='sendMessage' class="button" id="btn">送信</button>
+					<button type='submit' name='action' value='sendMessage'>送信</button>
 				</form>
 			</div>
 		</div>

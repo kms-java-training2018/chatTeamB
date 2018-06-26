@@ -1,23 +1,5 @@
 /*@charset "UTF-8";*/
 
-#backGround {
-
-}
-
-/*
-#userMessage{
-	position: relative;
-	left: 350px;
-}
-
-#userMessage p{
-	display: inline-block;
-	border: solid 2px black;
-	margin: 5px 0;
-	padding: 10px;
-	background-color : lightblue ;
-}
-*/
 
 .userMessageArea{
 	margin: 0;
@@ -54,20 +36,6 @@
 	display:inline;
 }
 
-/*
-#otherMessage{
-	position: relative;
-	left: 50px;
-}
-
-#otherMessage p{
-	display: inline-block;
-	border: solid 2px black;
-	margin: 5px 0;
-	padding: 10px;
-	background-color : lightgreen ;
-}
-*/
 
 
 .otherMessageArea{
@@ -96,6 +64,11 @@
     padding: 15px 20px;
     margin: 0;
     display: inline-block;
+}
+
+/* 送信ボタン */
+.sendMessageButton{
+	text-align: center;
 }
 
 
