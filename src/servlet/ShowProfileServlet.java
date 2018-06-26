@@ -56,6 +56,8 @@ public class ShowProfileServlet extends HttpServlet {
 		MyPageModel showProfileModel = new MyPageModel();
 		MyPageBean showProfileBean = new MyPageBean();
 		//		sessionBean = (SessionBean) session.getAttribute("session");
+		String logInUserNo = sessionBean.getUserNo();//////////////石井////////////////
+		System.out.println("一時保管logInUserNo：" + logInUserNo);//////////////石井////////////////
 		sessionBean.setUserNo(userNo);
 
 		// プロフィール情報の取得（認証処理）
@@ -73,6 +75,8 @@ public class ShowProfileServlet extends HttpServlet {
 
 		String userName = showProfileBean.getUserName();
 		String myPageText = showProfileBean.getMyPageText();
+		sessionBean.setUserNo(logInUserNo);/////////////////////////石井////////////////////
+		System.out.println("再度代入logInUserNo：" + sessionBean.getUserNo());//////////////石井////////////////
 
 		//セット
 		req.setAttribute("userName", userName);
