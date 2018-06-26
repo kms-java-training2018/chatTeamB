@@ -19,12 +19,18 @@
 }
 */
 
+.userMessageArea{
+	margin: 0;
+	padding: 0;
+	right: 20px;
+	text-align: right;
+}
+
 .userMessage {
-    position: relative;
-	left: 350px;
     margin: 2em 0;
     background: #dcefff;
     display: inline-block;
+    text-align: center;
 }
 .userMessage .userMessage-title {
     font-size: 1.2em;
@@ -42,8 +48,9 @@
 }
 
 #deleteMessageButton{
-	position: relative;
-	left: 350px;
+/* 	position: relative; */
+/* 	bottom: 0; */
+/* 	right; 5px; */
 	display:inline;
 }
 
@@ -62,12 +69,19 @@
 }
 */
 
+
+.otherMessageArea{
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+
 .otherMessage {
-    position: relative;
-	left: 50px;
     margin: 2em 0;
     background: #eaf8df;
     display: inline-block;
+    text-align: center;
 }
 .otherMessage .otherMessage-title {
     font-size: 1.2em;
