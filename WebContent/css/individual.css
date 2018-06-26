@@ -126,6 +126,34 @@ div img{
 メッセージ画面(個チャ・グルチャ共通)================================================
 */
 
+/* メッセージ表示欄 */
+.dispMessageList{
+	position: fixed;
+	top: 20%;
+	left: 0;
+	height: 55%;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* メッセージ表示欄の白枠 */
+.dispMessageList .contentsBox{
+	width: 80%;
+	height: 100%;
+	margin: 0 auto;
+}
+
+/* メッセージ表示欄白枠インナー */
+.dispMessageListInner{
+	display: block;
+	overflow: scroll;
+	padding: 20px;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+
 /* メッセージ入力・送信ボタン欄 */
 .inputMessageArea{
 	position: fixed;

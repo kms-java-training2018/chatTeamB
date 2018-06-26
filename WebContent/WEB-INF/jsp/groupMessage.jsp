@@ -8,7 +8,6 @@
 		<title>グループメッセージ</title>
 		<!-- jsを指定 -->
 		<script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
-		<script type="text/javascript" src="./js/reload.js"></script>
 		<script type="text/javascript" src="./js/main.js"></script>
 		<!-- cssを指定 -->
 		<link rel="stylesheet" type="text/css" href="./css/main.css">
@@ -78,7 +77,7 @@
 		<!-- メッセージ表示欄 -->
 		<div class="dispMessageList">
 			<div class="contentsBox">
-				<div window.onload="reload()">
+				<div class="dispMessageListInner">
 
 					<!-- for文でメッセージを全て表示させる -->
 					<c:forEach var="list" items="${list}" varStatus="status">

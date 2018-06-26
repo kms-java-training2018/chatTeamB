@@ -58,6 +58,7 @@
 <!-- メッセージ表示欄 -->
 		<div class="dispMessageList">
 			<div class="contentsBox">
+				<div class="dispMessageListInner">
 
 				<!-- for文でメッセージを全て表示させる -->
 				<c:forEach var="directMessageList" items="${directMessageList}" varStatus="status">
@@ -109,6 +110,7 @@
 						<br>
 					</c:if>
 				</c:forEach>
+				</div>
 			</div>
 		</div>
 
