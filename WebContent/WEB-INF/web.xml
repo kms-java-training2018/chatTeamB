@@ -65,4 +65,12 @@
     <servlet-name>LogoutServlet</servlet-name>
     <url-pattern>/logout</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>SvDbViewRangeServlet</servlet-name>
+    <servlet-class>servlet.SvDbViewRangeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SvDbViewRangeServlet</servlet-name>
+    <url-pattern>/SvDbViewRange</url-pattern>
+  </servlet-mapping>
 </web-app>
