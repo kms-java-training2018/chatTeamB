@@ -27,12 +27,21 @@
 :root{
 	--blue: #2E9AFE;
 		/* var(--blue); */
-	--green:
+	--green:#9FF781;
 		/* var(--green); */
-	--red:
+	--greenD:#01DF3A;
+		/* var(--greenD); */
+	--red: #F5A9A9;
 		/* var(--red); */
-	--orange:
+	--redD: #FE2E2E;
+		/* var(--redD); */
+	--orange: #F5DA81;
 		/* var(--orange); */
+		--orangeD: #FF8000;
+		/* var(--orangeD); */
+
+	--headerHeight: 100px;
+	/* var(--headerHeight); */
 }
 
 
@@ -40,6 +49,7 @@
 body{
 	background: var(--blue);
 	text-align: center;
+	min-width: 700px;
 }
 
 .contentsBox{
@@ -67,42 +77,53 @@ header{
 	position: fixed;
 	top: 0;/*基準を画面の左上に*/
 	left: 0;
+	bottom: 0;
 	margin: 0;/*余白が入らないように*/
 	padding: 0;
 	/*以下装飾*/
+	box-sizing: border-box;
 	width: 100%;
-	height: 5em;
+	height: var(--headerHeight);
 	color:white;
-	background-color: var(--blue);
-	box-shadow: -5px -5px 20px #0174DF inset;
+	background-color: var(--green);
+	box-shadow: -5px -5px 20px var(--greenD) inset;
 }
 
 /* ヘッダー表示 */
-#header{
+header div#header{
 	display: table;
-	box-sizing: border-box;
 	padding: 0 20px;
 	width: 100%;
-	height: 100%;
+	height: var(--headerHeight);
+	box-sizing: border-box;
 }
 
 
 /* ヘッダーの中で左寄せのもの */
 #header div.left{
 	display: table-cell;
+	padding: 0;
 	text-align: left;
+	vertical-align: baseline;
+	height: 100%;
 }
 
 /* ヘッダーの中で中央寄せのもの */
 #header div.center{
 	display: table-cell;
-	text-align: center;
+	padding: 0;
+	margin: 0 auto;
+	vertical-align: baseline;
+	height: 100%;
 }
 
 /* ヘッダーの中で右寄せのもの */
 #header div.right{
 	display: table-cell;
+	padding: 0;
 	text-align: right;
+	vertical-align: baseline;
+	height: 100%;
 }
 
 

@@ -30,7 +30,7 @@
 			<div class="center">
 				<!-- 相手の表示名(冒頭) -->
 				<a href="/chat/showProfile?userNo=${directMessageBean.toSendUserNo}"
-				class="link" target=”_blank”>${directMessageBean.otherName} さん</a>
+				class="link" target="_blank">${directMessageBean.otherName} さん</a>
 			</div>
 
 			<!-- ヘッダーの中で右寄せのものたち -->
@@ -94,9 +94,9 @@
 						<div class="otherMessageArea">
 							<div class = "otherMessage">
 								<div class= "otherMessage-title">
-									>><a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />" class="link" target=”_blank”>
-										<c:out value="${directMessageList.otherName}" /> さん
-									</a>
+									>><a href="/chat/showProfile?userNo=<c:out value="${directMessageList.userNo}" />"
+									class="link" target="_blank">
+										<c:out value="${directMessageList.otherName}" /> さん</a>
 								</div>
 								<p>
 									<c:out value="${directMessageList.message}" />

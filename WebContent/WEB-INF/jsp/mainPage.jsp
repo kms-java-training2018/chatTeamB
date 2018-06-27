@@ -47,22 +47,25 @@
 <!-- 		会員一覧(個チャへのリンク) -->
 		<div class="messageLinkArea">
 			<div class="contentsBox">
-				<div class="listHeadding">
-					<label>■会員一覧</label>
-				</div>
-				<ul class="messageLinkList">
+				<div class="messageLinkAreaInner">
+					<div class="listHeadding">
+						<label>■会員一覧</label>
+					</div>
+					<ul class="messageLinkList">
 
-<!-- 					会員一覧を表示 -->
-					<c:forEach var="otherUser" items="${otherUserList}">
-						<li>
-							<a
-								href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
-								class="partnerNameLink"> ${otherUser.otherName} さん（メッセージへ）
-							</a>
-							<p><c:out value="${otherUser.message}" /></p>
-						</li>
-					</c:forEach>
-				</ul>
+						<!-- 会員一覧を表示 -->
+						<c:forEach var="otherUser" items="${otherUserList}">
+							<li>
+								<a
+									href="/chat/directMessage?otherUserNo=${otherUser.otherNo}&otherUserName=${otherUser.otherName}"
+									class="partnerNameLink"> ${otherUser.otherName} さん（メッセージへ）
+								</a>
+								<p><c:out value="${otherUser.message}" /></p>
+							</li>
+						</c:forEach>
+					</ul>
+
+				</div>
 			</div>
 		</div>
 
@@ -70,23 +73,26 @@
 <!-- 		グループ一覧(グルチャへのリンク) -->
 		<div class="messageLinkArea">
 			<div class="contentsBox">
-				<div class="listHeadding">
-					<label>■グループ一覧</label>
-					<form action="/chat/makeGroup" method="POST">
-						<button type='submit' name='action' value='groupTransition'>グループ作成</button>
-					</form>
+				<div class="messageLinkAreaInner">
+					<div class="listHeadding">
+						<label>■グループ一覧</label>
+						<!-- グループ作成ボタン -->
+						<form action="/chat/makeGroup" method="POST">
+							<button type='submit' name='action' value='groupTransition'>グループ作成</button>
+						</form>
+					</div>
+					<ul class="messageLinkList">
+						<c:forEach var="userGroup" items="${userGroupList}">
+							<li>
+								<a
+									href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
+									class="nameLink"> ${userGroup.groupName}（グループメッセージへ）
+								</a>
+								<p><c:out value="${userGroup.groupMessage}" /></p>
+							</li>
+						</c:forEach>
+					</ul>
 				</div>
-				<ul class="messageLinkList">
-					<c:forEach var="userGroup" items="${userGroupList}">
-						<li>
-							<a
-								href="/chat/groupMessage?userGroupNo=${userGroup.groupNo}&userGroupName=${userGroup.groupName}"
-								class="nameLink"> ${userGroup.groupName}（グループメッセージへ）
-							</a>
-							<p><c:out value="${userGroup.groupMessage}" /></p>
-						</li>
-					</c:forEach>
-				</ul>
 			</div>
 		</div>
 

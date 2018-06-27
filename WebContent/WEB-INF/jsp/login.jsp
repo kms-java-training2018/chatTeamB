@@ -25,8 +25,8 @@
 
 			<div class="contentsBox">
 				<label>「しまゆまチャット」って？？</label>
+				<p>KMS2018年入社のBチームが作ったチャットシステムです！</p>
 				<p>メンバーの三野進紀(し)、石井雅大(ま)、稲田雄士(ゆ)、伊與真莉奈(ま)が由来になっています！</p>
-				<br>
 				<p>ちなみに･･･</p>
 				<p>このチャットは、青、緑、赤、黄の4色を基調にして作成しています！</p>
 				<p>各メンバーの好きな色を組み合わせて、Bチームらしさを表現しました！</p>
@@ -48,7 +48,7 @@
 					<input type="password" name="password" value="${loginBean.password}">
 					<br>
 					<p>${requestScope.errorMessage}</p>
-					<input type="submit" value="ログイン">
+					<input type="submit" value="ログイン" class="loginBtn">
 				</form>
 
 			</div>

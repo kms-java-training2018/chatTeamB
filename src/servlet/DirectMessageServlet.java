@@ -165,12 +165,12 @@ public class DirectMessageServlet extends HttpServlet {
 		System.out.println("DirectMessageServletに帰ってきました");
 
 		// レコードが取得出来なかった場合エラー画面に遷移する
-		if (directMessageList == null) {
-			System.out.println("レコードがないです");
-			session = req.getSession(false);
-			session = null;
-			direction = "/WEB-INF/jsp/errorPage.jsp";
-		}
+//		if (directMessageList == null) {
+//			System.out.println("レコードがないです");
+//			session = req.getSession(false);
+//			session = null;
+//			direction = "/WEB-INF/jsp/errorPage.jsp";
+//		}
 
 		// リクエストスコープにいれてjspに送る
 		req.setAttribute("directMessageList", directMessageList);
@@ -266,6 +266,8 @@ public class DirectMessageServlet extends HttpServlet {
 					req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 				}
 			}
+			System.out.println("会話情報を登録しました");
+
 
 			break;
 		////////////////////////////////////////////////////////////////////////
@@ -340,15 +342,48 @@ public class DirectMessageServlet extends HttpServlet {
 			direction = "/WEB-INF/jsp/errorPage.jsp";
 		}
 
-		// 送信対象者の会員番号取得
-		String toSendUserNo = directMessageBean
-				.getToSendUserNo();
-		System.out.println("ToSendUserNo：" + directMessageBean.getToSendUserNo());
 		// パラメータ送信対象者の会員番号が存在しない場合エラー画面に遷移する//////////////////////////////////////////////
-		if (toSendUserNo == null || !(toSendUserNo.equals("1") || toSendUserNo.equals("2") || toSendUserNo.equals("3")
-				|| toSendUserNo.equals("4"))) {
+
+		MainBean mainBean = new MainBean();
+
+		ArrayList<MainBean> toSendUserNoCheck = new ArrayList<MainBean>();
+		toSendUserNoCheck = (ArrayList<MainBean>) session.getAttribute("toSendUserList");
+
+		// 送信対象者の会員番号が存在するか確認する
+		int notToSendUserNo = 0;
+
+		// セッションスコープから送信対象者の会員番号取得
+//		directMessageBean.setToSendUserNo(req.getParameter("otherUserNo")/*mainBean.getOtherNo()*/);////////////////////////
+		String toSendUserNo = directMessageBean.getToSendUserNo();
+		System.out.println("ToSendUserNo：" + toSendUserNo);
+
+		// 送信対象者の会員番号が存在するか確認する
+		if(toSendUserNo == null) {
+			System.out.println("会員番号が存在しません");
 			direction = "/WEB-INF/jsp/errorPage.jsp";
-			System.out.println("存在しない会員番号です");
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "会員番号が存在しません");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
+		}
+
+		for (int i = 0; i < toSendUserNoCheck.size(); i++) {
+			mainBean = toSendUserNoCheck.get(i);
+			if (toSendUserNo.equals(mainBean.getOtherNo())) {
+				notToSendUserNo = 1;
+				System.out.println("toSendUserNo：" + toSendUserNo + " は存在します");
+			}
+		}
+
+		if (notToSendUserNo == 0) {
+			System.out.println("不正な会員番号です");
+			direction = "/WEB-INF/jsp/errorPage.jsp";
+			// セッションを削除
+			session.invalidate();
+			// エラー画面に遷移
+			req.setAttribute("errorMessage", "不正な会員番号です");
+			req.getRequestDispatcher("/WEB-INF/jsp/errorPage.jsp").forward(req, res);
 		}
 
 		// DirectMessageModelLookへ移動会話情報取得処理
@@ -367,12 +402,12 @@ public class DirectMessageServlet extends HttpServlet {
 		System.out.println("DirectMessageServletに帰ってきました");
 
 		// レコードが取得出来なかった場合エラー画面に遷移する
-		if (directMessageList == null) {
-			System.out.println("レコードがないです");
-			session = req.getSession(false);
-			session = null;
-			direction = "/WEB-INF/jsp/errorPage.jsp";
-		}
+//		if (directMessageList == null) {
+//			System.out.println("レコードがないです");
+//			session = req.getSession(false);
+//			session = null;
+//			direction = "/WEB-INF/jsp/errorPage.jsp";
+//		}
 
 		// リクエストスコープにいれてjspに送る
 		req.setAttribute("directMessageList", directMessageList);

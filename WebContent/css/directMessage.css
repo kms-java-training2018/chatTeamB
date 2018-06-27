@@ -1,6 +1,29 @@
 /*@charset "UTF-8";*/
 
 
+/* メインのカラーを指定 */
+:root{
+	--blue: #2E9AFE;
+		/* var(--blue); */
+	--green:#9FF781;
+		/* var(--green); */
+	--greenD:#01DF3A;
+		/* var(--greenD); */
+	--red: #F5A9A9;
+		/* var(--red); */
+	--redD: #FE2E2E;
+		/* var(--redD); */
+	--orange: #F5DA81;
+		/* var(--orange); */
+		--orangeD: #FF8000;
+		/* var(--orangeD); */
+
+	--headerHeight: 100px;
+	/* var(--headerHeight); */
+}
+
+
+
 .userMessageArea{
 	margin: 0;
 	padding: 0;
@@ -10,13 +33,13 @@
 
 .userMessage {
     margin: 2em 0;
-    background: #dcefff;
+    background: var(--orange);
     display: inline-block;
     text-align: center;
 }
 .userMessage .userMessage-title {
     font-size: 1.2em;
-    background: #5fb3f5;
+    background: var(--orangeD);
     padding: 4px;
     text-align: center;
     color: #FFF;
@@ -47,13 +70,13 @@
 
 .otherMessage {
     margin: 2em 0;
-    background: #eaf8df;
+    background: var(--red);
     display: inline-block;
     text-align: center;
 }
 .otherMessage .otherMessage-title {
     font-size: 1.2em;
-    background: #eaffff;
+    background: var(--redD);
     padding: 4px;
     text-align: center;
     color: #FFF;

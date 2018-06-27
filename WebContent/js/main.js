@@ -107,15 +107,6 @@ function checkDoubleSubmit(){
 }
 
 
-$(function(){
-    $('#menu li').hover(function(){
-        $("ul:not(:animated)", this).slideDown();
-    }, function(){
-        $("ul.child",this).slideUp();
-    });
-});
-
-
 //メッセージ削除　チェック用
 /*function logout() {
 
@@ -138,3 +129,9 @@ $(function(){
 
 }
 */
+
+//個チャ・グルチャのメッセージ表示エリアの
+//スクロール初期位置を一番下に設定
+$(function(){
+    $('.dispMessageListInner').scrollTop($('.dispMessageListInner')[0].scrollHeight);
+});
