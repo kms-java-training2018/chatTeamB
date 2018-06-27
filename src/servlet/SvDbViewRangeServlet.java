@@ -87,8 +87,10 @@ public class SvDbViewRangeServlet extends HttpServlet {
 				if(responceMessageNo.equals(lastMessageNo)){
 					res.setStatus(404);
 					return;
-				} else {
+				} else if ("fake".equals(lastMessageNo)){
 					session.setAttribute("message_no", responceMessageNo);
+					res.setStatus(404);
+					return;
 				}
 
 			} catch (SQLException e) {

@@ -155,6 +155,8 @@ public class DirectMessageServlet extends HttpServlet {
 			directMessageList = directMessageModel.lookMessage(directMessageBean);
 			if (!directMessageList.get(directMessageList.size() - 1).getUserNo().equals(sessionBean.getUserNo())) {
 				session.setAttribute("message_no", directMessageList.get(directMessageList.size() - 1).getMessageNo());
+			} else {
+				session.setAttribute("message_no", "fake");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -395,6 +397,8 @@ public class DirectMessageServlet extends HttpServlet {
 			directMessageList = model.lookMessage(directMessageBean);
 			if (!directMessageList.get(directMessageList.size() - 1).getUserNo().equals(sessionBean.getUserNo())) {
 				session.setAttribute("message_no", directMessageList.get(directMessageList.size() - 1).getMessageNo());
+			} else {
+				session.setAttribute("message_no", "fake");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
