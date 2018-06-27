@@ -132,11 +132,6 @@ function checkDoubleSubmit(){
 
 //個チャ・グルチャのメッセージ表示エリアの
 //スクロール初期位置を一番下に設定
-
-var dispMessageArea = document.getElementsByClassName('dispMessageListInner');
-dispMessageArea.scrollTop = dispMessageArea.scrollHeight;
-
-
-
-
-
+$(function(){
+    $('.dispMessageListInner').scrollTop($('.dispMessageListInner')[0].scrollHeight);
+});
