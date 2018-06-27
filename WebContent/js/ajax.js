@@ -1,4 +1,4 @@
-function ajax(userNo, sendUserNo) {
+/*function ajax(userNo, sendUserNo) {
 
 	// リクエストJSON
 	var request = {
@@ -25,4 +25,37 @@ function ajax(userNo, sendUserNo) {
 				}
 			});
 
-}
+};
+ */
+
+$(function() {
+	// リクエストJSON
+	var request = {
+		sendUserNo : toSendUserNo
+
+	};
+
+	setInterval(function() {
+		$.ajax({
+			type : 'GET',
+			url : '/chat/SvDbViewRange',
+			data : request,
+			dataType : 'json',
+			cache : false
+		}).done(
+				function(data, textStatus, jqXHR) {
+					$('#changeMsg').append(
+							'<p>' + data.responseMessage
+									+ '</p><br/>');
+
+//					for ( var item in data) {
+//						$('#changeMsg').append(
+//								'<p>' + data[item].responseMessage
+//										+ '</p><br/>');
+//					}
+
+				}).fail(function(jqXHR, textStatus, errorThrown) {
+			// エラーの時は特に何もしない
+		});
+	}, 10000);
+});

@@ -153,6 +153,9 @@ public class DirectMessageServlet extends HttpServlet {
 		try {
 			System.out.println("DirectMessageModelLookにいきます");
 			directMessageList = directMessageModel.lookMessage(directMessageBean);
+			if (!directMessageList.get(directMessageList.size() - 1).getUserNo().equals(sessionBean.getUserNo())) {
+				session.setAttribute("message_no", directMessageList.get(directMessageList.size() - 1).getMessageNo());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("DirectMessageServlet、認証処理キャッチ");
@@ -390,6 +393,9 @@ public class DirectMessageServlet extends HttpServlet {
 		try {
 			System.out.println("DirectMessageModelLookにいきます");
 			directMessageList = model.lookMessage(directMessageBean);
+			if (!directMessageList.get(directMessageList.size() - 1).getUserNo().equals(sessionBean.getUserNo())) {
+				session.setAttribute("message_no", directMessageList.get(directMessageList.size() - 1).getMessageNo());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("DirectMessageServlet、認証処理キャッチ");

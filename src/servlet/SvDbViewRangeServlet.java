@@ -14,6 +14,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import bean.SessionBean;
 
 public class SvDbViewRangeServlet extends HttpServlet {
 
@@ -26,12 +31,15 @@ public class SvDbViewRangeServlet extends HttpServlet {
 		try {
 
 			//パラメータ取得
-			String userNo = req.getParameter("userNo");
+			HttpSession session = req.getSession();
+			SessionBean sessionBean = (SessionBean) session.getAttribute("session");
+			String userNo = sessionBean.getUserNo();
 			String sendUserNo = req.getParameter("sendUserNo");
-			String response = "";
+			String responseMessage = "";
+			String responceMessageNo = "";
+			String lastMessageNo = (String)session.getAttribute("message_no");
 
 			//処理（DB呼び出し等）
-			StringBuilder sb = new StringBuilder();
 			Connection conn = null;
 			String url = "jdbc:oracle:thin:@192.168.51.67:1521:XE";
 			String user = "DEV_TEAM_B";
@@ -43,6 +51,7 @@ public class SvDbViewRangeServlet extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+
 			// 会話情報テーブルから二者間の最新メッセージを取得
 			try {
 				conn = DriverManager.getConnection(url, user, dbPassword);
@@ -50,6 +59,7 @@ public class SvDbViewRangeServlet extends HttpServlet {
 				StringBuilder sb2 = new StringBuilder();
 				// SQL作成
 				sb2.append("SELECT ");
+				sb2.append("message_no, ");
 				sb2.append("message ");
 				sb2.append("FROM ");
 				sb2.append("t_message_info ");
@@ -60,19 +70,25 @@ public class SvDbViewRangeServlet extends HttpServlet {
 				sb2.append("FROM ");
 				sb2.append("t_message_info ");
 				sb2.append("WHERE ");
-				sb2.append("((send_user_no = " + userNo);
-				sb2.append("OR send_user_no = " + sendUserNo + ")");
-				sb2.append("AND (to_send_user_no = " + userNo);
-				sb2.append("OR to_send_user_no = " + sendUserNo + ") ");
+				sb2.append("((send_user_no = " + sendUserNo + ") ");
+				sb2.append("AND (to_send_user_no = " + userNo + ") ");
 				sb2.append("AND (delete_flag = " + 0 + "))))");
 
 				// SQL実行
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sb2.toString());
 
-				if (rs.next()) {
+				while (rs.next()) {
 					//今参照されている会員に最新のメッセージをセット
-					response = rs.getString("message");
+					responseMessage = rs.getString("message");
+					responceMessageNo = rs.getString("message_no");
+				}
+
+				if(responceMessageNo.equals(lastMessageNo)){
+					res.setStatus(404);
+					return;
+				} else {
+					session.setAttribute("message_no", responceMessageNo);
 				}
 
 			} catch (SQLException e) {
@@ -92,7 +108,7 @@ public class SvDbViewRangeServlet extends HttpServlet {
 			Map<String, String> mapMsg = new HashMap<String, String>();
 
 			//追加
-			mapMsg.put("response", response);
+			mapMsg.put("responseMessage", responseMessage);
 
 			//マッパ(JSON <-> Map, List)
 			ObjectMapper mapper = new ObjectMapper();
@@ -112,7 +128,9 @@ public class SvDbViewRangeServlet extends HttpServlet {
 			//クローズ
 			pw.close();
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			e.printStackTrace();
 		}
 
